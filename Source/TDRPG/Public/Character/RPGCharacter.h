@@ -14,8 +14,12 @@ class TDRPG_API ARPGCharacter : public ABaseCharacter
 
 public:
 	ARPGCharacter();
+	virtual void PossessedBy(AController* NewController) override; // Server
+	virtual void OnRep_PlayerState() override; // Client
 
 private:
+	void InitAbilityActorInfo();
+	
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<class USpringArmComponent> CameraSpringArm;
 
