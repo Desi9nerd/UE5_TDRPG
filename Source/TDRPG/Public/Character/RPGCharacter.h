@@ -14,4 +14,11 @@ class TDRPG_API ARPGCharacter : public ABaseCharacter
 
 public:
 	ARPGCharacter();
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<class USpringArmComponent> CameraSpringArm;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<class UCameraComponent> FollowCamera;
 };

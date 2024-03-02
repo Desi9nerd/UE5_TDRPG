@@ -19,7 +19,7 @@ void ARPGPlayerController::CursorTrace()
 {
 	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
-	if (!CursorHit.bBlockingHit) return;
+	if (false == CursorHit.bBlockingHit) return;
 
 	LastActor = ThisActor;
 	ThisActor = Cast<IIEnemy>(CursorHit.GetActor());
@@ -77,18 +77,19 @@ void ARPGPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	check(AuraContext);
+	check(RPGContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	check(Subsystem);
-	Subsystem->AddMappingContext(AuraContext, 0);
+
+	Subsystem->AddMappingContext(RPGContext, 0);
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 
 	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Viewport에 마우스 락X
+	InputModeData.SetHideCursorDuringCapture(false); // Cursor 숨기지 않기
 	SetInputMode(InputModeData);
 }
 
@@ -107,12 +108,13 @@ void ARPGPlayerController::Move(const FInputActionValue& InputActionValue)
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // Front
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y); // Right
 
-	if (APawn* ControlledPawn = GetPawn<APawn>())
+	TWeakObjectPtr<APawn> ControlledPawn = GetPawn<APawn>();
+	if (ControlledPawn.IsValid())
 	{
-		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
-		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y); // Back
+		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X); // Left
 	}
 }

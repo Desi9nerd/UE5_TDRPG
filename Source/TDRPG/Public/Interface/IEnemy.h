@@ -18,6 +18,6 @@ class TDRPG_API IIEnemy
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void HighlightActor() = 0;
+	virtual void HighlightActor() = 0; // Enemy를 가리키면 외곽선
 	virtual void UnHighlightActor() = 0;
 };

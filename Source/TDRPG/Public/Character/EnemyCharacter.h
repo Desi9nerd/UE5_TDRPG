@@ -15,6 +15,7 @@ class TDRPG_API AEnemyCharacter : public ABaseCharacter, public IIEnemy
 
 public:
 	AEnemyCharacter();
+
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 };

@@ -1,5 +1,7 @@
 #include "Character/RPGCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 ARPGCharacter::ARPGCharacter()
 {
@@ -11,4 +13,13 @@ ARPGCharacter::ARPGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
+	CameraSpringArm->TargetArmLength = 750.0f;
+	CameraSpringArm->bUsePawnControlRotation = false;
+	CameraSpringArm->bEnableCameraLag = true;
+
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraSpringArm);
+	FollowCamera->bUsePawnControlRotation = false;
 }
