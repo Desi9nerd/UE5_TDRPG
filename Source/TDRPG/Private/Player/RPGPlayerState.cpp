@@ -6,6 +6,7 @@ ARPGPlayerState::ARPGPlayerState()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<URPGAttributeSet>("AttributeSet");
 
