@@ -1,10 +1,13 @@
 #include "GAS/RPGAttributeSet.h"
-#include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 URPGAttributeSet::URPGAttributeSet()
 {
-
+	//** #define ATTRIBUTE_ACCESSORS 매크로와 연동. HP, MP 초기값 설정
+	InitHealth(100.f);
+	InitMaxHealth(100.f);
+	InitMana(50.f);
+	InitMaxMana(50.f);
 }
 
 void URPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
