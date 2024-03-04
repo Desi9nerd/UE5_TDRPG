@@ -15,15 +15,18 @@ ARPGCharacter::ARPGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
+	
+	// Camera
 	CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
+	CameraSpringArm->SetupAttachment(RootComponent);
+	CameraSpringArm->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 0.f), FRotator(-45.f, 0.f, 0.f));
 	CameraSpringArm->TargetArmLength = 750.0f;
 	CameraSpringArm->bUsePawnControlRotation = false;
-	CameraSpringArm->bEnableCameraLag = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
+
 }
 
 void ARPGCharacter::PossessedBy(AController* NewController)

@@ -17,12 +17,13 @@ public:
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
 
-private:
-	void InitAbilityActorInfo();
-	
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+protected:
+	UPROPERTY(VisibleAnywhere, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> CameraSpringArm;
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FollowCamera;
+
+private:
+	void InitAbilityActorInfo();
 };

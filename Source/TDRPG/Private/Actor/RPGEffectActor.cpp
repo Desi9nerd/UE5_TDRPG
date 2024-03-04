@@ -27,8 +27,8 @@ void ARPGEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO: 지금은 const_cast 사용. 추후에 Gameplay Effect 적용방법으로 수정하자.
-	TWeakObjectPtr<IAbilitySystemInterface> ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
-	if (ASCInterface.IsValid())
+	IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
+	if (ASCInterface)
 	{
 		const URPGAttributeSet* RPGAttributeSet = Cast<URPGAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(URPGAttributeSet::StaticClass()));
 
