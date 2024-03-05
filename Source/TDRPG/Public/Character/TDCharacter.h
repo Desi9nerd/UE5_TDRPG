@@ -1,19 +1,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
-#include "RPGCharacter.generated.h"
+#include "TDBaseCharacter.h"
+#include "TDCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TDRPG_API ARPGCharacter : public ABaseCharacter
+class TDRPG_API ATDCharacter : public ATDBaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	ARPGCharacter();
+	ATDCharacter();
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
 

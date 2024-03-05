@@ -1,20 +1,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BaseCharacter.h"
+#include "Character/TDBaseCharacter.h"
 #include "Interface/IEnemy.h"
-#include "EnemyCharacter.generated.h"
+#include "TDEnemyCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TDRPG_API AEnemyCharacter : public ABaseCharacter, public IIEnemy
+class TDRPG_API ATDEnemyCharacter : public ATDBaseCharacter, public IIEnemy
 {
 	GENERATED_BODY()
 
 public:
-	AEnemyCharacter();
+	ATDEnemyCharacter();
 
 	//** IEnemy 함수
 	virtual void HighlightActor() override;	  // 외곽선 효과 On

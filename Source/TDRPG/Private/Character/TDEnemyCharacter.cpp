@@ -1,20 +1,20 @@
-#include "Character/EnemyCharacter.h"
-#include "GAS/RPGAbilitySystemComponent.h"
-#include "GAS/RPGAttributeSet.h"
+#include "Character/TDEnemyCharacter.h"
+#include "GAS/TDAbilitySystemComponent.h"
+#include "GAS/TDAttributeSet.h"
 #include "TDRPG/TDRPG.h"
 
-AEnemyCharacter::AEnemyCharacter()
+ATDEnemyCharacter::ATDEnemyCharacter()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
-	AbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
-	AttributeSet = CreateDefaultSubobject<URPGAttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UTDAttributeSet>("AttributeSet");
 }
 
-void AEnemyCharacter::HighlightActor()
+void ATDEnemyCharacter::HighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(true);
 	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
@@ -22,13 +22,13 @@ void AEnemyCharacter::HighlightActor()
 	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 }
 
-void AEnemyCharacter::UnHighlightActor()
+void ATDEnemyCharacter::UnHighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
 }
 
-void AEnemyCharacter::BeginPlay()
+void ATDEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 

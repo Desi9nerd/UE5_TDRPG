@@ -1,6 +1,6 @@
-#include "Character/BaseCharacter.h"
+#include "Character/TDBaseCharacter.h"
 
-ABaseCharacter::ABaseCharacter()
+ATDBaseCharacter::ATDBaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -13,12 +13,12 @@ ABaseCharacter::ABaseCharacter()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
+UAbilitySystemComponent* ATDBaseCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
 
-void ABaseCharacter::BeginPlay()
+void ATDBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	

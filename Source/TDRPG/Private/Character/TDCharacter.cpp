@@ -1,11 +1,11 @@
-#include "Character/RPGCharacter.h"
+#include "Character/TDCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "AbilitySystemComponent.h"
-#include "Player/RPGPlayerState.h"
+#include "Player/TDPlayerState.h"
 
-ARPGCharacter::ARPGCharacter()
+ATDCharacter::ATDCharacter()
 {
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
@@ -29,26 +29,26 @@ ARPGCharacter::ARPGCharacter()
 
 }
 
-void ARPGCharacter::PossessedBy(AController* NewController)
+void ATDCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo(); // Init Ability actor info for the Server
 }
 
-void ARPGCharacter::OnRep_PlayerState()
+void ATDCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	
 	InitAbilityActorInfo(); // Init Ability actor info for the Client
 }
 
-void ARPGCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
+void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
 {
-	TObjectPtr<ARPGPlayerState> RPGPlayerState = GetPlayerState<ARPGPlayerState>();
-	check(RPGPlayerState); // 예외처리. PlayerState 없을시 종료
+	TObjectPtr<ATDPlayerState> TDPlayerState = GetPlayerState<ATDPlayerState>();
+	check(TDPlayerState); // 예외처리. PlayerState 없을시 종료
 
-	RPGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(RPGPlayerState, this);
-	AbilitySystemComponent = RPGPlayerState->GetAbilitySystemComponent();
-	AttributeSet = RPGPlayerState->GetAttributeSet();
+	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
+	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
+	AttributeSet = TDPlayerState->GetAttributeSet();
 }

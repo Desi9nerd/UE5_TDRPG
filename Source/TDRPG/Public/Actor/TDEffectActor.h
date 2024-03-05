@@ -1,17 +1,17 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "RPGEffectActor.generated.h"
+#include "TDEffectActor.generated.h"
 
 class USphereComponent;
 
 UCLASS()
-class TDRPG_API ARPGEffectActor : public AActor
+class TDRPG_API ATDEffectActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	ARPGEffectActor();
+	ATDEffectActor();
 
 	UFUNCTION()
 	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

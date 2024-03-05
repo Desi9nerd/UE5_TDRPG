@@ -1,13 +1,13 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "AnimRPGCharacter.generated.h"
+#include "TDAnimEnemyCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TDRPG_API UAnimRPGCharacter : public UAnimInstance
+class TDRPG_API UTDAnimEnemyCharacter : public UAnimInstance
 {
 	GENERATED_BODY()
 	

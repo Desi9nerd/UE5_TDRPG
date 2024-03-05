@@ -2,7 +2,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h" // #define ATTRIBUTE_ACCESSORS 매크로에 사용
-#include "RPGAttributeSet.generated.h"
+#include "TDAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -14,29 +14,29 @@
  * 
  */
 UCLASS()
-class TDRPG_API URPGAttributeSet : public UAttributeSet
+class TDRPG_API UTDAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
 public:
-	URPGAttributeSet();
+	UTDAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(URPGAttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Health);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
 	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(URPGAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MaxHealth);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
 	FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS(URPGAttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Mana);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Vital Attributes")
 	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS(URPGAttributeSet, MaxMana);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MaxMana);
 
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;

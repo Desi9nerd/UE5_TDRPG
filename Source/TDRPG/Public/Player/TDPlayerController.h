@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "RPGPlayerController.generated.h"
+#include "TDPlayerController.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
@@ -14,12 +14,12 @@ class IIEnemy;
  */
 
 UCLASS()
-class TDRPG_API ARPGPlayerController : public APlayerController
+class TDRPG_API ATDPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
-	ARPGPlayerController();
+	ATDPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
 
 protected:

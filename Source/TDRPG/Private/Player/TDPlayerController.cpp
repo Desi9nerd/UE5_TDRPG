@@ -1,21 +1,21 @@
-#include "Player/RPGPlayerController.h"
+#include "Player/TDPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Interface/IEnemy.h"
 
-ARPGPlayerController::ARPGPlayerController()
+ATDPlayerController::ATDPlayerController()
 {
 	bReplicates = true;
 }
 
-void ARPGPlayerController::PlayerTick(float DeltaTime)
+void ATDPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
 }
 
-void ARPGPlayerController::CursorTrace()
+void ATDPlayerController::CursorTrace() // 마우스 커서 Trace하여 가리킨 적에 외곽선 효과
 {
 	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
@@ -73,7 +73,7 @@ void ARPGPlayerController::CursorTrace()
 	}
 }
 
-void ARPGPlayerController::BeginPlay()
+void ATDPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -93,16 +93,16 @@ void ARPGPlayerController::BeginPlay()
 	SetInputMode(InputModeData);
 }
 
-void ARPGPlayerController::SetupInputComponent()
+void ATDPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARPGPlayerController::Move);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDPlayerController::Move);
 }
 
-void ARPGPlayerController::Move(const FInputActionValue& InputActionValue)
+void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 	const FRotator Rotation = GetControlRotation();
