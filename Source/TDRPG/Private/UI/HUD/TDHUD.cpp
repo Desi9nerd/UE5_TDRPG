@@ -8,6 +8,7 @@ UTDOverlayWidgetController* ATDHUD::GetOverlayWidgetController(const FWidgetCont
 	{
 		OverlayWidgetController = NewObject<UTDOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		OverlayWidgetController->BindCallbacksToDependencies(); // 콜백함수 바인딩
 
 		return OverlayWidgetController;
 	}

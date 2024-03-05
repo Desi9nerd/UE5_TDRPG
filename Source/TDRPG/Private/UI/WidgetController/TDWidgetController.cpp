@@ -11,3 +11,7 @@ void UTDWidgetController::SetWidgetControllerParams(const FWidgetControllerParam
 void UTDWidgetController::BroadcastInitialValues()
 {
 }
+
+void UTDWidgetController::BindCallbacksToDependencies()
+{
+}
