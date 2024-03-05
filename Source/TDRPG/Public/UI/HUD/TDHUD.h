@@ -1,8 +1,13 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "UI/Widget/TDUserWidget.h"
 #include "TDHUD.generated.h"
+
+class UAttributeSet;
+class UAbilitySystemComponent;
+class UTDOverlayWidgetController;
+class UTDUserWidget;
+struct FWidgetControllerParams;
 
 /**
  * 
@@ -16,10 +21,17 @@ public:
 	UPROPERTY()
 	TObjectPtr<UTDUserWidget>  OverlayWidget;
 
-protected:
-	virtual void BeginPlay() override;
+	UTDOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+
+	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UTDUserWidget> OverlayWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UTDOverlayWidgetController> OverlayWidgetController;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UTDOverlayWidgetController> OverlayWidgetControllerClass;
 };

@@ -3,7 +3,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "AbilitySystemComponent.h"
+#include "Player/TDPlayerController.h"
 #include "Player/TDPlayerState.h"
+#include "UI/HUD/TDHUD.h"
 
 ATDCharacter::ATDCharacter()
 {
@@ -51,4 +53,15 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
 	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
+
+	// 서버는 모든 PlayerController를 소유.
+	// 하지만 각각의 클라이언트는 하나의 PlayerController만 소유하고 나머진 Proxy로 가지고 있다
+	// 그렇기 때문에 Assert로 체크하면 안 된다.
+	if (ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(GetController()))
+	{
+		if (ATDHUD* TDHUD = Cast<ATDHUD>(TDPlayerController->GetHUD()))
+		{
+			TDHUD->InitOverlay(TDPlayerController, TDPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
 }
