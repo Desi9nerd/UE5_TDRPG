@@ -37,6 +37,6 @@ private:
 
 	//** 마우스가 가리키는곳에 Enemy가 있으면 외곽선 Highlight
 	void CursorTrace(); // 마우스 CursorTrace
-	TObjectPtr<IIEnemy> LastActor;
-	TObjectPtr<IIEnemy> ThisActor;
+	IIEnemy* LastActor;
+	IIEnemy* ThisActor;
 };
