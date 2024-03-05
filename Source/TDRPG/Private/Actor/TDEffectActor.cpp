@@ -34,6 +34,7 @@ void ATDEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 		UTDAttributeSet* MutableTDAttributeSet = const_cast<UTDAttributeSet*>(TDAttributeSet);
 		MutableTDAttributeSet->SetHealth(TDAttributeSet->GetHealth() + 25.f); // HP¸¦ +25
+		MutableTDAttributeSet->SetMana(TDAttributeSet->GetMana() + 20.f); // MP¸¦ +20
 
 		Destroy();
 	}

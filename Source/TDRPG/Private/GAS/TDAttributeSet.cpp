@@ -6,8 +6,8 @@ UTDAttributeSet::UTDAttributeSet()
 	//** #define ATTRIBUTE_ACCESSORS 매크로와 연동. HP, MP 초기값 설정
 	InitHealth(70.f);
 	InitMaxHealth(100.f);
-	InitMana(50.f);
-	InitMaxMana(50.f);
+	InitMana(20.f);
+	InitMaxMana(100.f);
 }
 
 void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
