@@ -1,46 +1,34 @@
 #include "Actor/TDEffectActor.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-#include "GAS/TDAttributeSet.h"
-#include "Components/SphereComponent.h"
 
 ATDEffectActor::ATDEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	Mesh->SetupAttachment(GetRootComponent());
 }
 
 void ATDEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ATDEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &ATDEffectActor::EndOverlap);
+	
 }
 
-void ATDEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATDEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	//TODO: 지금은 const_cast 사용. 추후에 Gameplay Effect 적용방법으로 수정하자.
-	IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
-	if (ASCInterface)
-	{
-		const UTDAttributeSet* TDAttributeSet = Cast<UTDAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UTDAttributeSet::StaticClass()));
+	// UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent함수는 GetAbilitySystemComponentFromActor함수를 리턴하고 이 과정에서 const IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(Target)의 과정을 거친다. 
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target); 
+	if (TargetASC == nullptr) return;
 
-		UTDAttributeSet* MutableTDAttributeSet = const_cast<UTDAttributeSet*>(TDAttributeSet);
-		MutableTDAttributeSet->SetHealth(TDAttributeSet->GetHealth() + 25.f); // HP를 +25
-		MutableTDAttributeSet->SetMana(TDAttributeSet->GetMana() + 20.f); // MP를 +20
+	check(GameplayEffectClass);
 
-		Destroy();
-	}
-}
-
-void ATDEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
+	// FGameplayEffectContextHandle와 FGameplayEffectSpecHandle는 각각 FGameplayEffectContext와 FGameplayEffectSpec를 감싸는 wrapper 구조체다.
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }

@@ -10,6 +10,6 @@ public class TDRPG : ModuleRules
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "GameplayAbilities" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks" }); // Game Ability System(GAS)
+        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "DatasmithCore" }); // Game Ability System(GAS)
     }
 }
