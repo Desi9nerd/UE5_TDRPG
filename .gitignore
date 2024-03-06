@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Assets
+Content/ABP/*
+Content/Assets/*
+Content/LevelPrototyping/*
+Content/ThirdPerson/*
+Content/Migrated/*
