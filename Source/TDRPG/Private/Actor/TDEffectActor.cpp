@@ -29,7 +29,7 @@ void ATDEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGamep
 	// FGameplayEffectContextHandle와 FGameplayEffectSpecHandle는 각각 FGameplayEffectContext와 FGameplayEffectSpec를 감싸는 wrapper 구조체다.
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
-	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, EffectContextHandle);
 	const FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 
 	// EffectSpecHandle.Data는 Spec이다. EffectSpecHandle.Data.Get()->Def는 GE다.
