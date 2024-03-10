@@ -32,5 +32,12 @@ void ATDEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitAbilityActorInfo();
+}
+
+void ATDEnemyCharacter::InitAbilityActorInfo()
+{
+	// Super 하지 않는다.
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }

@@ -23,3 +23,7 @@ void ATDBaseCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 }
+
+void ATDBaseCharacter::InitAbilityActorInfo()
+{
+}

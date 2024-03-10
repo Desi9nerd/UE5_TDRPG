@@ -3,6 +3,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "AbilitySystemComponent.h"
+#include "GAS/TDAbilitySystemComponent.h"
 #include "Player/TDPlayerController.h"
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
@@ -51,6 +52,8 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
 	check(TDPlayerState); // 예외처리. PlayerState 없을시 종료
 
 	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
+	Cast<UTDAbilitySystemComponent>(TDPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet(); // AbilityActorInfo 설정하기
+
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
 

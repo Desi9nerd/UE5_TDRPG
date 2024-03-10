@@ -25,5 +25,5 @@ protected:
 	TObjectPtr<class UCameraComponent> FollowCamera;
 
 private:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 };
