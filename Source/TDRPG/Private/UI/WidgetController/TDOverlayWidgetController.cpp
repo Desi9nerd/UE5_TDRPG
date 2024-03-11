@@ -1,4 +1,5 @@
 #include "UI/WidgetController/TDOverlayWidgetController.h"
+#include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 
 void UTDOverlayWidgetController::BroadcastInitialValues()
@@ -25,6 +26,17 @@ void UTDOverlayWidgetController::BindCallbacksToDependencies() // TDAttributeSet
 		TDAttributeSet->GetManaAttribute()).AddUObject(this, &UTDOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDOverlayWidgetController::MaxManaChanged);
+
+	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
+			}
+		}
+	);
 }
 
 void UTDOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
