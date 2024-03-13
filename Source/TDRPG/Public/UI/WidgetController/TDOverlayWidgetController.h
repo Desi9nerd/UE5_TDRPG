@@ -9,11 +9,6 @@ class UTDUserWidget;
  * 
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealtChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealtChangedSignature, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
-
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
 {
@@ -32,6 +27,12 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealtChangedSignature, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealtChangedSignature, float, NewMaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+
 UCLASS(BlueprintType, Blueprintable)
 class TDRPG_API UTDOverlayWidgetController : public UTDWidgetController
 {
@@ -43,15 +44,16 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
 	FOnHealtChangedSignature OnHealthChanged;
-
 	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
 	FOnMaxHealtChangedSignature OnMaxHealthChanged;
-
 	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
 	FOnManaChangedSignature OnManaChanged;
-
 	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
 	FOnMaxManaChangedSignature OnMaxManaChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
+	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+
 
 protected:
 	void HealthChanged(const FOnAttributeChangeData& Data) const;

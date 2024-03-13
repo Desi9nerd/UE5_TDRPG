@@ -50,10 +50,12 @@ void UTDOverlayWidgetController::ReadDataTableRowByTag(const FGameplayTagContain
 {
 	for (const FGameplayTag& Tag : AssetTags)
 	{
-		const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
-
-		FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+		FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+		if (Tag.MatchesTag(MessageTag)) // MatchesTag로 "Message"글자를 포함하고 있는지 확인
+		{
+			const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+			MessageWidgetRowDelegate.Broadcast(*Row); // Delegate Broadcast
+		}
 	}
 }
 
