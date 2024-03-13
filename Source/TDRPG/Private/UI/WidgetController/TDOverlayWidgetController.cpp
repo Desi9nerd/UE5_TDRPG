@@ -27,7 +27,7 @@ void UTDOverlayWidgetController::BindCallbacksToDependencies() // TDAttributeSet
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDOverlayWidgetController::MaxManaChanged);
 
-	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
@@ -38,7 +38,23 @@ void UTDOverlayWidgetController::BindCallbacksToDependencies() // TDAttributeSet
 				FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 			}
 		}
-	);
+	);*/ // 위: 람다함수 버젼, 아래: 함수를 밖으로 뺀 버젼 
+	TWeakObjectPtr<UTDAbilitySystemComponent> TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
+	if(TDASC.IsValid())
+	{
+		TDASC->EffectAssetTags.AddUObject(this, &UTDOverlayWidgetController::ReadDataTableRowByTag);
+	}
+}
+
+void UTDOverlayWidgetController::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
+{
+	for (const FGameplayTag& Tag : AssetTags)
+	{
+		const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
+
+		FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+	}
 }
 
 void UTDOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const

@@ -58,6 +58,7 @@ protected:
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
+	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
 
 	template<typename T> // DataTable ÀÐ±â¿ë
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
