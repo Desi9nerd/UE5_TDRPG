@@ -29,7 +29,7 @@ void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	// PreAttributeChange함수는 Attribute의 변수 변경 전에 관찰하여 범위를 설정해둔 값이 범위를 벗어났을시 적용되지 않게 한다. Clamp 용도로만 사용하는걸 권장한다.
 	Super::PreAttributeChange(Attribute, NewValue);
 
-	//** 수치 Clamp 범위 주기
+	//** 수치 Clamp 범위 주기 (attribute 변경 전에 clamp 적용)
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
@@ -47,6 +47,16 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props); // 이펙트 속성 설정하기
+
+	//** 수치 Clamp 범위 주기 (attribute 변경 후에 clamp 적용)
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
 }
 
 void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // 이펙트 속성 설정하기
