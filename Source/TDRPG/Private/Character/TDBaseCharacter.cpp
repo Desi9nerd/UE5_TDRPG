@@ -1,4 +1,5 @@
 #include "Character/TDBaseCharacter.h"
+#include "AbilitySystemComponent.h"
 
 ATDBaseCharacter::ATDBaseCharacter()
 {
@@ -26,4 +27,14 @@ void ATDBaseCharacter::BeginPlay()
 
 void ATDBaseCharacter::InitAbilityActorInfo()
 {
+}
+
+void ATDBaseCharacter::InitializeStatAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent())); // ASC 유무 검사
+	check(DefaultStatAttributes);
+
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultStatAttributes, 1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }

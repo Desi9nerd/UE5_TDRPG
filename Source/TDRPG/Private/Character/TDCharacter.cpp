@@ -46,7 +46,7 @@ void ATDCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo(); // Init Ability actor info for the Client
 }
 
-void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
+void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜
 {
 	TObjectPtr<ATDPlayerState> TDPlayerState = GetPlayerState<ATDPlayerState>();
 	check(TDPlayerState); // 예외처리. PlayerState 없을시 종료
@@ -56,6 +56,8 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화
 
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
+
+	InitializeStatAttributes(); // RPG Attibutes 초기값 설정하기
 
 	// 서버는 모든 PlayerController를 소유.
 	// 하지만 각각의 클라이언트는 하나의 PlayerController만 소유하고 나머진 Proxy로 가지고 있다
