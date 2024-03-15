@@ -46,6 +46,14 @@ void ATDCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo(); // Init Ability actor info for the Client
 }
 
+int32 ATDCharacter::GetPlayerLevel()
+{
+	const ATDPlayerState* TDPlayerState = GetPlayerState<ATDPlayerState>();
+	check(TDPlayerState);
+
+	return TDPlayerState->GetPlayerLevel();
+}
+
 void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜
 {
 	TObjectPtr<ATDPlayerState> TDPlayerState = GetPlayerState<ATDPlayerState>();

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Interface/ICombat.h"
 #include "TDBaseCharacter.generated.h"
 
 class UAbilitySystemComponent;
@@ -10,7 +11,7 @@ class UAttributeSet;
 class UGameplayEffect;
 
 UCLASS(Abstract)
-class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface
+class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat
 {
 	GENERATED_BODY()
 

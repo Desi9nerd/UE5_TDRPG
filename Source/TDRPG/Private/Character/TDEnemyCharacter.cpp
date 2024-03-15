@@ -1,4 +1,4 @@
-#include "Character/TDEnemyCharacter.h"
+ï»¿#include "Character/TDEnemyCharacter.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 #include "TDRPG/TDRPG.h"
@@ -28,6 +28,11 @@ void ATDEnemyCharacter::UnHighlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+int32 ATDEnemyCharacter::GetPlayerLevel()
+{
+	return Level;
+}
+
 void ATDEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -37,7 +42,7 @@ void ATDEnemyCharacter::BeginPlay()
 
 void ATDEnemyCharacter::InitAbilityActorInfo()
 {
-	// Super ÇÏÁö ¾Ê´Â´Ù.
+	// Super ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
