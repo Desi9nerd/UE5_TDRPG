@@ -20,6 +20,7 @@ public:
 	virtual void HighlightActor() override;	  // 외곽선 효과 On
 	virtual void UnHighlightActor() override; // 외곽선 효과 Off
 
+	//** ICombat 함수
 	virtual int32 GetPlayerLevel() override;
 
 protected:
