@@ -43,6 +43,8 @@ void ATDBaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEf
 
 void ATDBaseCharacter::InitializeDefaultAttributes() const // Attributes 초기값 설정
 {
-	ApplyEffectToSelf(DefaultStatAttributes, 1.f);	// StatAttributes로 사용할 GE_StatAttributes 적용
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f); // SecondaryAttributes로 사용할 GE_SecondaryAttributes 적용
+	// Stat/Secondary/VitalAttributes로 사용할 GE_Stat/Secondary/VitalAttributes 적용
+	ApplyEffectToSelf(DefaultStatAttributes, 1.f);	
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f); 
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
