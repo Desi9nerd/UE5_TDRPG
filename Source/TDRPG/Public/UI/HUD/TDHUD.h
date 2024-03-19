@@ -5,7 +5,7 @@
 
 class UAttributeSet;
 class UAbilitySystemComponent;
-class UTDOverlayWidgetController;
+class UTDWidgetControllerOverlay;
 class UTDUserWidget;
 struct FWidgetControllerParams;
 
@@ -21,7 +21,7 @@ public:
 	UPROPERTY()
 	TObjectPtr<UTDUserWidget>  OverlayWidget;
 
-	UTDOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UTDWidgetControllerOverlay* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
@@ -30,8 +30,8 @@ private:
 	TSubclassOf<UTDUserWidget> OverlayWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UTDOverlayWidgetController> OverlayWidgetController;
+	TObjectPtr<UTDWidgetControllerOverlay> OverlayWidgetController;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UTDOverlayWidgetController> OverlayWidgetControllerClass;
+	TSubclassOf<UTDWidgetControllerOverlay> OverlayWidgetControllerClass;
 };

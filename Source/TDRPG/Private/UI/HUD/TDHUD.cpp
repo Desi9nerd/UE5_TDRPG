@@ -1,12 +1,12 @@
 ﻿#include "UI/HUD/TDHUD.h"
 #include "UI/Widget/TDUserWidget.h"
-#include "UI/WidgetController/TDOverlayWidgetController.h"
+#include "UI/WidgetController/TDWidgetControllerOverlay.h"
 
-UTDOverlayWidgetController* ATDHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
+UTDWidgetControllerOverlay* ATDHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
 	if (false == IsValid(OverlayWidgetController)) // OverlayWidgetController이 없다면 설정
 	{
-		OverlayWidgetController = NewObject<UTDOverlayWidgetController>(this, OverlayWidgetControllerClass);
+		OverlayWidgetController = NewObject<UTDWidgetControllerOverlay>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
 		OverlayWidgetController->BindCallbacksToDependencies(); // 콜백함수 바인딩
 
@@ -28,7 +28,7 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	//** TDOverlayWidgetController
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	UTDOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
+	UTDWidgetControllerOverlay* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(WidgetController); // TDUserWidget에 TDOverlayWidgetController를 묶는다
 

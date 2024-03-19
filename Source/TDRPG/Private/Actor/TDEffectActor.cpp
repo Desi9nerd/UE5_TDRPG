@@ -20,6 +20,7 @@ void ATDEffectActor::BeginPlay()
 
 void ATDEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Effect!!!!!!"));
 	// UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent함수는 GetAbilitySystemComponentFromActor함수를 리턴하고 이 과정에서 const IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(Target)의 과정을 거친다. 
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (TargetASC == nullptr) return;

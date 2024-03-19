@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "UI/WidgetController/TDWidgetController.h"
-#include "TDOverlayWidgetController.generated.h"
+#include "TDWidgetControllerOverlay.generated.h"
 
 class UTDUserWidget;
 
@@ -31,7 +31,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
 UCLASS(BlueprintType, Blueprintable)
-class TDRPG_API UTDOverlayWidgetController : public UTDWidgetController
+class TDRPG_API UTDWidgetControllerOverlay : public UTDWidgetController
 {
 	GENERATED_BODY()
 
@@ -67,7 +67,7 @@ protected:
 };
 
 template <typename T>
-T* UTDOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+T* UTDWidgetControllerOverlay::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
 {
 	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
 }

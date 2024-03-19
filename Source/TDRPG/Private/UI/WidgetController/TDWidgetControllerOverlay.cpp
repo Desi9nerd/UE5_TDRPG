@@ -1,8 +1,8 @@
-#include "UI/WidgetController/TDOverlayWidgetController.h"
+#include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 
-void UTDOverlayWidgetController::BroadcastInitialValues()
+void UTDWidgetControllerOverlay::BroadcastInitialValues()
 {
 	const UTDAttributeSet* TDAttributeSet = CastChecked<UTDAttributeSet>(AttributeSet);
 
@@ -12,20 +12,20 @@ void UTDOverlayWidgetController::BroadcastInitialValues()
 	OnMaxManaChanged.Broadcast(TDAttributeSet->GetMaxMana());
 }
 
-void UTDOverlayWidgetController::BindCallbacksToDependencies() // TDAttributeSet의 데이터와 콜백함수 바인딩
+void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet의 데이터와 콜백함수 바인딩
 {
 	const UTDAttributeSet* TDAttributeSet = CastChecked<UTDAttributeSet>(AttributeSet);
 
 	//** Health, MaxHealth가 변경될때 마다 아래함수(HealthChanged, MaxHealthChanged)가 callback됨
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetHealthAttribute()).AddUObject(this, &UTDOverlayWidgetController::HealthChanged);
+		TDAttributeSet->GetHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::HealthChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UTDOverlayWidgetController::MaxHealthChanged);
+		TDAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxHealthChanged);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetManaAttribute()).AddUObject(this, &UTDOverlayWidgetController::ManaChanged);
+		TDAttributeSet->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDOverlayWidgetController::MaxManaChanged);
+		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
 
 	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
@@ -42,11 +42,11 @@ void UTDOverlayWidgetController::BindCallbacksToDependencies() // TDAttributeSet
 	TWeakObjectPtr<UTDAbilitySystemComponent> TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
 	if(TDASC.IsValid())
 	{
-		TDASC->EffectAssetTags.AddUObject(this, &UTDOverlayWidgetController::ReadDataTableRowByTag);
+		TDASC->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
 	}
 }
 
-void UTDOverlayWidgetController::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
+void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
 {
 	for (const FGameplayTag& Tag : AssetTags)
 	{
@@ -59,22 +59,22 @@ void UTDOverlayWidgetController::ReadDataTableRowByTag(const FGameplayTagContain
 	}
 }
 
-void UTDOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
+void UTDWidgetControllerOverlay::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChanged.Broadcast(Data.NewValue);
 }
 
-void UTDOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+void UTDWidgetControllerOverlay::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxHealthChanged.Broadcast(Data.NewValue);
 }
 
-void UTDOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
+void UTDWidgetControllerOverlay::ManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnManaChanged.Broadcast(Data.NewValue);
 }
 
-void UTDOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+void UTDWidgetControllerOverlay::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
 }
