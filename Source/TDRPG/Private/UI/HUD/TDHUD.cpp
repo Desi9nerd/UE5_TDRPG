@@ -2,7 +2,7 @@
 #include "UI/Widget/TDUserWidget.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 
-UTDWidgetControllerOverlay* ATDHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
+UTDWidgetControllerOverlay* ATDHUD::GetWidgetControllerOverlay(const FWidgetControllerParams& WCParams)
 {
 	if (false == IsValid(OverlayWidgetController)) // OverlayWidgetController이 없다면 설정
 	{
@@ -28,7 +28,7 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	//** TDOverlayWidgetController
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	UTDWidgetControllerOverlay* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
+	UTDWidgetControllerOverlay* WidgetController = GetWidgetControllerOverlay(WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(WidgetController); // TDUserWidget에 TDOverlayWidgetController를 묶는다
 

@@ -21,7 +21,7 @@ public:
 	UPROPERTY()
 	TObjectPtr<UTDUserWidget>  OverlayWidget;
 
-	UTDWidgetControllerOverlay* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UTDWidgetControllerOverlay* GetWidgetControllerOverlay(const FWidgetControllerParams& WCParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
