@@ -2,20 +2,21 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h" // GameplayTag 타입 정보
 
-/** TDGameplayTags
- *  native GamplayTags를 가지는 Singleton
+/** native GamplayTags를 가지는 Singleton
+ *  코드로 에디터에 TDGameplayTags 등록
  */
 struct FTDGameplayTags
 {
 public:
 	static const FTDGameplayTags& GetTDGameplayTags() { return GameplayTags; }
-	static void InitializeNativeGameplayTags();
+	static void InitializeNativeGameplayTags(); // GameplayTags 등록
 
+	// Stat Attributes
 	FGameplayTag Attributes_Stat_Strength;
 	FGameplayTag Attributes_Stat_Intelligence;
 	FGameplayTag Attributes_Stat_Resilience;
 	FGameplayTag Attributes_Stat_Vigor;
-
+	// Secondary Attributes
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_ArmorPenetration;
 	FGameplayTag Attributes_Secondary_BlockChance;

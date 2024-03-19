@@ -5,11 +5,11 @@ FTDGameplayTags FTDGameplayTags::GameplayTags; // static GamplayTags instance
 
 void FTDGameplayTags::InitializeNativeGameplayTags()
 {
-	// Primary Attributes
-	GameplayTags.Attributes_Stat_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Strength"),FString("물리 데미지 증가"));
-	GameplayTags.Attributes_Stat_Intelligence = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Intelligence"),FString("마법 데미지 증가"));
-	GameplayTags.Attributes_Stat_Resilience = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Resilience"),FString("방어력과 침투방어력 증가"));
-	GameplayTags.Attributes_Stat_Vigor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Vigor"),FString("체력 증가"));
+	// Stat Attributes
+	GameplayTags.Attributes_Stat_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Stat.Strength"),FString("물리 데미지 증가"));
+	GameplayTags.Attributes_Stat_Intelligence = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Stat.Intelligence"),FString("마법 데미지 증가"));
+	GameplayTags.Attributes_Stat_Resilience = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Stat.Resilience"),FString("방어력과 침투방어력 증가"));
+	GameplayTags.Attributes_Stat_Vigor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Stat.Vigor"),FString("체력 증가"));
 
 	// Secondary Attributes
 	GameplayTags.Attributes_Secondary_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.Armor"),FString("데미지 피해 감소, Block chance 증가"));
