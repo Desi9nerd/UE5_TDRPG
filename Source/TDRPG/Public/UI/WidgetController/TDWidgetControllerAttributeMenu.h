@@ -6,7 +6,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class TDRPG_API UTDWidgetControllerAttributeMenu : public UTDWidgetController
 {
 	GENERATED_BODY()

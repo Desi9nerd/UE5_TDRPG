@@ -4,6 +4,7 @@
 #include "TDAbilitySystemBPLibrary.generated.h"
 
 class UTDWidgetControllerOverlay;
+class UTDWidgetControllerAttributeMenu;
 
 /**
  * 
@@ -16,4 +17,7 @@ class TDRPG_API UTDAbilitySystemBPLibrary : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController")
 	static UTDWidgetControllerOverlay* GetWidgetControllerOverlay(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
+	static UTDWidgetControllerAttributeMenu* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 };
