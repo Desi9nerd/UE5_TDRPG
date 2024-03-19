@@ -42,6 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable) // BP에서 호출가능
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues();
 	virtual void BindCallbacksToDependencies();
 

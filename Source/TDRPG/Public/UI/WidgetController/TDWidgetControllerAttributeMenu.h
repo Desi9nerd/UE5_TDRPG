@@ -3,6 +3,9 @@
 #include "UI/WidgetController/TDWidgetController.h"
 #include "TDWidgetControllerAttributeMenu.generated.h"
 
+class UTDDataAttribute;
+struct FTDDataAttributeInfo;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataAttributeInfoSignature, const FTDDataAttributeInfo&, Info);
 /**
  * 
  */
@@ -14,4 +17,12 @@ class TDRPG_API UTDWidgetControllerAttributeMenu : public UTDWidgetController
 public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
+	FDataAttributeInfoSignature DataAttributeInfoDelegate;
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UTDDataAttribute> DataAttribute;
+
 };
