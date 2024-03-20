@@ -10,7 +10,11 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
+// DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);를 아래와 같이 수정
+// typedef는 FGameplayAttribute() signature에 한정해서 사용한다. 반면에 아래와 같이 TStaticFunPtr로 수정하면 모든 signature에 사용 가능하다.
+// typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;를 template 형태로 변형하여 다형성을 확보하였다.
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
 /**
  * 
@@ -56,7 +60,7 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 
-	TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 
 	//** Stat Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Stat Attributes")
