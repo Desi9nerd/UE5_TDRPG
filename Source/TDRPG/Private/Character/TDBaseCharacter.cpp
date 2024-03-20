@@ -1,5 +1,6 @@
 #include "Character/TDBaseCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "GAS/TDAbilitySystemComponent.h"
 
 ATDBaseCharacter::ATDBaseCharacter()
 {
@@ -47,4 +48,12 @@ void ATDBaseCharacter::InitializeDefaultAttributes() const // Attributes 초기값 
 	ApplyEffectToSelf(DefaultStatAttributes, 1.f);	
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f); 
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
+{
+	UTDAbilitySystemComponent* TDASC = CastChecked<UTDAbilitySystemComponent>(AbilitySystemComponent);
+	if (false == HasAuthority()) return; // 서버가 아니면 return
+
+	TDASC->AddCharacterAbilities(StartupAbilities);
 }

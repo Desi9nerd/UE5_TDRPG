@@ -32,18 +32,21 @@ ATDCharacter::ATDCharacter()
 
 }
 
-void ATDCharacter::PossessedBy(AController* NewController)
+void ATDCharacter::PossessedBy(AController* NewController) // 서버
 {
 	Super::PossessedBy(NewController);
 
-	InitAbilityActorInfo(); // Init Ability actor info for the Server
+	// 서버에 Init Ability actor info 
+	InitAbilityActorInfo(); 
+	AddCharacterAbilities();
 }
 
-void ATDCharacter::OnRep_PlayerState()
+void ATDCharacter::OnRep_PlayerState() // 클라이언트
 {
 	Super::OnRep_PlayerState();
-	
-	InitAbilityActorInfo(); // Init Ability actor info for the Client
+
+	// 클라이언트에 Init Ability actor info
+	InitAbilityActorInfo(); 
 }
 
 int32 ATDCharacter::GetPlayerLevel()
