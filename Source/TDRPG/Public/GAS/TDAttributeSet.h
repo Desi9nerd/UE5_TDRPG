@@ -10,6 +10,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
+
 /**
  * 
  */
@@ -52,6 +54,9 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+
+	TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
 
 	//** Stat Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Stat Attributes")

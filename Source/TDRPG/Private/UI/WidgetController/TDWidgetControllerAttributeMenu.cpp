@@ -9,10 +9,13 @@ void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()
 
 	check(DataAttribute);
 
-	FTDDataAttributeInfo Info = DataAttribute->FindAttributeInfoForTag(FTDGameplayTags::GetTDGameplayTags().Attributes_Stat_Strength);
-	Info.AttributeValue = AS->GetStrength();
-	DataAttributeInfoDelegate.Broadcast(Info);
-
+	// UTDAttributeSet 내 TagsToAttributes 맵 변수의 GameplayTag를 순회하여 value들을 Broadcast시킨다.
+	for (auto& Pair : AS->TagsToAttributes)
+	{
+		FTDDataAttributeInfo Info = DataAttribute->FindAttributeInfoForTag(Pair.Key);
+		Info.AttributeValue = Pair.Value.Execute().GetNumericValue(AS);
+		DataAttributeInfoDelegate.Broadcast(Info);
+	}
 }
 
 void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()

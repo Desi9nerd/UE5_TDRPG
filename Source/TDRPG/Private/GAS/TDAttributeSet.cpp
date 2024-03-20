@@ -3,12 +3,22 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
+#include "GameplayTags/TDGameplayTags.h"
 
 UTDAttributeSet::UTDAttributeSet()
 {
-	//** #define ATTRIBUTE_ACCESSORS 매크로와 연동. HP, MP 초기값 설정
-	InitHealth(70.f);
-	InitMana(20.f);
+	//** #define ATTRIBUTE_ACCESSORS 매크로와 연동. 초기값 설정 가능.
+
+	// TagsToAttributes라는 map변수에 key: GameplayTags, value: Attributes값을 넣어준다.
+	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+
+	FAttributeSignature StrengthDelegate;
+	StrengthDelegate.BindStatic(GetStrengthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Stat_Strength, StrengthDelegate);
+
+	FAttributeSignature IntelligenceDelegate;
+	IntelligenceDelegate.BindStatic(GetIntelligenceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Stat_Intelligence, IntelligenceDelegate);
 }
 
 void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
