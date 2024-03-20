@@ -28,6 +28,14 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
+	// Enhanced Input
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_Q;
+	FGameplayTag InputTag_W;
+	FGameplayTag InputTag_E;
+	FGameplayTag InputTag_R;
+
 private:
 	static FTDGameplayTags GameplayTags;
 };
