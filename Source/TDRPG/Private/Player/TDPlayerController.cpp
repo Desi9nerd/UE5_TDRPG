@@ -2,6 +2,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInput/TDEnhancedInputComponent.h"
 #include "Interface/IEnemy.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GAS/TDAbilitySystemComponent.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -106,17 +108,33 @@ void ATDPlayerController::SetupInputComponent()
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Red, *InputTag.ToString());
+	if (false == IsValid(GetASC())) return;
+
+	GetASC()->InputTagPressed(InputTag);
 }
 
 void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Blue, *InputTag.ToString());
+	if (false == IsValid(GetASC())) return;
+
+	GetASC()->InputTagReleased(InputTag);
 }
 
 void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 2.f, FColor::Green, *InputTag.ToString());
+	if (false == IsValid(GetASC())) return;
+
+	GetASC()->InputTagHeld(InputTag);
+}
+
+TObjectPtr<UTDAbilitySystemComponent> ATDPlayerController::GetASC()
+{
+	if (false == IsValid(TDASC))
+	{
+		TDASC = Cast<UTDAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+
+	return TDASC;
 }
 
 void ATDPlayerController::Move(const FInputActionValue& InputActionValue)

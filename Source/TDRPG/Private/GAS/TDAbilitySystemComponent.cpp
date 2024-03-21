@@ -1,4 +1,5 @@
 #include "GAS/TDAbilitySystemComponent.h"
+#include "GAS/GameplayAbility/TDGA.h"
 
 void UTDAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -8,10 +9,58 @@ void UTDAbilitySystemComponent::AbilityActorInfoSet()
 void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
 	// 에디터에서 할당한 GameplayAbility를 모두 등록
-	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		const TWeakObjectPtr<UTDGA> TDAbility = Cast<UTDGA>(AbilitySpec.Ability);
+		if (TDAbility.IsValid())
+		{
+			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UTDAbilitySystemComponent::InputTagPressed(const FGameplayTag& InputTag)
+{
+	if (false == InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+		}
+	}
+}
+
+void UTDAbilitySystemComponent::InputTagReleased(const FGameplayTag& InputTag)
+{
+	if (false == InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+		}
+	}
+}
+
+void UTDAbilitySystemComponent::InputTagHeld(const FGameplayTag& InputTag)
+{
+	if (false == InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputPressed(AbilitySpec); // 내장함수.
+			if (false == AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
 	}
 }
 

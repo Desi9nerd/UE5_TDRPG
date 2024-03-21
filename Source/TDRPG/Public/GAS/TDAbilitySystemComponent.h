@@ -17,6 +17,9 @@ class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+	void InputTagPressed(const FGameplayTag& InputTag);
+	void InputTagReleased(const FGameplayTag& InputTag);
+	void InputTagHeld(const FGameplayTag& InputTag);
 
 	FEffectAssetTags EffectAssetTags;
 

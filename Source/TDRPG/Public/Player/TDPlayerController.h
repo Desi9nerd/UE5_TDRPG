@@ -10,6 +10,7 @@ class UInputAction;
 struct FInputActionValue;
 class IIEnemy;
 class UTDDAInput;
+class UTDAbilitySystemComponent;
 
 /**
  * 
@@ -33,6 +34,7 @@ private:
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
+	TObjectPtr<UTDAbilitySystemComponent> GetASC();
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> RPGContext;
@@ -42,6 +44,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UTDDAInput> InputData;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UTDAbilitySystemComponent> TDASC;
 
 
 	//** 마우스가 가리키는곳에 Enemy가 있으면 외곽선 Highlight
