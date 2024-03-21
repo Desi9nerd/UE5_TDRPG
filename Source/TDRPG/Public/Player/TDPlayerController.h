@@ -36,6 +36,7 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 	TObjectPtr<UTDAbilitySystemComponent> GetASC();
+	void AutoRun();
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> RPGContext;

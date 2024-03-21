@@ -21,6 +21,7 @@ void ATDPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
+	AutoRun();
 }
 
 void ATDPlayerController::CursorTrace() // 마우스 커서 Trace하여 가리킨 적에 외곽선 효과
@@ -154,6 +155,7 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					Spline->AddSplinePoint(NavPointLocation, ESplineCoordinateSpace::World);
 					DrawDebugSphere(GetWorld(), NavPointLocation, 10.f, 8, FColor::Green, false, 5.f);
 				}
+				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1]; // CachedDestination를 마지막 PathPoints로 설정. 이렇게하면 AutoRunning때 항상 도달가능한 도착지점이 된다.
 				bAutoRunning = true;
 			}
 		}
@@ -208,6 +210,26 @@ TObjectPtr<UTDAbilitySystemComponent> ATDPlayerController::GetASC()
 	}
 
 	return TDASC;
+}
+
+void ATDPlayerController::AutoRun()
+{
+	if (false == bAutoRunning) return;
+
+	const TWeakObjectPtr<APawn> ControlledPawn = GetPawn();
+	if (ControlledPawn.IsValid())
+	{
+		// Pawn은 항상 Spline 바로 위에 있지 않으므로 Pawn에 가장 가까운 Spline 위치를 LocationOnSpline으로 설정
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World); // LocationOnSpline위치에서의 Spline 방향
+		ControlledPawn->AddMovementInput(Direction);
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length(); // 이동해야할 거리
+		if (DistanceToDestination <= AutoRunAcceptanceRadius) // 이동해야할 거리가 자동이동 설정 범위보다 작다면
+		{
+			bAutoRunning = false;
+		}
+	}
 }
 
 void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
