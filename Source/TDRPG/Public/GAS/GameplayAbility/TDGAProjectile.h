@@ -3,6 +3,8 @@
 #include "GAS/GameplayAbility/TDGA.h"
 #include "TDGAProjectile.generated.h"
 
+class ATDProjectile;
+
 /**
  * 
  */
@@ -14,5 +16,7 @@ class TDRPG_API UTDGAProjectile : public UTDGA
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
 };

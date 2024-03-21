@@ -57,3 +57,10 @@ void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
 
 	TDASC->AddCharacterAbilities(StartupAbilities);
 }
+
+FVector ATDBaseCharacter::GetCombatSocketLocation() // 소켓 위치를 리턴
+{
+	check(Weapon);
+
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}

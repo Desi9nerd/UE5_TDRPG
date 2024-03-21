@@ -27,9 +27,13 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
+	virtual FVector GetCombatSocketLocation() override;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+
+	UPROPERTY(EditAnywhere, Category = "Combat") // 에디터에서 적음
+	FName WeaponTipSocketName; // 무기 소켓 이름
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

@@ -5,6 +5,7 @@
 ATDProjectile::ATDProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true; // 액터가 replicated될 수 있도록 true 설정
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
