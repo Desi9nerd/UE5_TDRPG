@@ -6,6 +6,8 @@
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "Components/SplineComponent.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -121,9 +123,43 @@ void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (false == IsValid(GetASC())) return;
+	if (false == InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB))
+	{
+		if (GetASC())
+		{
+			GetASC()->InputTagReleased(InputTag);
+		}
+		return;
+	}
 
-	GetASC()->InputTagReleased(InputTag);
+	if (bTargeting) // 타겟팅 O
+	{
+		if (GetASC())
+		{
+			GetASC()->InputTagReleased(InputTag);
+		}
+	}
+	else // 타겟팅 X
+	{
+		const TWeakObjectPtr<APawn> ControlledPawn = GetPawn(); // 여기서 폰은 플레이어
+		if (FollowTime <= ShortPressThreshold && ControlledPawn.IsValid())
+		{
+			const TWeakObjectPtr<UNavigationPath> NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination);
+			if (NavPath.IsValid())
+			{
+				Spline->ClearSplinePoints();
+				for (const FVector& NavPointLocation : NavPath->PathPoints) 
+				{
+					// NavPath의 포인트들을 Spline의 포인트로 추가
+					Spline->AddSplinePoint(NavPointLocation, ESplineCoordinateSpace::World);
+					DrawDebugSphere(GetWorld(), NavPointLocation, 10.f, 8, FColor::Green, false, 5.f);
+				}
+				bAutoRunning = true;
+			}
+		}
+		FollowTime = 0.f;
+		bTargeting = false;
+	}
 }
 
 void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)

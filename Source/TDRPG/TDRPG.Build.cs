@@ -8,8 +8,8 @@ public class TDRPG : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "GameplayAbilities" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "GameplayAbilities", "UMG", "Slate", "SlateCore" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "DatasmithCore" }); // Game Ability System(GAS)
+        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "DatasmithCore", "NavigationSystem"}); // Game Ability System(GAS)
     }
 }
