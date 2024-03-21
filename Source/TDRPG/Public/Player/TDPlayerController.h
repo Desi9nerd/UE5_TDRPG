@@ -11,6 +11,7 @@ struct FInputActionValue;
 class IIEnemy;
 class UTDDAInput;
 class UTDAbilitySystemComponent;
+class USplineComponent;
 
 /**
  * 
@@ -48,6 +49,17 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UTDAbilitySystemComponent> TDASC;
 
+	//** 이동
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius = 50.f;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline; // 이동경로 Spline
+
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortPressThreshold = 0.5f;
+	bool bAutoRunning = false;
+	bool bTargeting = false;
 
 	//** 마우스가 가리키는곳에 Enemy가 있으면 외곽선 Highlight
 	void CursorTrace(); // 마우스 CursorTrace

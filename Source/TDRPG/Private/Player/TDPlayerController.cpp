@@ -4,10 +4,14 @@
 #include "Interface/IEnemy.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/TDAbilitySystemComponent.h"
+#include "GameplayTags/TDGameplayTags.h"
+#include "Components/SplineComponent.h"
 
 ATDPlayerController::ATDPlayerController()
 {
 	bReplicates = true;
+
+	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
 void ATDPlayerController::PlayerTick(float DeltaTime)
@@ -108,9 +112,11 @@ void ATDPlayerController::SetupInputComponent()
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	if (false == IsValid(GetASC())) return;
-
-	GetASC()->InputTagPressed(InputTag);
+	if (InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB)) // 마우스 우클릭
+	{
+		bTargeting = ThisActor ? true : false;
+		bAutoRunning = false;
+	}
 }
 
 void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
@@ -122,9 +128,40 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	if (false == IsValid(GetASC())) return;
+	if (false == InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB))
+	{
+		if (IsValid(GetASC()))
+		{
+			GetASC()->InputTagHeld(InputTag);
+		}
+		return;
+	}
 
-	GetASC()->InputTagHeld(InputTag);
+	if (bTargeting) // 타겟팅 O
+	{
+		if (IsValid(GetASC()))
+		{
+			GetASC()->InputTagHeld(InputTag);
+		}
+	}
+	else // 타겟팅 X
+	{
+		FollowTime += GetWorld()->GetDeltaSeconds();
+
+		FHitResult Hit;
+		if (GetHitResultUnderCursor(ECC_Visibility, false, Hit)) // 마우스 커서가 스크린(=월드)에 충돌된 지점이 있다면 true
+		{
+			CachedDestination = Hit.ImpactPoint; // Hit된 위치를 도착지점으로 설정
+		}
+
+		const TWeakObjectPtr<APawn> ControlledPawn = GetPawn(); // 여기서 폰은 플레이어
+		if (ControlledPawn.IsValid())
+		{
+			// 방향 = (도착지점 - Pawn의 위치)를 Normalize한 벡터
+			const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+			ControlledPawn->AddMovementInput(WorldDirection); // 해당 방향으로 움직임
+		}
+	}
 }
 
 TObjectPtr<UTDAbilitySystemComponent> ATDPlayerController::GetASC()
