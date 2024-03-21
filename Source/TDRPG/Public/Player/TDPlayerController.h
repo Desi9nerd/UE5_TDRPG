@@ -61,9 +61,9 @@ private:
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
 	bool bTargeting = false;
-
-	//** 마우스가 가리키는곳에 Enemy가 있으면 외곽선 Highlight
+	
 	void CursorTrace(); // 마우스 CursorTrace
+	FHitResult CursorHit; // 마우스 CursorHit
 	IIEnemy* LastActor;
 	IIEnemy* ThisActor;
 };

@@ -24,61 +24,19 @@ void ATDPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void ATDPlayerController::CursorTrace() // 마우스 커서 Trace하여 가리킨 적에 외곽선 효과
+void ATDPlayerController::CursorTrace() // 마우스 커서 Trace
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (false == CursorHit.bBlockingHit) return;
 
+	// 마우스로 가리킨 Enemy 외곽선 효과
 	LastActor = ThisActor;
 	ThisActor = Cast<IIEnemy>(CursorHit.GetActor());
 
-	/**
-	 * Line trace from cursor. There are several scenarios:
-	 *  A. LastActor is null && ThisActor is null
-	 *		- Do nothing
-	 *	B. LastActor is null && ThisActor is valid
-	 *		- Highlight ThisActor
-	 *	C. LastActor is valid && ThisActor is null
-	 *		- UnHighlight LastActor
-	 *	D. Both actors are valid, but LastActor != ThisActor
-	 *		- UnHighlight LastActor, and Highlight ThisActor
-	 *	E. Both actors are valid, and are the same actor
-	 *		- Do nothing
-	 */
-
-	if (LastActor == nullptr)
+	if (LastActor != ThisActor)
 	{
-		if (ThisActor != nullptr)
-		{
-			// Case B
-			ThisActor->HighlightActor();
-		}
-		else
-		{
-			// Case A - both are null, do nothing
-		}
-	}
-	else // LastActor is valid
-	{
-		if (ThisActor == nullptr)
-		{
-			// Case C
-			LastActor->UnHighlightActor();
-		}
-		else // both actors are valid
-		{
-			if (LastActor != ThisActor)
-			{
-				// Case D
-				LastActor->UnHighlightActor();
-				ThisActor->HighlightActor();
-			}
-			else
-			{
-				// Case E - do nothing
-			}
-		}
+		if (LastActor) LastActor->UnHighlightActor();
+		if (ThisActor) ThisActor->HighlightActor();
 	}
 }
 
@@ -185,11 +143,10 @@ void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	else // 타겟팅 X
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
-
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, false, Hit)) // 마우스 커서가 스크린(=월드)에 충돌된 지점이 있다면 true
+		
+		if (CursorHit.bBlockingHit) // 마우스 커서가 스크린(=월드)에 충돌된 지점이 있다면 true
 		{
-			CachedDestination = Hit.ImpactPoint; // Hit된 위치를 도착지점으로 설정
+			CachedDestination = CursorHit.ImpactPoint; // Hit된 위치를 도착지점으로 설정
 		}
 
 		const TWeakObjectPtr<APawn> ControlledPawn = GetPawn(); // 여기서 폰은 플레이어
