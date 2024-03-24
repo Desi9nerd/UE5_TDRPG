@@ -44,6 +44,8 @@ void ATDPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerControlledPawn = GetPawn(); // 여기서 폰은 플레이어
+
 	check(RPGContext);
 
 	 UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
@@ -102,10 +104,9 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	}
 	else // 타겟팅 X
 	{
-		const TWeakObjectPtr<APawn> ControlledPawn = GetPawn(); // 여기서 폰은 플레이어
-		if (FollowTime <= ShortPressThreshold && ControlledPawn.IsValid())
+		if (FollowTime <= ShortPressThreshold && IsValid(PlayerControlledPawn))
 		{
-			const TWeakObjectPtr<UNavigationPath> NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination);
+			const TWeakObjectPtr<UNavigationPath> NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, PlayerControlledPawn->GetActorLocation(), CachedDestination);
 			if (NavPath.IsValid())
 			{
 				Spline->ClearSplinePoints();
@@ -150,13 +151,12 @@ void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		{
 			CachedDestination = CursorHit.ImpactPoint; // Hit된 위치를 도착지점으로 설정
 		}
-
-		const TWeakObjectPtr<APawn> ControlledPawn = GetPawn(); // 여기서 폰은 플레이어
-		if (ControlledPawn.IsValid())
+		
+		if (IsValid(PlayerControlledPawn))
 		{
 			// 방향 = (도착지점 - Pawn의 위치)를 Normalize한 벡터
-			const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
-			ControlledPawn->AddMovementInput(WorldDirection); // 해당 방향으로 움직임
+			const FVector WorldDirection = (CachedDestination - PlayerControlledPawn->GetActorLocation()).GetSafeNormal();
+			PlayerControlledPawn->AddMovementInput(WorldDirection); // 해당 방향으로 움직임
 		}
 	}
 }
@@ -174,14 +174,13 @@ TObjectPtr<UTDAbilitySystemComponent> ATDPlayerController::GetASC()
 void ATDPlayerController::AutoRun()
 {
 	if (false == bAutoRunning) return;
-
-	const TWeakObjectPtr<APawn> ControlledPawn = GetPawn();
-	if (ControlledPawn.IsValid())
+	
+	if (IsValid(PlayerControlledPawn))
 	{
 		// Pawn은 항상 Spline 바로 위에 있지 않으므로 Pawn에 가장 가까운 Spline 위치를 LocationOnSpline으로 설정
-		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(PlayerControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
 		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World); // LocationOnSpline위치에서의 Spline 방향
-		ControlledPawn->AddMovementInput(Direction);
+		PlayerControlledPawn->AddMovementInput(Direction);
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length(); // 이동해야할 거리
 		if (DistanceToDestination <= AutoRunAcceptanceRadius) // 이동해야할 거리가 자동이동 설정 범위보다 작다면
@@ -199,11 +198,10 @@ void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // Front
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y); // Right
-
-	TWeakObjectPtr<APawn> ControlledPawn = GetPawn<APawn>();
-	if (ControlledPawn.IsValid())
+	
+	if (IsValid(PlayerControlledPawn))
 	{
-		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y); // Back
-		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X); // Left
+		PlayerControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y); // Back
+		PlayerControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X); // Left
 	}
 }

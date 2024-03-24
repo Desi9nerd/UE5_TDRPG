@@ -56,6 +56,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UTDAbilitySystemComponent> TDASC;
 
+	UPROPERTY()
+	TObjectPtr<APawn> PlayerControlledPawn;
+
 	//** ¿Ãµø
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptanceRadius = 50.f;
