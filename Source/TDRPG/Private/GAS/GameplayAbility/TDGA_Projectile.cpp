@@ -15,7 +15,7 @@ void UTDGA_Projectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 //	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 //}
 
-void UTDGA_Projectile::SpawnProjectile()
+void UTDGA_Projectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// Projectile Actor를 서버에만 스폰시킨다.
 	// 서버가 스폰시킨 Projectile Actor는 replicated actor가 되어 클라이언트는 replicated된 버젼을 보게 된다.
@@ -25,11 +25,12 @@ void UTDGA_Projectile::SpawnProjectile()
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		Rotation.Pitch = 0.f;
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
-
-		// TODO: Projectile Rotation 설정하기.
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 
 		ATDProjectile* Projectile = GetWorld()->SpawnActorDeferred<ATDProjectile>(ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 

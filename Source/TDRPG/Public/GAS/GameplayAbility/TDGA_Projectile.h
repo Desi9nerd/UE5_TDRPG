@@ -19,7 +19,7 @@ protected:
 	//virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile();
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
