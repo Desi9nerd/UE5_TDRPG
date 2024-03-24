@@ -68,7 +68,9 @@ void ATDPlayerController::SetupInputComponent()
 	
 	const TWeakObjectPtr<UTDEnhancedInputComponent> TDEnhancedInputComponent = CastChecked<UTDEnhancedInputComponent>(InputComponent);
 	TDEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDPlayerController::Move);
-	TDEnhancedInputComponent->BindAbilityActions(InputData, this, &ATDPlayerController::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ATDPlayerController::ShiftPressed);
+	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ATDPlayerController::ShiftReleased);
+	TDEnhancedInputComponent->BindAbilityActions(InputData, this, &ATDPlayerController::AbilityInputTagPressed, &ATDPlayerController::AbilityInputTagReleased, &ATDPlayerController::AbilityInputTagHeld);
 }
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)

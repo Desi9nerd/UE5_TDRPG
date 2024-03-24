@@ -37,12 +37,18 @@ private:
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 	TObjectPtr<UTDAbilitySystemComponent> GetASC();
 	void AutoRun();
+	void ShiftPressed() { bShiftKeyDown = true; };
+	void ShiftReleased() { bShiftKeyDown = false; };
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> RPGContext;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	bool bShiftKeyDown = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UTDDAInput> InputData;
@@ -66,4 +72,5 @@ private:
 	FHitResult CursorHit; // ¸¶¿ì½º CursorHit
 	IIEnemy* LastActor;
 	IIEnemy* ThisActor;
+
 };
