@@ -9,3 +9,7 @@ FVector IICombat::GetCombatSocketLocation()
 {
 	return FVector();
 }
+
+void IICombat::SetFacingTarget(const FVector& FacingTarget)
+{
+}

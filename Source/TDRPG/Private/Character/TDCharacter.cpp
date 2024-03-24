@@ -7,6 +7,7 @@
 #include "Player/TDPlayerController.h"
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
+#include "MotionWarpingComponent.h"
 
 ATDCharacter::ATDCharacter()
 {
@@ -30,6 +31,7 @@ ATDCharacter::ATDCharacter()
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 void ATDCharacter::PossessedBy(AController* NewController) // 서버
@@ -55,6 +57,12 @@ int32 ATDCharacter::GetPlayerLevel()
 	check(TDPlayerState);
 
 	return TDPlayerState->GetPlayerLevel();
+}
+
+void ATDCharacter::SetFacingTarget(const FVector& FacingTarget)
+{
+	// 몽타주에서 MotionWarping 애님스테이트를 지정하고 Warp Target Name을 똑같이 적는다
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(WarpTargetName, FacingTarget);
 }
 
 void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜
