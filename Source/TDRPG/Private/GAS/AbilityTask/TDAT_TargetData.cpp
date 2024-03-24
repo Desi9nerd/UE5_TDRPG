@@ -14,17 +14,27 @@ void UTDAT_TargetData::Activate()
 
 	const bool bIsLocallyControlled = Ability->GetCurrentActorInfo()->IsLocallyControlled();
 
-	if (bIsLocallyControlled) // 클라이언트
+	if (bIsLocallyControlled) // Client.
 	{
 		SendMouseCursorData();
 	}
-	else // 서버
+	else // Server.
 	{
+		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
+		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UTDAT_TargetData::OnTargetDataReplicatedCallback); // 함수 바인딩
+
+		// TargetData가 이미 보내져 Delegate가 이미 Broadcast되었어도 콜백함수가 호출되도록 조치
+		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
+		if (false == bCalledDelegate) 
+		{
+			SetWaitingOnRemotePlayerData();
+		}
 	}
 
 }
 
-void UTDAT_TargetData::SendMouseCursorData() // 마우스 커서 데이터 보내기
+void UTDAT_TargetData::SendMouseCursorData() // 서버에 마우스 커서 데이터 보내기 && Locally Broadcast
 {
 	FScopedPredictionWindow ScopedPrediction(AbilitySystemComponent.Get());
 
@@ -48,6 +58,17 @@ void UTDAT_TargetData::SendMouseCursorData() // 마우스 커서 데이터 보내기
 
 	// ValidData를 (Locally) Broadcast 하기 (=로컬 클라이언트에서 마우스 커서 데이터 볼 수 있도록 Broadcast)
 	if (ShouldBroadcastAbilityTaskDelegates()) // ability is still active 하다면
+	{
+		ValidData.Broadcast(DataHandle);
+	}
+}
+
+void UTDAT_TargetData::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag)
+{
+	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey()); // TargetData를 받았다면 저장하고 있지 말아라는 의미
+
+	// ValidData를 (Server) Broadcast 하기
+	if (ShouldBroadcastAbilityTaskDelegates())
 	{
 		ValidData.Broadcast(DataHandle);
 	}

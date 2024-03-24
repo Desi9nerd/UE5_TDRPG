@@ -24,5 +24,6 @@ public:
 
 private:
 	virtual void Activate() override;
-	void SendMouseCursorData();
+	void SendMouseCursorData(); // Client. 마우스 커서 데이터 보내기
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag); // Server.
 };
