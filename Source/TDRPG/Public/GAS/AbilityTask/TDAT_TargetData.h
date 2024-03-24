@@ -3,11 +3,12 @@
 #include "Abilities/Tasks/AbilityTask.h"
 #include "TDAT_TargetData.generated.h"
 
-/** Owning GameplayAbility로 
- * 
+/** 마우스 위치 데이터를 AbilityTask를 활용하여 보냄
+ *  Owning GameplayAbility 사용.
+ *  클라이언트(=locally controlled)라면 SendMouseCursorData()함수를 콜하여 TargetData를 서버에 보냄.
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMouseTargetDataSignature, const FVector&, Data);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMouseTargetDataSignature, const FGameplayAbilityTargetDataHandle&, DataHandle);
 
 UCLASS()
 class TDRPG_API UTDAT_TargetData : public UAbilityTask
@@ -23,4 +24,5 @@ public:
 
 private:
 	virtual void Activate() override;
+	void SendMouseCursorData();
 };
