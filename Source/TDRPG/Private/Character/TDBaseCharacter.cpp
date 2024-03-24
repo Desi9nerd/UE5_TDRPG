@@ -1,6 +1,7 @@
 #include "Character/TDBaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ATDBaseCharacter::ATDBaseCharacter()
 {
@@ -9,6 +10,10 @@ ATDBaseCharacter::ATDBaseCharacter()
 	//** Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+
+	// 카메라랑 Capsule, Mesh 충돌 무시
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
