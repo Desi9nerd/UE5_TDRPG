@@ -4,8 +4,9 @@
 #include "TDGA_Projectile.generated.h"
 
 class ATDProjectile;
+class UGameplayEffect;
 
-/**
+/** TDProjectile 액터를 날리는 GameAbility
  * 
  */
 
@@ -23,6 +24,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> GameplayEffectDamageClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EventTag;

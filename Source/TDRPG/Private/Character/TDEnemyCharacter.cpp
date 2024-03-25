@@ -42,7 +42,8 @@ void ATDEnemyCharacter::BeginPlay()
 
 void ATDEnemyCharacter::InitAbilityActorInfo()
 {
-	// Super ���� �ʴ´�.
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+
+	InitializeDefaultAttributes();
 }
