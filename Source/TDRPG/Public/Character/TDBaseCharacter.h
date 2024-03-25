@@ -10,6 +10,7 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
+class UTDDA_CharacterClass;
 
 UCLASS(Abstract)
 class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat
@@ -21,11 +22,14 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
-	void InitializeDefaultAttributes() const; // Attributes 초기값 설정
+	virtual void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
 	virtual FVector GetCombatSocketLocation() override;
 

@@ -3,6 +3,7 @@
 #include "UI/WidgetController/TDWidgetController.h"
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
+#include "GameMode/TDGameModeBase.h"
 
 UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetWidgetControllerOverlay(const UObject* WorldContextObject)
 {
@@ -37,4 +38,30 @@ UTDWidgetControllerAttributeMenu* UTDAbilitySystemBPLibrary::GetAttributeMenuWid
 		}
 	}
 	return nullptr;
+}
+
+void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
+{
+	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (false == IsValid(TDGameMode)) return;
+
+	AActor* AvatarActor = ASC->GetAvatarActor(); // GameplayEffect가 적용될 Source
+
+	UTDDA_CharacterClass* DataAssetCharacterClass = TDGameMode->TDDACharacterClass;
+	FCharacterClassDefaultInfo ClassDefaultInfo = DataAssetCharacterClass->GetClassDefaultInfo(CharacterClass);
+
+	FGameplayEffectContextHandle StatAttributesContextHandle = ASC->MakeEffectContext();
+	StatAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle StatAttributesSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.StatAttributes, Level, StatAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*StatAttributesSpecHandle.Data.Get());
+
+	FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
+	SecondaryAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(DataAssetCharacterClass->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data.Get());
+
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(DataAssetCharacterClass->VitalAttributes, Level, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }

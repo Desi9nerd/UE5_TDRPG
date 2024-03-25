@@ -4,6 +4,7 @@
 #include "TDRPG/TDRPG.h" // CUSTOM_DEPTH_RED
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/TDUserWidget.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
 
 ATDEnemyCharacter::ATDEnemyCharacter()
 {
@@ -78,4 +79,9 @@ void ATDEnemyCharacter::InitAbilityActorInfo()
 	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
 	InitializeDefaultAttributes();
+}
+
+void ATDEnemyCharacter::InitializeDefaultAttributes() const
+{
+	UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

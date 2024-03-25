@@ -23,7 +23,7 @@ struct FCharacterClassDefaultInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
-	TSubclassOf<UGameplayEffect> StatAttributes;
+	TSubclassOf<UGameplayEffect>StatAttributes;
 };
 
 UCLASS()
