@@ -1,6 +1,9 @@
 #include "Actor/TDProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATDProjectile::ATDProjectile()
 {
@@ -25,10 +28,37 @@ void ATDProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetLifeSpan(LifeSpan);
+
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
+
+	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent()); // LoopingSound 재생
 }
 
-void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATDProjectile::Destroyed()
 {
+	if (false == bHit && false == HasAuthority()) // 피격X && Client
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+	}
+
+	Super::Destroyed();
+}
+
+void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+
+	if (HasAuthority()) // Server
+	{
+		Destroy();
+	}
+	else // Client
+	{
+		bHit = true; // 피격O
+	}
 }
