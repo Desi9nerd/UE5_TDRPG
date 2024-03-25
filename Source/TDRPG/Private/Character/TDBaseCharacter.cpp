@@ -2,6 +2,7 @@
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "TDRPG/TDRPG.h" // ECC_Projectile
 
 ATDBaseCharacter::ATDBaseCharacter()
 {
@@ -14,6 +15,9 @@ ATDBaseCharacter::ATDBaseCharacter()
 	// 카메라랑 Capsule, Mesh 충돌 무시
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	// Projectile채널(=ECC_Projectile)을 Overlap 처리
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true); // Mesh에 Overlap 이벤트 발생 true로 설정
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
