@@ -14,6 +14,7 @@ ATDBaseCharacter::ATDBaseCharacter()
 
 	// 카메라랑 Capsule, Mesh 충돌 무시
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	// Projectile채널(=ECC_Projectile)을 Overlap 처리
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
