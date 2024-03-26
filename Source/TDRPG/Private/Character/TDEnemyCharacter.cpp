@@ -55,6 +55,7 @@ void ATDEnemyCharacter::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
+	UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent); // GameplayAbility 초기값
 
 	UTDUserWidget* TDUserWidget = Cast<UTDUserWidget>(HealthBar->GetUserWidgetObject());
 	if (IsValid(TDUserWidget))

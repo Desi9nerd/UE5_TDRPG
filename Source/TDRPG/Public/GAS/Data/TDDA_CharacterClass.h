@@ -4,6 +4,7 @@
 #include "TDDA_CharacterClass.generated.h"
 
 class UGameplayEffect;
+class UGameplayAbility;
 
 /**
  * 
@@ -41,4 +42,7 @@ public:
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Ability")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 };

@@ -12,8 +12,8 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		const TWeakObjectPtr<UTDGA> TDAbility = Cast<UTDGA>(AbilitySpec.Ability);
-		if (TDAbility.IsValid())
+		const TObjectPtr<UTDGA> TDAbility = Cast<UTDGA>(AbilitySpec.Ability);
+		if (IsValid(TDAbility))
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag);
 			GiveAbility(AbilitySpec);

@@ -65,3 +65,16 @@ void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* World
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(DataAssetCharacterClass->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
+
+void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	TObjectPtr<ATDGameModeBase> TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (false == IsValid(TDGameMode)) return;
+
+	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass = TDGameMode->TDDACharacterClass;
+	for (TSubclassOf<UGameplayAbility> AbilityClass : TDDACharacterClass->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(AbilitySpec);
+	}
+}

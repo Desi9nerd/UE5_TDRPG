@@ -102,6 +102,12 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); // 체력 업데이트
 
 			const bool bFatal = NewHealth <= 0.f; // 체력이 0이하면 true
+			if (false == bFatal) // 체력이 0 초과
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
+			}
 		}
 	}
 }
