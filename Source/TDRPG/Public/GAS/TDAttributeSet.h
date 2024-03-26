@@ -129,6 +129,11 @@ public:
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Mana);
 
+	//** Meta Attributes (Attribute와 상호 작용할 임시 값)
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, IncomingDamage);
+
 
 	//** Stat Attibutes
 	UFUNCTION()

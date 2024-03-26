@@ -89,6 +89,21 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+
+	//** Damage 처리
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage(); // 변수에 들어오는 데미지 저장
+		SetIncomingDamage(0.f);
+
+		if (LocalIncomingDamage > 0.f)
+		{			
+			const float NewHealth = GetHealth() - LocalIncomingDamage; // New체력 = 현재 체력 - 데미지 계산
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); // 체력 업데이트
+
+			const bool bFatal = NewHealth <= 0.f; // 체력이 0이하면 true
+		}
+	}
 }
 
 void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // 이펙트 속성 설정하기
