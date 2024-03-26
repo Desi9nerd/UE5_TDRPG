@@ -3,6 +3,7 @@
 #include "Interface/ICombat.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayTags/TDGameplayTags.h"
 
 void UTDGA_Projectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -39,6 +40,9 @@ void UTDGA_Projectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
 		// Gameplay Effect Spec으로 데미지 처리.
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GameplayEffectDamageClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+
+		FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 50.f); // GameplayEffect에서 Set by Caller로 사용할 때 적용되는 key, value. FTDGameplayTags구조체 내의 Damage라는 이름의 GameplayTag를 key로, Magnitude 50.f을 value로 사용. 
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 
 		Projectile->FinishSpawning(SpawnTransform);

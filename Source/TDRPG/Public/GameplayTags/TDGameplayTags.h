@@ -28,6 +28,9 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
+	// Meta
+	FGameplayTag Damage;
+
 	// Event
 	FGameplayTag Event_Montage_Fireball;
 
