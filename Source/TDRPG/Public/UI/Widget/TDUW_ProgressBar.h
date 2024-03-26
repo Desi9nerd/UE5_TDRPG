@@ -56,7 +56,9 @@ private:
 
 	bool bProgressBarVisibility;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess), Category = "Ghost Percent Target")
 	float GhostPercentTarget = 1.f;
 
 	FTimerHandle HideTimer;
+	FTimerHandle GhostDelayTimer;
 };

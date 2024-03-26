@@ -70,7 +70,7 @@ void UTDUW_ProgressBar::UpdateGhostFillBrush()
 	ProgressBar_Ghost->SetWidgetStyle(ProgressBarStyle);
 }
 
-void UTDUW_ProgressBar::SetBarVisibility(bool bVisible)
+void UTDUW_ProgressBar::SetBarVisibility(bool bVisible) // ProgressBar 화면 On/Off
 {
 	bProgressBarVisibility = bVisible;
 	if (bProgressBarVisibility)
@@ -93,27 +93,24 @@ void UTDUW_ProgressBar::InterpGhostBar(float InDeltaTime)
 
 void UTDUW_ProgressBar::UpdateGhostInterpTarget(const float& InTarget)
 {
-	//FTimerHandle TimerHandle;
-	HideTimer.Invalidate();
-	
+	// 체력바 5초 후에 사라지기
+	GetWorld()->GetTimerManager().ClearTimer(HideTimer);
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, InTarget]() {
 		HideProgressBar(InTarget);
 		});
-	
 	GetWorld()->GetTimerManager().SetTimer(HideTimer, TimerDelegate, 5.f, false);
+
+	// GhostBar 1초 후에 사라지기
+	GetWorld()->GetTimerManager().ClearTimer(GhostDelayTimer);
+	FTimerDelegate TimerDelegate2 = FTimerDelegate::CreateLambda([this, InTarget]() {
+		DelayGhostPercentTarget(InTarget);
+		});
+	GetWorld()->GetTimerManager().SetTimer(GhostDelayTimer, TimerDelegate2, 1.0f, false);
 }
 
 void UTDUW_ProgressBar::HideProgressBar(const float& InTarget)
 {
-	SetBarVisibility(false);
-
-	FTimerHandle GhostDelayTimer;
-
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, InTarget]() {
-		DelayGhostPercentTarget(InTarget);
-		});
-
-	GetWorld()->GetTimerManager().SetTimer(GhostDelayTimer, TimerDelegate, 1.f, false);
+	SetBarVisibility(false); // 체력바 끄기
 }
 
 void UTDUW_ProgressBar::DelayGhostPercentTarget(const float& InTarget)
