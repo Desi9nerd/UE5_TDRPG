@@ -30,6 +30,7 @@ public:
 
 	// Meta
 	FGameplayTag Damage;
+	FGameplayTag Effect_HitReact;
 
 	// Event
 	FGameplayTag Event_Montage_Fireball;

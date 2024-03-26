@@ -3,6 +3,8 @@
 #include "UObject/Interface.h"
 #include "ICombat.generated.h"
 
+class UAnimMontage;
+
 UINTERFACE(MinimalAPI, BlueprintType)
 class UICombat : public UInterface
 {
@@ -24,4 +26,7 @@ public:
 	void UpdateFacingTarget(const FVector& Target);
 	UFUNCTION() // C++ ver.
 	virtual void SetFacingTarget(const FVector& FacingTarget);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UAnimMontage* GetHitReactMontage();
 };

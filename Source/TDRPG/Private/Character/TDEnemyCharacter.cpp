@@ -3,8 +3,10 @@
 #include "GAS/TDAttributeSet.h"
 #include "TDRPG/TDRPG.h" // CUSTOM_DEPTH_RED
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/TDUserWidget.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
+#include "GameplayTags/TDGameplayTags.h"
 
 ATDEnemyCharacter::ATDEnemyCharacter()
 {
@@ -39,10 +41,19 @@ int32 ATDEnemyCharacter::GetPlayerLevel()
 	return Level;
 }
 
+void ATDEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+
+	// 최대 이동속도: 피격중에는 0, 피격중이 아니라면 BaseWalkSpeed
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
+}
+
 void ATDEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
 
 	UTDUserWidget* TDUserWidget = Cast<UTDUserWidget>(HealthBar->GetUserWidgetObject());
@@ -52,6 +63,7 @@ void ATDEnemyCharacter::BeginPlay()
 	}
 
 	//** Delegate Bind: TDWidgetControllerOverlay의 FOnAttributeChangeData 중 OnHealthChanged, OnMaxHealthChanged
+	//** GameplayTagEvent 등록: Effect_HitReact 태그가 새로 생기거나 없어지면(=NewOrRemoved) HitReactTagChanged 콜백함수 호출
 	const UTDAttributeSet* TDAttributeSet = Cast<UTDAttributeSet>(AttributeSet);
 	if (IsValid(TDAttributeSet))
 	{
@@ -67,6 +79,7 @@ void ATDEnemyCharacter::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
+		AbilitySystemComponent->RegisterGameplayTagEvent(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 
 		OnHealthChanged.Broadcast(TDAttributeSet->GetHealth());
 		OnMaxHealthChanged.Broadcast(TDAttributeSet->GetMaxHealth());

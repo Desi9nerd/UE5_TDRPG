@@ -30,6 +30,11 @@ UAbilitySystemComponent* ATDBaseCharacter::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+UAnimMontage* ATDBaseCharacter::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void ATDBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();

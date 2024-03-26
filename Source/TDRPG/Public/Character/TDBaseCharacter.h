@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
@@ -11,6 +10,7 @@ class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
 class UTDDA_CharacterClass;
+class UAnimMontage;
 
 UCLASS(Abstract)
 class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat
@@ -21,6 +21,7 @@ public:
 	ATDBaseCharacter();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
@@ -56,4 +57,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "GameplayAbility")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; // GameplayAbility를 에디터에서 모두 할당
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

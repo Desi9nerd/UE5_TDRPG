@@ -134,6 +134,9 @@ public:
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, IncomingDamage);
 
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData HitReact;
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, HitReact);
 
 	//** Stat Attibutes
 	UFUNCTION()
