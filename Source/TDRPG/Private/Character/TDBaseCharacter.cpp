@@ -35,6 +35,28 @@ UAnimMontage* ATDBaseCharacter::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+void ATDBaseCharacter::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+
+	MulticastHandleDeath(); // 캐릭터 사망 처리. Server & Client
+}
+
+void ATDBaseCharacter::MulticastHandleDeath_Implementation() // 캐릭터 사망 처리
+{
+	// 무기 바닥에 떨어뜨리기
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+
+	// Ragdoll 적용을 위해 캐릭터 매쉬/캡슐 설정하기 
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
+}
+
 void ATDBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();

@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Interface/ICombat.h"
 
 UTDAttributeSet::UTDAttributeSet()
 {
@@ -102,7 +103,15 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); // 체력 업데이트
 
 			const bool bFatal = NewHealth <= 0.f; // 체력이 0이하면 true
-			if (false == bFatal) // 체력이 0 초과
+			if (bFatal) // 체력 0 이하
+			{
+				IICombat* CombatInterface = Cast<IICombat>(Props.TargetAvatarActor);
+				if (CombatInterface)
+				{
+					CombatInterface->Die(); // 캐릭터 사망 처리
+				}
+			}
+			else // 체력 0 초과
 			{
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);

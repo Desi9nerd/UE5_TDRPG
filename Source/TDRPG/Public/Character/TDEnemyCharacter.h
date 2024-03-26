@@ -22,6 +22,7 @@ public:
 	//** IEnemy 함수
 	virtual void HighlightActor() override;	  // 외곽선 효과 On
 	virtual void UnHighlightActor() override; // 외곽선 효과 Off
+	virtual void Die() override;
 
 	//** ICombat 함수
 	virtual int32 GetPlayerLevel() override;
@@ -38,6 +39,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 600.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float LifeSpanUntilDead = 5.f;
 
 protected:
 	virtual void BeginPlay() override;

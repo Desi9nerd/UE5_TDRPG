@@ -36,6 +36,13 @@ void ATDEnemyCharacter::UnHighlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+void ATDEnemyCharacter::Die()
+{
+	SetLifeSpan(LifeSpanUntilDead); // 5초 뒤 캐릭터 destroy
+
+	Super::Die();
+}
+
 int32 ATDEnemyCharacter::GetPlayerLevel()
 {
 	return Level;

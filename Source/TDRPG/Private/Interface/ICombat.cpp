@@ -13,3 +13,7 @@ FVector IICombat::GetCombatSocketLocation()
 void IICombat::SetFacingTarget(const FVector& FacingTarget)
 {
 }
+
+void IICombat::Die()
+{
+}
