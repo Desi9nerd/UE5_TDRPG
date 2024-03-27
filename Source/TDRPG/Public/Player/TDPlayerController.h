@@ -12,6 +12,7 @@ class IIEnemy;
 class UTDDAInput;
 class UTDAbilitySystemComponent;
 class USplineComponent;
+class UTDWidgetComponent;
 
 /**
  * 
@@ -25,6 +26,9 @@ class TDRPG_API ATDPlayerController : public APlayerController
 public:
 	ATDPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter); 
 
 protected:
 	virtual void BeginPlay() override;
@@ -58,6 +62,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<APawn> PlayerControlledPawn;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UTDWidgetComponent> DamageTextComponentClass; // 데미지 위젯
 
 	//** 이동
 	UPROPERTY(EditDefaultsOnly)

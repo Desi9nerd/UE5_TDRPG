@@ -8,6 +8,8 @@
 #include "Components/SplineComponent.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "GameFramework/Character.h"
+#include "UI/WidgetComponent/TDWidgetComponent.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -22,6 +24,21 @@ void ATDPlayerController::PlayerTick(float DeltaTime)
 
 	CursorTrace();
 	AutoRun();
+}
+
+void ATDPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	check(DamageTextComponentClass);
+
+	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		//** TDWidgetComponent 동적 생성
+		UTDWidgetComponent* DamageText = NewObject<UTDWidgetComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageText->RegisterComponent(); // 생성자가 아닌곳에서 동적 생성하기 때문에 필요. TargetCharacterㅇ
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // 캐릭터 위치에 부착
+		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 캐릭터에 떼어서 DamageText 애니메이션 효과가 원하는데로 보이도록 적용
+		DamageText->SetDamageText(DamageAmount);
+	}
 }
 
 void ATDPlayerController::CursorTrace() // 마우스 커서 Trace

@@ -5,6 +5,8 @@
 #include "GameplayEffectExtension.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "Interface/ICombat.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/TDPlayerController.h"
 
 UTDAttributeSet::UTDAttributeSet()
 {
@@ -117,6 +119,8 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
 			}
+
+			ShowFloatingText(Props, LocalIncomingDamage); // 데미지 숫자 띄우기
 		}
 	}
 }
@@ -151,6 +155,17 @@ void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+}
+
+void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if (ATDPlayerController* PC = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter);
+		}
 	}
 }
 
