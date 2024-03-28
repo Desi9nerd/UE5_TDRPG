@@ -42,12 +42,9 @@ UTDWidgetControllerAttributeMenu* UTDAbilitySystemBPLibrary::GetAttributeMenuWid
 
 void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (false == IsValid(TDGameMode)) return;
-
 	AActor* AvatarActor = ASC->GetAvatarActor(); // GameplayEffect가 적용될 Source
 
-	UTDDA_CharacterClass* DataAssetCharacterClass = TDGameMode->TDDACharacterClass;
+	UTDDA_CharacterClass* DataAssetCharacterClass = GetTDDA_CharacterClass(WorldContextObject);
 	FCharacterClassDefaultInfo ClassDefaultInfo = DataAssetCharacterClass->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle StatAttributesContextHandle = ASC->MakeEffectContext();
@@ -68,13 +65,20 @@ void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* World
 
 void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-	TObjectPtr<ATDGameModeBase> TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (false == IsValid(TDGameMode)) return;
+	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass = GetTDDA_CharacterClass(WorldContextObject);
 
-	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass = TDGameMode->TDDACharacterClass;
 	for (TSubclassOf<UGameplayAbility> AbilityClass : TDDACharacterClass->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
+}
+
+UTDDA_CharacterClass* UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(const UObject* WorldContextObject)
+{
+	TObjectPtr<ATDGameModeBase> TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (false == IsValid(TDGameMode)) return nullptr;
+
+	check(TDGameMode->TDDACharacterClass);
+	return TDGameMode->TDDACharacterClass;
 }

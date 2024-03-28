@@ -2,6 +2,9 @@
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
+#include "GAS/Data/TDDA_CharacterClass.h"
+#include "Interface/ICombat.h"
 
 struct TDDamageStatics
 {
@@ -40,8 +43,12 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
 	// SourceASC와 TargetASC가 있는 경우 AvatorActor를 가져온다
-	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+
+	// Source(공격자), Target(피격자) 캐릭터의 레벨을 사용하기 위해 IICombat 변수를 만든다
+	IICombat* SourceCombatInterface = Cast<IICombat>(SourceAvatar);
+	IICombat* TargetCombatInterface = Cast<IICombat>(TargetAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
@@ -74,12 +81,20 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration); // SourceArmorPenetration 캡처
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
 
+	const UTDDA_CharacterClass* TDDA_CharacterClass = UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(SourceAvatar);
+	check(TDDA_CharacterClass->DamageCalculationCoefficients);
+	const FRealCurve* ArmorPenetrationCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString()); // CT_DamageCalculationCoeffients의 "ArmorPenetration" 데이터 
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel()); // 레벨에 맞는 Column에 접근하여 값을 가져옴
+
 	// Target's Armor를 Source's ArmorPenetration만큼 차감.
-	TargetArmor *= (100 - SourceArmorPenetration * 0.25f) / 100.f;
+	TargetArmor *= (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
 	const float EffectiveArmor = TargetArmor;
 
+	const FRealCurve* EffectiveArmorCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString());
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+
 	//* 데미지 계산. EffectiveArmor 퍼센트지만큼 데미지 차감
-	Damage *= (100 - EffectiveArmor * 0.333f) / 100.f;
+	Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 
 	//* 최종 계산된 데미지를 넘김
 	const FGameplayModifierEvaluatedData EvaluatedData(UTDAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

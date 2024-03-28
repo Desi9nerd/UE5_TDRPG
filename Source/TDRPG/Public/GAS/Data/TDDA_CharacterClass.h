@@ -6,8 +6,8 @@
 class UGameplayEffect;
 class UGameplayAbility;
 
-/**
- * 
+/** 캐릭터의 데이터를 집어넣는 클래스
+ *  스탯, GameplayAbilities, 데미지처리CT
  */
 
 UENUM(BlueprintType)
@@ -45,4 +45,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Ability")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Damage")
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
 };
