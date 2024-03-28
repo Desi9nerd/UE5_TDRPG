@@ -55,7 +55,7 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-	// Source(공격자), Target(피격자) 캐릭터의 레벨을 사용하기 위해 IICombat 변수를 만든다
+	// Source, Target 캐릭터의 레벨을 사용하기 위해 IICombat 변수를 만든다
 	IICombat* SourceCombatInterface = Cast<IICombat>(SourceAvatar);
 	IICombat* TargetCombatInterface = Cast<IICombat>(TargetAvatar);
 
