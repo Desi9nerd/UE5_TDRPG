@@ -63,7 +63,8 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance; // Block 성공 여부 판단
 
-	Damage = bBlocked ? Damage / 2.f : Damage; // Block 성공: Damage 절반, Block 실패: Damage
+	//* 데미지 계산. Block 성공: Damage 절반, Block 실패: Damage
+	Damage = bBlocked ? Damage / 2.f : Damage;
 
 	float TargetArmor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor); // TargetArmor 캡처
@@ -73,12 +74,14 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration); // SourceArmorPenetration 캡처
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
 
-	// ArmorPenetration ignores a percentage of the Target's Armor.	
-	const float EffectiveArmor = TargetArmor *= (100 - SourceArmorPenetration * 0.25f) / 100.f;
-	// Armor ignores a percentage of incoming Damage.
+	// Target's Armor를 Source's ArmorPenetration만큼 차감.
+	TargetArmor *= (100 - SourceArmorPenetration * 0.25f) / 100.f;
+	const float EffectiveArmor = TargetArmor;
+
+	//* 데미지 계산. EffectiveArmor 퍼센트지만큼 데미지 차감
 	Damage *= (100 - EffectiveArmor * 0.333f) / 100.f;
 
-
+	//* 최종 계산된 데미지를 넘김
 	const FGameplayModifierEvaluatedData EvaluatedData(UTDAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
