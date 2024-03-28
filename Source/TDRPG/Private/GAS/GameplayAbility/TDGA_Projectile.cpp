@@ -39,7 +39,18 @@ void UTDGA_Projectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
 
 		// Gameplay Effect Spec으로 데미지 처리.
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GameplayEffectDamageClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+		EffectContextHandle.SetAbility(this); // AbilityInstanceNotReplicated/CDO/Level 세팅
+		EffectContextHandle.AddSourceObject(Projectile);
+		TArray<TWeakObjectPtr<AActor>> Actors;
+		Actors.Add(Projectile);
+		EffectContextHandle.AddActors(Actors);
+		FHitResult HitResult;
+		HitResult.Location = ProjectileTargetLocation;
+		EffectContextHandle.AddHitResult(HitResult);
+
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GameplayEffectDamageClass, GetAbilityLevel(), EffectContextHandle);
+
 
 		FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
 		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
