@@ -3,8 +3,9 @@
 #include "GameplayEffectTypes.h"
 #include "TDAbilityTypes.generated.h"
 
-/** Critical Hit, Block Hit
+/** FGameplayEffectContext에 Critical Hit, Block Hit 요소를 추가하기 위해 만듬.
  *  GameplayEffectContext를 상속받아 GetScriptStruct, NetSerialize를 재정의
+ *	TDAbilitySystemGlobals에서 AllocGameplayEffectContext 함수 재정의의 리턴 타입을 FTDGameplayEffectContext으로 만들어 GAS에서 FTDGameplayEffectContext를 사용하도록 수정함.
  */
 
 USTRUCT(BlueprintType)
