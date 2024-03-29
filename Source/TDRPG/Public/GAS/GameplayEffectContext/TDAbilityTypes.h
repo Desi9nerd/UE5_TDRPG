@@ -3,8 +3,8 @@
 #include "GameplayEffectTypes.h"
 #include "TDAbilityTypes.generated.h"
 
-/** 
- *  GameplayEffectContext를 상속받아 NetSerialize를 재정의
+/** Critical Hit, Block Hit
+ *  GameplayEffectContext를 상속받아 GetScriptStruct, NetSerialize를 재정의
  */
 
 USTRUCT(BlueprintType)
@@ -19,14 +19,9 @@ public:
 	void SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	void SetIsBlockedHit(bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
 
-	/** Returns the actual struct used for serialization, subclasses must override this! */
-	virtual UScriptStruct* GetScriptStruct() const
-	{
-		return FGameplayEffectContext::StaticStruct();
-	}
-
-	/** Custom serialization, subclasses must override this */
-	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	//** FGameplayEffectContext 함수 재정의
+	virtual UScriptStruct* GetScriptStruct() const;
+	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess); // Custom serialization
 
 protected:
 	UPROPERTY()
