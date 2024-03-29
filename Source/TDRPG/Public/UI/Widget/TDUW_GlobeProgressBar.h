@@ -50,7 +50,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Globe ProgressBar Properties")
 	FSlateBrush ProgressBarBrush;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Globe ProgressBar Properties")
-	float GlobePadding = 10.f;
+	float GlobePadding;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Globe ProgressBar Properties")
 	FSlateBrush GlassBrush;
 

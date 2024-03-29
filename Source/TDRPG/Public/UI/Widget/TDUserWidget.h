@@ -3,6 +3,9 @@
 #include "Blueprint/UserWidget.h"
 #include "TDUserWidget.generated.h"
 
+class UTDWidgetControllerOverlay;
+class UTDWidgetControllerAttributeMenu;
+
 /**
  * 
  */
@@ -17,6 +20,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObject> WidgetController;
+
+	//** TDAbilitySystemBPLibrary 함수 옮기기
+	UFUNCTION(Category = "WidgetController")
+	static UTDWidgetControllerOverlay* GetWidgetControllerOverlay(const UObject* WorldContextObject);
+	UFUNCTION(Category = "WidgetController")
+	static UTDWidgetControllerAttributeMenu* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent) // BP에서 실행

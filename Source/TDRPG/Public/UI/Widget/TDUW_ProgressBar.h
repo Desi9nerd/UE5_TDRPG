@@ -31,8 +31,14 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable) // Enemy
 	virtual void SetBarPercent(const float& InValue, const float& InMaxValue);
+
+	//UFUNCTION(BlueprintCallable) // Player
+	//virtual void SetProgressBarPercent(float InPercent);
+	//void GlobePercentSet(float InPercent);
+	//void SetNewGhostPercentTarget(float InPercent);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Progress Bar Properties")
 	float BoxWidth = 90.f;
@@ -61,4 +67,10 @@ private:
 
 	FTimerHandle HideTimer;
 	FTimerHandle GhostDelayTimer;
+
+	//** Player
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), //Category = "Ghost Globe Properties")
+	//float GhostDelay;
+	//
+	//bool bGlobeInitialized = false;
 };

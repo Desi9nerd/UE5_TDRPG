@@ -3,6 +3,7 @@
 #include "Components/Button.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Player/TDPlayerController.h"
 
 void UTDUW_ProgressBar::NativePreConstruct()
 {
@@ -16,8 +17,17 @@ void UTDUW_ProgressBar::NativePreConstruct()
 void UTDUW_ProgressBar::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
 
-	SetBarVisibility(false); // 생성 시 체력바 안 보이도록 설정
+	/*ATDPlayerController* PlayerController = Cast<ATDPlayerController>(GetOwningPlayer());
+	if(IsValid(PlayerController))
+	{
+		SetBarVisibility(true);
+	}
+	else*/
+	{
+		SetBarVisibility(false); // 생성 시 체력바 안 보이도록 설정		
+	}
 }
 
 void UTDUW_ProgressBar::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -39,6 +49,43 @@ void UTDUW_ProgressBar::SetBarPercent(const float& InValue, const float& InMaxVa
 
 	UpdateGhostInterpTarget(InPercent);
 }
+
+//void UTDUW_ProgressBar::SetProgressBarPercent(float InPercent)
+//{
+//	float ProgressPercent = InPercent;
+//
+//	if (bGlobeInitialized)
+//	{
+//		ProgressBar_Front->SetPercent(ProgressPercent);
+//		GlobePercentSet(ProgressPercent);
+//	}
+//	else
+//	{
+//		if (ProgressPercent > 0.f)
+//		{
+//			bGlobeInitialized = true;
+//			ProgressBar_Front->SetPercent(ProgressPercent);
+//			ProgressBar_Ghost->SetPercent(ProgressPercent);
+//			GhostPercentTarget = ProgressPercent;
+//		}
+//	}
+//}
+//
+//void UTDUW_ProgressBar::GlobePercentSet(float InPercent)
+//{
+//	FTimerHandle PlayerGhostDelayTimer;
+//
+//	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, InPercent]() {
+//		SetNewGhostPercentTarget(InPercent);
+//		});
+//
+//	GetWorld()->GetTimerManager().SetTimer(PlayerGhostDelayTimer, TimerDelegate, GhostDelay, false); // GhostDelay초 지난 후 GhostPercentTarget 값 업데이트
+//}
+//
+//void UTDUW_ProgressBar::SetNewGhostPercentTarget(float InPercent)
+//{
+//	GhostPercentTarget = InPercent;
+//}
 
 void UTDUW_ProgressBar::UpdateBoxSize()
 {

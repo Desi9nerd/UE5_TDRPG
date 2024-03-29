@@ -124,7 +124,7 @@ void UTDUW_GlobeProgressBar::UpdateGhostGlobeBrush()
 	ProgressBarStyle.BackgroundImage = SlateBrush;
 	ProgressBarStyle.FillImage = GhostProgressBarBrush;  // MI_GhostSoulGlobe
 
-	ProgressBar_Globe->SetWidgetStyle(ProgressBarStyle);
+	ProgressBar_Ghost->SetWidgetStyle(ProgressBarStyle);
 }
 
 void UTDUW_GlobeProgressBar::SetGhostProgressBarPercent(const float& InPercent)
