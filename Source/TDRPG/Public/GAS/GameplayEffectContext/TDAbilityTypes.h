@@ -21,6 +21,7 @@ public:
 
 	//** FGameplayEffectContext 함수 재정의
 	virtual UScriptStruct* GetScriptStruct() const;
+	virtual FGameplayEffectContext* Duplicate() const;
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess); // Custom serialization
 
 protected:
@@ -30,4 +31,14 @@ protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
 
+};
+
+template<>
+struct TStructOpsTypeTraits<FTDGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FTDGameplayEffectContext>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true
+	};
 };

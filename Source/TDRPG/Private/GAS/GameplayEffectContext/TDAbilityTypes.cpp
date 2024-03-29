@@ -3,7 +3,23 @@
 UScriptStruct* FTDGameplayEffectContext::GetScriptStruct() const
 {
 	// Returns the actual struct used for serialization.
-	return FGameplayEffectContext::StaticStruct();
+	return StaticStruct();
+}
+
+FGameplayEffectContext* FTDGameplayEffectContext::Duplicate() const
+{
+	//* Creates a copy of this context, used to duplicate for later modifications */
+
+	FGameplayEffectContext* NewContext = new FGameplayEffectContext();
+	*NewContext = *this;
+
+	if (GetHitResult())
+	{
+		// Does a deep copy of the hit result
+		NewContext->AddHitResult(*GetHitResult(), true);
+	}
+
+	return NewContext;
 }
 
 bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
