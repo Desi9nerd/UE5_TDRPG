@@ -23,11 +23,22 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Secondary_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxHealth"), FString("총 체력량"));
 	GameplayTags.Attributes_Secondary_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxMana"), FString("총 마나량"));
 
-	// Meta
+
+	//** Meta
+	// Damage Type
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("데미지"));
 	GameplayTags.Damage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("파이어볼 데미지"));
-	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Fireball);
+	GameplayTags.Damage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("메테오 데미지"));
 
+	// Resistance
+	GameplayTags.Attributes_Resistance_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fireball"), FString("파이어볼 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Meteor"), FString("메테오 데미지 저항"));
+
+	// TMap 등록. DamageTypesToResistances
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fireball, GameplayTags.Attributes_Resistance_Fireball);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Meteor, GameplayTags.Attributes_Resistance_Meteor);
+
+	// Effect
 	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"), FString("피격 시 GameplayTag Granted 반응"));
 
 	// Event

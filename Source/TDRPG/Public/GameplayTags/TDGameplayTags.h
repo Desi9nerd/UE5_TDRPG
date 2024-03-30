@@ -28,12 +28,20 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
+
 	// Meta
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fireball;
+	FGameplayTag Damage_Meteor;
 
-	TArray<FGameplayTag> DamageTypes;
+	// Resistance
+	FGameplayTag Attributes_Resistance_Fireball;
+	FGameplayTag Attributes_Resistance_Meteor;
 
+	// TMap. key: DamageType, value: Resistance
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+
+	// Effect
 	FGameplayTag Effect_HitReact;
 
 	// Event
