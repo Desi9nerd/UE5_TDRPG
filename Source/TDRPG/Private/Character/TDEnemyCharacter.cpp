@@ -62,7 +62,11 @@ void ATDEnemyCharacter::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
-	UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent); // GameplayAbility 초기값
+
+	if (HasAuthority()) // Server
+	{
+		UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent); // GameplayAbility 초기값		
+	}
 
 	UTDUserWidget* TDUserWidget = Cast<UTDUserWidget>(HealthBar->GetUserWidgetObject());
 	if (IsValid(TDUserWidget))
@@ -99,7 +103,10 @@ void ATDEnemyCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
-	InitializeDefaultAttributes();
+	if (HasAuthority()) // Server
+	{
+		InitializeDefaultAttributes();		
+	}
 }
 
 void ATDEnemyCharacter::InitializeDefaultAttributes() const
