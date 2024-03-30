@@ -28,16 +28,15 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
+	// Resistance
+	FGameplayTag Attributes_Resistance_Fireball;
+	FGameplayTag Attributes_Resistance_Meteor;
 
-	//** Meta
+	//** Meta ************************************************
 	// Damage Type
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fireball;
 	FGameplayTag Damage_Meteor;
-
-	// Resistance
-	FGameplayTag Attributes_Resistance_Fireball;
-	FGameplayTag Attributes_Resistance_Meteor;
 
 	// TMap. key: DamageType, value: Resistance
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
@@ -55,6 +54,7 @@ public:
 	FGameplayTag InputTag_W;
 	FGameplayTag InputTag_E;
 	FGameplayTag InputTag_R;
+	//********************************************************
 
 private:
 	static FTDGameplayTags GameplayTags;
