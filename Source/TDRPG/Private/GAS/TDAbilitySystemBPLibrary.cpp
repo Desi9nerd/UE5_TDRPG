@@ -4,6 +4,7 @@
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
 #include "GameMode/TDGameModeBase.h"
+#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 
 UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetWidgetControllerOverlay(const UObject* WorldContextObject)
 {
@@ -66,6 +67,7 @@ void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* World
 void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass = GetTDDA_CharacterClass(WorldContextObject);
+	//check(TDDACharacterClass);
 
 	for (TSubclassOf<UGameplayAbility> AbilityClass : TDDACharacterClass->CommonAbilities)
 	{
@@ -81,4 +83,43 @@ UTDDA_CharacterClass* UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(const UO
 
 	check(TDGameMode->TDDACharacterClass);
 	return TDGameMode->TDDACharacterClass;
+}
+
+bool UTDAbilitySystemBPLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UTDAbilitySystemBPLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UTDAbilitySystemBPLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		TDGameplayEffectContext->SetIsCriticalHit(bInIsBlockedHit);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInIsCriticalHit)
+{
+	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		TDGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
 }

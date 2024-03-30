@@ -1,5 +1,6 @@
 #include "GAS/ExecutionCalculation/TDGEEC_Damage.h"
 #include "AbilitySystemComponent.h"
+#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "GAS/TDAttributeSet.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
@@ -81,6 +82,10 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance; // Block 성공 여부 판단
 
+	// UTDAbilitySystemBPLibrary에 Block Hit 성공 여부를 넘김
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	UTDAbilitySystemBPLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
+
 	//* 데미지 계산. Block 성공: Damage 절반, Block 실패: Damage
 	Damage = bBlocked ? Damage / 2.f : Damage;
 	//**************************************************************************//
@@ -133,6 +138,9 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	// Critical Hit Resistance는 Critical Hit 확률을 줄임
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance; // Critical Hit 성공 결정
+
+	// UTDAbilitySystemBPLibrary에 Critical Hit 여부를 넘김.
+	UTDAbilitySystemBPLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
 
 	//** 데미지 계산. Critical Hit 시 데미지 2배
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;

@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
 #include "Interface/ICombat.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
@@ -120,7 +121,9 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
 			}
 
-			ShowFloatingText(Props, LocalIncomingDamage); // 데미지 숫자 띄우기
+			const bool bBlock = UTDAbilitySystemBPLibrary::IsBlockedHit(Props.EffectContextHandle);
+			const bool bCriticalHit = UTDAbilitySystemBPLibrary::IsCriticalHit(Props.EffectContextHandle);
+			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit); // 데미지 숫자 띄우기. FEffectProperties, 데미지, Block, CriticalHit 정보 전달
 		}
 	}
 }
@@ -158,7 +161,7 @@ void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 	}
 }
 
-void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage) const
+void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{

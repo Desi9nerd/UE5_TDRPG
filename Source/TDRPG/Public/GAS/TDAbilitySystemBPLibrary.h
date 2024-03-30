@@ -4,6 +4,7 @@
 #include "Data/TDDA_CharacterClass.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
 
+struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
@@ -32,4 +33,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClassDefaults")
 	static UTDDA_CharacterClass* GetTDDA_CharacterClass(const UObject* WorldContextObject); // TDGameMode의 UTDDACharacterClass를 가져오는 함수
+
+	//********************************************************
+	//** Block Hit, Critical Hit
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+	//********************************************************
 };
