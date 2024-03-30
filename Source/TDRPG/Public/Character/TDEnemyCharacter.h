@@ -7,6 +7,8 @@
 #include "TDEnemyCharacter.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class ATDAIController;
 
 /**
  * 
@@ -18,6 +20,7 @@ class TDRPG_API ATDEnemyCharacter : public ATDBaseCharacter, public IIEnemy
 
 public:
 	ATDEnemyCharacter();
+	virtual void PossessedBy(AController* NewController) override;
 
 	//** IEnemy 함수
 	virtual void HighlightActor() override;	  // 외곽선 효과 On
@@ -56,4 +59,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+	UPROPERTY()
+	TObjectPtr<ATDAIController> TDAIController;
+
 };

@@ -1,4 +1,7 @@
 ﻿#include "Character/TDEnemyCharacter.h"
+#include "AI/AIController/TDAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 #include "TDRPG/TDRPG.h" // CUSTOM_DEPTH_RED
@@ -20,6 +23,17 @@ ATDEnemyCharacter::ATDEnemyCharacter()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+}
+
+void ATDEnemyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (false == HasAuthority()) return;
+
+	TDAIController = Cast<ATDAIController>(NewController);
+	TDAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset); // BlackboardComponent 초기화.
+	TDAIController->RunBehaviorTree(BehaviorTree); // BehaviorTree 실행
 }
 
 void ATDEnemyCharacter::HighlightActor()
