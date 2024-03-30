@@ -45,7 +45,10 @@ void ATDProjectile::Destroyed()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+		if (IsValid(LoopingSoundComponent))
+		{
+			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+		}
 	}
 
 	Super::Destroyed();
@@ -55,7 +58,10 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+	if (IsValid(LoopingSoundComponent))
+	{
+		LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+	}
 
 	if (HasAuthority()) // Server
 	{
