@@ -60,12 +60,14 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		return;
 	}
-
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	if (IsValid(LoopingSoundComponent))
+	if (false == bHit) // 피격 최초 성공 시에 적용. bHit은 아래에서 false로 변경된다.
 	{
-		LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		if (IsValid(LoopingSoundComponent))
+		{
+			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+		}
 	}
 
 	if (HasAuthority()) // Server
