@@ -3,6 +3,7 @@
 #include "Blueprint/UserWidget.h"
 #include "TDUserWidget.generated.h"
 
+class UTDWidgetController;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
 
@@ -20,6 +21,13 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObject> WidgetController;
+
+	/////////////////////////////////////////////////
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UTDWidgetController> TDWidgetController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UTDWidgetControllerOverlay> TDWidgetControllerOverlay;
+	/////////////////////////////////////////////////
 
 	//** TDAbilitySystemBPLibrary 함수 옮기기
 	UFUNCTION(Category = "WidgetController")
