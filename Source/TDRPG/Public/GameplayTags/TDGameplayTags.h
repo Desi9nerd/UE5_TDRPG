@@ -29,7 +29,8 @@ public:
 	FGameplayTag Attributes_Secondary_MaxMana;
 
 
-	// Meta
+	//** Meta
+	// Damage Type
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fireball;
 	FGameplayTag Damage_Meteor;

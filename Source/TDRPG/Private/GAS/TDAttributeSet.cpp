@@ -32,13 +32,16 @@ UTDAttributeSet::UTDAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	// Resistance Attributes
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fireball, GetFireballResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Meteor, GetMeteorResistanceAttribute);
 }
 
 void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//** HP, MP는 항상 모두에게 Replicated되어야 하므로 COND_None, REPNOTIFY_Always로 설정
+	//** 항상 모두에게 Replicated되어야 하는 것들은 COND_None, REPNOTIFY_Always로 설정
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
@@ -57,6 +60,8 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, FireballResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeteorResistance, COND_None, REPNOTIFY_Always);
 }
 
 void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -250,4 +255,14 @@ void UTDAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) cons
 void UTDAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, Mana, OldMana);
+}
+
+void UTDAttributeSet::OnRep_FireballResistance(const FGameplayAttributeData& OldFireballResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, FireballResistance, OldFireballResistance);
+}
+
+void UTDAttributeSet::OnRep_MeteorResistance(const FGameplayAttributeData& OldMeteorResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, MeteorResistance, OldMeteorResistance);
 }
