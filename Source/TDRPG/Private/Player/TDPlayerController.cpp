@@ -30,14 +30,17 @@ void ATDPlayerController::ShowDamageNumber_Implementation(float DamageAmount, AC
 {
 	check(DamageTextComponentClass);
 
-	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	if (IsLocalController()) // Client인 경우 데미지 텍스트 O. Server인 경우 X
 	{
-		//** TDWidgetComponent 동적 생성. TargetCharacter에서 DamageText생성
-		UTDWidgetComponent* DamageText = NewObject<UTDWidgetComponent>(TargetCharacter, DamageTextComponentClass);
-		DamageText->RegisterComponent(); // 생성자가 아닌곳에서 동적 생성하기 때문에 필요. 
-		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // 캐릭터 위치에 부착
-		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 캐릭터에 떼어서 DamageText 애니메이션 효과가 원하는데로 보이도록 적용
-		DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
+		if (IsValid(TargetCharacter) && DamageTextComponentClass)
+		{
+			//** TDWidgetComponent 동적 생성. TargetCharacter에서 DamageText생성
+			UTDWidgetComponent* DamageText = NewObject<UTDWidgetComponent>(TargetCharacter, DamageTextComponentClass);
+			DamageText->RegisterComponent(); // 생성자가 아닌곳에서 동적 생성하기 때문에 필요. 
+			DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // 캐릭터 위치에 부착
+			DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 캐릭터에 떼어서 DamageText 애니메이션 효과가 원하는데로 보이도록 적용
+			DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
+		}
 	}
 }
 
