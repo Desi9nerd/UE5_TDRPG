@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "GAS/GameplayAbility/TDGA.h"
-#include "TDGA_Projectile.generated.h"
+#include "GAS/GameplayAbility/TDGA_Damage.h"
+#include "TDGA_DamageProjectile.generated.h"
 
 class ATDProjectile;
 class UGameplayEffect;
@@ -11,7 +11,7 @@ class UGameplayEffect;
  */
 
 UCLASS()
-class TDRPG_API UTDGA_Projectile : public UTDGA
+class TDRPG_API UTDGA_DamageProjectile : public UTDGA_Damage
 {
 	GENERATED_BODY()
 
@@ -24,9 +24,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> GameplayEffectDamageClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EventTag;

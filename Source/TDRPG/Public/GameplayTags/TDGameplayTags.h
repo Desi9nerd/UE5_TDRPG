@@ -30,6 +30,10 @@ public:
 
 	// Meta
 	FGameplayTag Damage;
+	FGameplayTag Damage_Fireball;
+
+	TArray<FGameplayTag> DamageTypes;
+
 	FGameplayTag Effect_HitReact;
 
 	// Event

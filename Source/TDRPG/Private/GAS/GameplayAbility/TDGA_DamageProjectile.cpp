@@ -1,11 +1,11 @@
-#include "GAS/GameplayAbility/TDGA_Projectile.h"
+#include "GAS/GameplayAbility/TDGA_DamageProjectile.h"
 #include "Actor/TDProjectile.h"
 #include "Interface/ICombat.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTags/TDGameplayTags.h"
 
-void UTDGA_Projectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UTDGA_DamageProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
@@ -18,7 +18,7 @@ void UTDGA_Projectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 //	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 //}
 
-void UTDGA_Projectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// Projectile Actor를 서버에만 스폰시킨다.
 	// 서버가 스폰시킨 Projectile Actor는 replicated actor가 되어 클라이언트는 replicated된 버젼을 보게 된다.
@@ -53,9 +53,12 @@ void UTDGA_Projectile::SpawnProjectile(const FVector& ProjectileTargetLocation)
 
 
 		FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
 
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage); // GameplayEffect에서 Set by Caller로 사용할 때 적용되는 key, value. FTDGameplayTags구조체 내의 Damage라는 이름의 GameplayTag를 key로, ScaledDamage을 value로 사용.
+		for (auto& Pair : DamageTypes)
+		{
+			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);// GameplayEffect에서 Set by Caller로 사용할 때 적용되는 key, value. FTDGameplayTags구조체 내의 Damage타입의 GameplayTag를 key로, ScaledDamage을 value로 사용.
+		}
 
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 

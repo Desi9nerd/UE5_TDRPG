@@ -71,7 +71,12 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 
 	// 데미지 변수에 담기. GetSetByCallerMagnitude는 SetByCaller modifier의 magnitude값을 가져옴
-	float Damage = Spec.GetSetByCallerMagnitude(FTDGameplayTags::GetTDGameplayTags().Damage);
+	float Damage = 0.f;
+	for (FGameplayTag DamageTypeTag : FTDGameplayTags::GetTDGameplayTags().DamageTypes)
+	{
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		Damage += DamageTypeValue;
+	}
 
 	//**************************************************************************//
 	//* Block

@@ -25,6 +25,9 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 
 	// Meta
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("데미지"));
+	GameplayTags.Damage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("파이어볼 데미지"));
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Fireball);
+
 	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"), FString("피격 시 GameplayTag Granted 반응"));
 
 	// Event
