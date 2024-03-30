@@ -16,6 +16,12 @@ struct TDDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireballResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(MeteorResistance);
+
+	//**
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
+
 	TDDamageStatics()
 	{
 		// 클래스 이름, 멤버 이름, Source 또는 Target, 스냅샷 할지 여부. 자세한 사항 F12로 확인
@@ -25,6 +31,21 @@ struct TDDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, CriticalHitChance, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, CriticalHitResistance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, CriticalHitDamage, Source, false);
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, FireballResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, MeteorResistance, Target, false);
+
+		const FTDGameplayTags& Tags = FTDGameplayTags::GetTDGameplayTags();
+
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_Armor, ArmorDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_BlockChance, BlockChanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_ArmorPenetration, ArmorPenetrationDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitChance, CriticalHitChanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitResistance, CriticalHitResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitDamage, CriticalHitDamageDef);
+
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fireball, FireballResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Meteor, MeteorResistanceDef);
 	}
 };
 
@@ -45,6 +66,9 @@ UTDGEEC_Damage::UTDGEEC_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
+
+	RelevantAttributesToCapture.Add(DamageStatics().FireballResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().MeteorResistanceDef);
 }
 
 void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -71,10 +95,25 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 
 	// 데미지 변수에 담기. GetSetByCallerMagnitude는 SetByCaller modifier의 magnitude값을 가져옴
+	// DamageType과 Resistance를 고려하여 데미지 계산 후 데미지 변수(=Damage)에 담기.
 	float Damage = 0.f;
 	for (const TTuple<FGameplayTag, FGameplayTag>& Pair : FTDGameplayTags::GetTDGameplayTags().DamageTypesToResistances)
 	{
-		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key);
+		const FGameplayTag DamageTypeTag = Pair.Key;
+		const FGameplayTag ResistanceTag = Pair.Value;
+
+		checkf(TDDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString()); // 방어코드. ResistanceTag 확인. 
+		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TDDamageStatics().TagsToCaptureDefs[ResistanceTag];
+
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag); // 해당 DamageType의 데미지 값
+
+		float Resistance = 0.f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance); // 저항력값 
+		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
+
+		DamageTypeValue *= (100.f - Resistance) / 100.f;
+
+
 		Damage += DamageTypeValue;
 	}
 
