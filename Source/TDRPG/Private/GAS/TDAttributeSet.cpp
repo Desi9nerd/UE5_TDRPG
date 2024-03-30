@@ -167,7 +167,7 @@ void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Dam
 	{
 		if (ATDPlayerController* PC = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
 		{
-			PC->ShowDamageNumber(Damage, Props.TargetCharacter);
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
 	}
 }
