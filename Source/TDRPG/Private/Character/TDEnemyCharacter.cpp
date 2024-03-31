@@ -90,7 +90,7 @@ void ATDEnemyCharacter::BeginPlay()
 
 	if (HasAuthority()) // Server
 	{
-		UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent); // GameplayAbility 초기값		
+		UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass); // GameplayAbility 초기값. ASC랑 캐릭터직업 넘김.
 	}
 
 	UTDUserWidget* TDUserWidget = Cast<UTDUserWidget>(HealthBar->GetUserWidgetObject());

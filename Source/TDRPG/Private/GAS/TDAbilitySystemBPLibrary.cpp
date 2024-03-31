@@ -5,6 +5,7 @@
 #include "UI/HUD/TDHUD.h"
 #include "GameMode/TDGameModeBase.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
+#include "Interface/ICombat.h"
 
 UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetWidgetControllerOverlay(const UObject* WorldContextObject)
 {
@@ -64,15 +65,28 @@ void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* World
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
 
-void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass)
 {
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass = GetTDDA_CharacterClass(WorldContextObject);
-	//check(TDDACharacterClass);
+	if (false == IsValid(TDDACharacterClass)) return;
 
 	for (TSubclassOf<UGameplayAbility> AbilityClass : TDDACharacterClass->CommonAbilities)
 	{
+		// CommonAbilities(ex.HitReact, Die)는 레벨이 변경되도 변경되지 않으므로 InLevel를 1로 하드코딩함.
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
+	}
+
+	const FCharacterClassDefaultInfo& CharacterClassDefaultInfo = TDDACharacterClass->GetClassDefaultInfo(CharacterClass);
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassDefaultInfo.StartupAbilities)
+	{
+		IICombat* CombatInterface = Cast<IICombat>(ASC->GetAvatarActor());
+		if (CombatInterface)
+		{
+			// PlayerLevel에 따라 Ability가 달라지므로 PlayerLevel를 변수로 넘김.
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			ASC->GiveAbility(AbilitySpec);
+		}
 	}
 }
 

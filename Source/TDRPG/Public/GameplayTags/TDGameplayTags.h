@@ -32,6 +32,9 @@ public:
 	FGameplayTag Attributes_Resistance_Fireball;
 	FGameplayTag Attributes_Resistance_Meteor;
 
+	// Abilities
+	FGameplayTag Abilities_Attack;
+
 	//** Meta ************************************************
 	// Damage Type
 	FGameplayTag Damage;

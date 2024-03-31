@@ -27,7 +27,7 @@ void UBTService_SearchPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	AActor* ClosestActor = nullptr; // 가장 가까운 Actor
 	for (AActor* Actor : ActorsWithTag)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, .5f, FColor::Blue, *Actor->GetName());
+		// GEngine->AddOnScreenDebugMessage(-1, .5f, FColor::Blue, *Actor->GetName());
 
 		if (IsValid(Actor) && IsValid(OwningPawn))
 		{
