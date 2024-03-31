@@ -1,4 +1,4 @@
-#include "TDUW_GlobeProgressBar_Health.h"
+#include "UI/Widget/TDUW_GlobeProgressBar_Health.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 
@@ -8,7 +8,7 @@ void UTDUW_GlobeProgressBar_Health::NativeConstruct()
 
 	TDWidgetControllerOverlay = GetWidgetControllerOverlay(GetWorld());
 	check(TDWidgetControllerOverlay);
-	
+
 	//TDWidgetControllerOverlay->OnHealthChanged.AddDynamic(this, &ThisClass::OnHealthChanged_Event);
 	//TDWidgetControllerOverlay->OnMaxHealthChanged.AddDynamic(this, &ThisClass::OnMaxHealthChanged_Event);
 }
@@ -31,3 +31,4 @@ void UTDUW_GlobeProgressBar_Health::OnMaxHealthChanged_Event(float InValue)
 
 	SetProgressBarPercent(UKismetMathLibrary::SafeDivide(Health, MaxHealth));
 }
+
