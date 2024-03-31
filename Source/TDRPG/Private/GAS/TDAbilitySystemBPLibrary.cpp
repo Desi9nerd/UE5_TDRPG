@@ -153,10 +153,13 @@ void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		for (FOverlapResult& Overlap : Overlaps)
 		{
 			const bool ImplementsCombatInterface = Overlap.GetActor()->Implements<UICombat>();
-			const bool IsDead = IICombat::Execute_IsDead(Overlap.GetActor());
-			if (ImplementsCombatInterface && false == IsDead)
+			if (ImplementsCombatInterface)
 			{
-				OutOverlappingActors.AddUnique(IICombat::Execute_GetAvatar(Overlap.GetActor()));
+				const bool IsDead = IICombat::Execute_IsDead(Overlap.GetActor());
+				if(false == IsDead)
+				{
+					OutOverlappingActors.AddUnique(IICombat::Execute_GetAvatar(Overlap.GetActor()));					
+				}
 			}
 		}
 	}
