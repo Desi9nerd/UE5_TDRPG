@@ -39,6 +39,10 @@ void ATDEnemyCharacter::PossessedBy(AController* NewController)
 	TDAIController = Cast<ATDAIController>(NewController);
 	TDAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset); // BlackboardComponent 초기화.
 	TDAIController->RunBehaviorTree(BehaviorTree); // BehaviorTree 실행
+
+	//** Blackboard의 key를 찾고 해당 key의 value값을 설정하기.
+	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
 void ATDEnemyCharacter::HighlightActor()
@@ -72,7 +76,9 @@ void ATDEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32
 	bHitReacting = NewCount > 0;
 
 	// 최대 이동속도: 피격중에는 0, 피격중이 아니라면 BaseWalkSpeed
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+
+	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void ATDEnemyCharacter::BeginPlay()
