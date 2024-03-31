@@ -50,6 +50,8 @@ public:
 	// Event
 	FGameplayTag Event_Montage_Fireball;
 
+	FGameplayTag Event_Montage_Attack_Melee;
+
 	// Enhanced Input
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
