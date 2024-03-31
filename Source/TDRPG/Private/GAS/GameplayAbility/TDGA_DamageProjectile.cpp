@@ -24,10 +24,11 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 	// 서버가 스폰시킨 Projectile Actor는 replicated actor가 되어 클라이언트는 replicated된 버젼을 보게 된다.
 	if (false == GetAvatarActorFromActorInfo()->HasAuthority()) return; // 서버가 아닌 경우 예외처리
 
-	IICombat* CombatInterface = Cast<IICombat>(GetAvatarActorFromActorInfo());
-	if (CombatInterface)
+	//IICombat* CombatInterface = Cast<IICombat>(GetAvatarActorFromActorInfo());
+	//if (CombatInterface)
 	{
-		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		const FVector SocketLocation = IICombat::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
+		//const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
 		FTransform SpawnTransform;
@@ -51,7 +52,7 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GameplayEffectDamageClass, GetAbilityLevel(), EffectContextHandle);
 
 
-		FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+		const FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
 
 		for (auto& Pair : DamageTypes)
 		{
