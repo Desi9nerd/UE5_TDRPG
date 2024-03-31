@@ -20,7 +20,8 @@ void ATDEffectActor::BeginPlay()
 
 void ATDEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Effect!!!!!!"));
+	if (TargetActor->ActorHasTag(FName("Enemy")) && false == bApplyEffectsToEnemies) return; // 적이지만 Effect를 적용하지 않아야하는 적이라면 예외처리.
+
 	// UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent함수는 GetAbilitySystemComponentFromActor함수를 리턴하고 이 과정에서 const IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(Target)의 과정을 거친다. 
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (TargetASC == nullptr) return;
@@ -40,10 +41,16 @@ void ATDEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGamep
 	{
 		ActiveEffectHandles.Add(ActiveEffectHandle, TargetASC); // TMap에 GE Handle과 TargetActor의 ASC를 담음
 	}
+	else if (false == bIsInfinite)
+	{
+		Destroy();
+	}
 }
 
 void ATDEffectActor::OnOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag(FName("Enemy")) && false == bApplyEffectsToEnemies) return; // 예외처리.
+
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
@@ -60,6 +67,8 @@ void ATDEffectActor::OnOverlap(AActor* TargetActor)
 
 void ATDEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag(FName("Enemy")) && false == bApplyEffectsToEnemies) return; // 예외처리.
+
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);

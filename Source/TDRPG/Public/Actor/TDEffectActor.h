@@ -7,6 +7,10 @@
 class UAbilitySystemComponent;
 class UGameplayEffect;
 
+/** 포션, 크리스탈 등의 액터
+ *
+ */
+
 UENUM(BlueprintType) // 이펙트 적용방법 종류
 enum class EEffectApplicationPolicy 
 {
@@ -42,7 +46,10 @@ protected:
 	void OnEndOverlap(AActor* TargetActor);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	bool bDestroyOnEffectRemoval = false;
+	bool bDestroyOnEffectApplication = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectsToEnemies = false;
 
 	//** Instant
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
