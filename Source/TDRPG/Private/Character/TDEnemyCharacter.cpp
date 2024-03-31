@@ -59,6 +59,16 @@ void ATDEnemyCharacter::UnHighlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+void ATDEnemyCharacter::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* ATDEnemyCharacter::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 void ATDEnemyCharacter::Die()
 {
 	SetLifeSpan(LifeSpanUntilDead); // 5초 뒤 캐릭터 destroy
