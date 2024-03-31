@@ -137,3 +137,27 @@ void UTDAbilitySystemBPLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 		TDGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
 	}
 }
+
+void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin)
+{
+	//* UGamplayStatics::ApplyRadialDamageWithFallOff 함수와 유사하게 구현. *//
+
+	FCollisionQueryParams SphereParams;
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+
+	const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	if (IsValid(World))
+	{
+		TArray<FOverlapResult> Overlaps;
+		World->OverlapMultiByObjectType(Overlaps, SphereOrigin, FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), FCollisionShape::MakeSphere(Radius), SphereParams);
+		for (FOverlapResult& Overlap : Overlaps)
+		{
+			const bool ImplementsCombatInterface = Overlap.GetActor()->Implements<UICombat>();
+			const bool IsDead = IICombat::Execute_IsDead(Overlap.GetActor());
+			if (ImplementsCombatInterface && false == IsDead)
+			{
+				OutOverlappingActors.AddUnique(IICombat::Execute_GetAvatar(Overlap.GetActor()));
+			}
+		}
+	}
+}

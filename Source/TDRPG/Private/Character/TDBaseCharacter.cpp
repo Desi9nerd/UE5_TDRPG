@@ -55,6 +55,8 @@ void ATDBaseCharacter::MulticastHandleDeath_Implementation() // 캐릭터 사망 처리
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
+
+	bDead = true;
 }
 
 void ATDBaseCharacter::BeginPlay()
@@ -100,4 +102,14 @@ FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation() // 소켓 위치�
 	check(Weapon);
 
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
+bool ATDBaseCharacter::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* ATDBaseCharacter::GetAvatar_Implementation()
+{
+	return this;
 }

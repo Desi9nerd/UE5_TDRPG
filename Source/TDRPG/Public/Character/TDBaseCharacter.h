@@ -21,8 +21,14 @@ public:
 	ATDBaseCharacter();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	//** ICombat *********************************************
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(); // 캐릭터 사망 처리
@@ -36,13 +42,14 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
-	virtual FVector GetCombatSocketLocation_Implementation() override;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(EditAnywhere, Category = "Combat") // 에디터에서 적음
 	FName WeaponTipSocketName; // 무기 소켓 이름
+
+	bool bDead = false;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
