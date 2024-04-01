@@ -25,9 +25,10 @@ public:
 	//** ICombat *********************************************
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
-	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages; // 공격 몽타주 배열
 
 protected:
 	virtual void BeginPlay() override;
@@ -48,6 +52,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat") // 에디터에서 적음
 	FName WeaponTipSocketName; // 무기 소켓 이름
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName HeadSocketName;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName LeftHandSocketName;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName RightHandSocketName;
 
 	bool bDead = false;
 

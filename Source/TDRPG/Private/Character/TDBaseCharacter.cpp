@@ -2,6 +2,7 @@
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameplayTags/TDGameplayTags.h"
 #include "TDRPG/TDRPG.h" // ECC_Projectile
 
 ATDBaseCharacter::ATDBaseCharacter()
@@ -97,11 +98,27 @@ void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
 	TDASC->AddCharacterAbilities(StartupAbilities);
 }
 
-FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation() // 소켓 위치를 리턴
+FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // 소켓 위치를 리턴
 {
-	check(Weapon);
+	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Head))
+	{
+		return GetMesh()->GetSocketLocation(HeadSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
 
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	return FVector();
 }
 
 bool ATDBaseCharacter::IsDead_Implementation() const
@@ -112,4 +129,9 @@ bool ATDBaseCharacter::IsDead_Implementation() const
 AActor* ATDBaseCharacter::GetAvatar_Implementation()
 {
 	return this;
+}
+
+TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
 }
