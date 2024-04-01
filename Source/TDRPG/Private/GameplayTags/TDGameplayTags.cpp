@@ -31,7 +31,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Damage Type
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("데미지"));
 	GameplayTags.Damage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("파이어볼 데미지"));
-	GameplayTags.Damage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("메테오 데미지"));
+	GameplayTags.Damage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Meteor"), FString("메테오 데미지"));
 
 	// Resistance
 	GameplayTags.Attributes_Resistance_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fireball"), FString("파이어볼 데미지 저항"));
@@ -47,7 +47,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Event
 	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Fireball"), FString("파이어볼"));
 
-	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Attack.Melee"), FString("근접 공격"));
+	GameplayTags.Event_Montage_Attack_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Attack.Melee"), FString("근접 공격"));
 
 	// Enhanced Input
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LMB"), FString("왼쪽 마우스 버튼 Input Tag"));
