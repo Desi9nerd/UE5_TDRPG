@@ -88,7 +88,10 @@ void ATDEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32
 	// 최대 이동속도: 피격중에는 0, 피격중이 아니라면 BaseWalkSpeed
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 
-	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	if (TDAIController && TDAIController->GetBlackboardComponent())
+	{
+		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);		
+	}
 }
 
 void ATDEnemyCharacter::BeginPlay()
