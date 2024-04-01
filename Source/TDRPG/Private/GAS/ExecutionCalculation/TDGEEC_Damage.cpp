@@ -72,6 +72,7 @@ UTDGEEC_Damage::UTDGEEC_Damage()
 
 	RelevantAttributesToCapture.Add(DamageStatics().FireballResistanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().MeteorResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().MeleeResistanceDef);
 }
 
 void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
