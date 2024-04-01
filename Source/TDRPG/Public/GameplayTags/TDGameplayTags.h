@@ -32,6 +32,8 @@ public:
 	FGameplayTag Attributes_Resistance_Fireball;
 	FGameplayTag Attributes_Resistance_Meteor;
 
+	FGameplayTag Attributes_Resistance_Melee;
+
 	// Abilities
 	FGameplayTag Abilities_Attack;
 
@@ -40,6 +42,8 @@ public:
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fireball;
 	FGameplayTag Damage_Meteor;
+
+	FGameplayTag Damage_Melee;
 
 	// TMap. key: DamageType, value: Resistance
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;

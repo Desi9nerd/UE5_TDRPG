@@ -32,14 +32,17 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("데미지"));
 	GameplayTags.Damage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("파이어볼 데미지"));
 	GameplayTags.Damage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Meteor"), FString("메테오 데미지"));
+	GameplayTags.Damage_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Melee"), FString("근접공격 데미지"));
 
 	// Resistance
 	GameplayTags.Attributes_Resistance_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fireball"), FString("파이어볼 데미지 저항"));
 	GameplayTags.Attributes_Resistance_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Meteor"), FString("메테오 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Melee"), FString("근접공격 데미지 저항"));
 
 	// TMap 등록. DamageTypesToResistances
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fireball, GameplayTags.Attributes_Resistance_Fireball);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Meteor, GameplayTags.Attributes_Resistance_Meteor);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Melee, GameplayTags.Attributes_Resistance_Melee);
 
 	// Effect
 	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"), FString("피격 시 GameplayTag Granted 반응"));
