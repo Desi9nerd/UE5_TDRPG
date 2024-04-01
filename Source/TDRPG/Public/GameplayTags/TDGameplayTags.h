@@ -56,6 +56,12 @@ public:
 
 	FGameplayTag Event_Montage_Attack_Melee;
 
+	// Montage
+	FGameplayTag Montage_Attack_Weapon;
+	FGameplayTag Montage_Attack_Head;
+	FGameplayTag Montage_Attack_RightHand;
+	FGameplayTag Montage_Attack_LeftHand;
+
 	// Enhanced Input
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
