@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GAS/GameplayAbility/TDGA.h"
+#include "Interface/ICombat.h"
 #include "TDGA_Damage.generated.h"
 
 /**
@@ -21,4 +22,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypes;
+
+	UFUNCTION(BlueprintPure)
+	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;
 };

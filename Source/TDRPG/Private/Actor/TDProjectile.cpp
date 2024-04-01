@@ -7,6 +7,7 @@
 #include "TDRPG/TDRPG.h" // ECC_Projectile
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
 
 ATDProjectile::ATDProjectile()
 {
@@ -58,8 +59,14 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 {
 	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
 	{
-		return;
+		return; // 예외처리. 액터를 던진 자기자신은 Overlap되지 않게 리턴.
 	}
+	if (UTDAbilitySystemBPLibrary::IsSameTeam(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
+	{
+		return; // 예외처리. 같은 팀이면 피격되지 않도록 바로 리턴.
+	}
+
+
 	if (false == bHit) // 피격 최초 성공 시에 적용. bHit은 아래에서 false로 변경된다.
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
