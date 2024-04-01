@@ -164,3 +164,14 @@ void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		}
 	}
 }
+
+bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondActor)
+{
+	if (FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player") || 
+		FirstActor->ActorHasTag("Enemy") && SecondActor->ActorHasTag("Enemy"))
+	{
+		return true;
+	}
+
+	return false;
+}

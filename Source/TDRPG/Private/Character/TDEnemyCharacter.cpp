@@ -19,6 +19,8 @@ ATDEnemyCharacter::ATDEnemyCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseRVOAvoidance = true; // Enemy끼리 겹쳐서 잘 안 움직이는것 방지. Agents avoid obstacles by using velocity vectors within a specified radius.
 
 	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);

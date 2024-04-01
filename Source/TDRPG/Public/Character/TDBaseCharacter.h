@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "Interface/ICombat.h"
 #include "TDBaseCharacter.generated.h"
@@ -13,7 +14,7 @@ class UTDDA_CharacterClass;
 class UAnimMontage;
 
 UCLASS(Abstract)
-class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat
+class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -46,6 +47,9 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
+
+	UPROPERTY(EditAnywhere, Category = "Combat| Team")
+	uint8 TeamID;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
