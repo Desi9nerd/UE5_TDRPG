@@ -172,7 +172,14 @@ void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Dam
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
+		// SouceCharacter가 플레이어. TargetCharcter(= damage causer)가 몬스터.
 		if (ATDPlayerController* PC = Cast<ATDPlayerController>(Props.SourceCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			return; // 리턴.
+		}
+		// SouceCharacter가 몬스터. TargetCharacter(= damage causer 공격한 사람)가 플레이어.
+		if (ATDPlayerController* PC = Cast<ATDPlayerController>(Props.TargetCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
