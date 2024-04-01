@@ -54,8 +54,6 @@ public:
 	// Event
 	FGameplayTag Event_Montage_Fireball;
 
-	FGameplayTag Event_Montage_Attack_Melee;
-
 	// Montage
 	FGameplayTag Montage_Attack_Weapon;
 	FGameplayTag Montage_Attack_Head;

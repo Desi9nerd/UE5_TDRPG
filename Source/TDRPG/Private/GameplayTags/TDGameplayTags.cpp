@@ -50,8 +50,6 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Event
 	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Fireball"), FString("파이어볼"));
 
-	GameplayTags.Event_Montage_Attack_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Attack.Melee"), FString("근접 공격"));
-
 	// Montage
 	GameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Weapon"),FString("Weapon"));
 	GameplayTags.Montage_Attack_Head = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Head"), FString("머리(대가리)"));

@@ -72,8 +72,8 @@ void ATDBaseCharacter::InitAbilityActorInfo()
 
 void ATDBaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const // GE 적용하기
 {
-	check(IsValid(GetAbilitySystemComponent())); // ASC 유무 검사
-	check(GameplayEffectClass); // GameplayEffectClass 할당여부 검사(에디터에서 할당 안 하면 터짐)
+	check(GetAbilitySystemComponent()); // ASC 유무 검사
+	check(GameplayEffectClass); 
 
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this); // SourceObject(=TDBaseCharacter)를 ContextHandle에 추가. ICombat.h의 GetPlayerLevel()를 사용할때 필요하기에 SourceObject을 추가
