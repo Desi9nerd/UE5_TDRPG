@@ -35,6 +35,7 @@ UTDAttributeSet::UTDAttributeSet()
 	// Resistance Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fireball, GetFireballResistanceAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Meteor, GetMeteorResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Melee, GetMeleeResistanceAttribute);
 }
 
 void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -62,6 +63,7 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, FireballResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeteorResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeleeResistance, COND_None, REPNOTIFY_Always);
 }
 
 void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -265,4 +267,9 @@ void UTDAttributeSet::OnRep_FireballResistance(const FGameplayAttributeData& Old
 void UTDAttributeSet::OnRep_MeteorResistance(const FGameplayAttributeData& OldMeteorResistance) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, MeteorResistance, OldMeteorResistance);
+}
+
+void UTDAttributeSet::OnRep_MeleeResistance(const FGameplayAttributeData& OldMeleeResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, MeleeResistance, OldMeleeResistance);
 }

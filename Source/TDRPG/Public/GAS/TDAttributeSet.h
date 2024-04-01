@@ -138,6 +138,10 @@ public:
 	FGameplayAttributeData MeteorResistance;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeteorResistance);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeteorResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData MeleeResistance;
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeleeResistance);
+
 
 	//** Meta Attributes (Attribute와 상호 작용할 임시 값. Replicated X)
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
@@ -189,6 +193,8 @@ public:
 	void OnRep_FireballResistance(const FGameplayAttributeData& OldFireballResistance) const;
 	UFUNCTION()
 	void OnRep_MeteorResistance(const FGameplayAttributeData& OldMeteorResistance) const;
+	UFUNCTION()
+	void OnRep_MeleeResistance(const FGameplayAttributeData& OldMeleeResistance) const;
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // 이펙트 속성 설정하기

@@ -18,6 +18,7 @@ struct TDDamageStatics
 
 	DECLARE_ATTRIBUTE_CAPTUREDEF(FireballResistance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MeteorResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(MeleeResistance);
 
 	//**
 	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
@@ -34,6 +35,7 @@ struct TDDamageStatics
 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, FireballResistance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, MeteorResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, MeleeResistance, Target, false);
 
 		const FTDGameplayTags& Tags = FTDGameplayTags::GetTDGameplayTags();
 
@@ -46,6 +48,7 @@ struct TDDamageStatics
 
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fireball, FireballResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Meteor, MeteorResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Melee, MeleeResistanceDef);
 	}
 };
 
