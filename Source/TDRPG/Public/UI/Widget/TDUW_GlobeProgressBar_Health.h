@@ -3,9 +3,8 @@
 #include "UI/Widget/TDUW_GlobeProgressBar.h"
 #include "TDUW_GlobeProgressBar_Health.generated.h"
 
-DECLARE_DELEGATE_OneParam(FOnHealthChanged, const float&);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthChanged);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMaxHealthChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMaxHealthChanged);
 
 /**
  * 
@@ -20,7 +19,7 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	FOnHealthChanged OnHealthChanged;
-	//FOnMaxHealthChanged OnMaxHealthChanged;
+	FOnMaxHealthChanged OnMaxHealthChanged;
 
 private:
 	UFUNCTION()
