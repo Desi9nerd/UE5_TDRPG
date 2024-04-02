@@ -10,6 +10,7 @@ void UTDWidgetControllerOverlay::BroadcastInitialValues()
 	OnMaxHealthChanged.Broadcast(TDAttributeSet->GetMaxHealth());
 	OnManaChanged.Broadcast(TDAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(TDAttributeSet->GetMaxMana());
+	OnSoulChanged.Broadcast(TDAttributeSet->GetSoul());
 }
 
 void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet의 데이터와 콜백함수 바인딩
@@ -26,6 +27,8 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 		TDAttributeSet->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		TDAttributeSet->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
 
 	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
@@ -77,4 +80,9 @@ void UTDWidgetControllerOverlay::ManaChanged(const FOnAttributeChangeData& Data)
 void UTDWidgetControllerOverlay::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
+void UTDWidgetControllerOverlay::SoulChanged(const FOnAttributeChangeData& Data) const
+{
+	OnSoulChanged.Broadcast(Data.NewValue);
 }

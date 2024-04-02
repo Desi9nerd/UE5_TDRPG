@@ -129,6 +129,10 @@ public:
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Mana);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Soul, Category = "Vital Attributes")
+	FGameplayAttributeData Soul;
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Soul);
+
 	//** Resistance Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireballResistance, Category = "Resistance Attributes")
 	FGameplayAttributeData FireballResistance;
@@ -138,7 +142,7 @@ public:
 	FGameplayAttributeData MeteorResistance;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeteorResistance);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeteorResistance, Category = "Resistance Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeResistance, Category = "Resistance Attributes")
 	FGameplayAttributeData MeleeResistance;
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeleeResistance);
 
@@ -187,6 +191,8 @@ public:
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 	UFUNCTION()
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
+	UFUNCTION()
+	void OnRep_Soul(const FGameplayAttributeData& OldSoul) const;
 
 	//** Resistance Attributes
 	UFUNCTION()

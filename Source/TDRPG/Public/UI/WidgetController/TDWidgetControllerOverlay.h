@@ -47,6 +47,8 @@ public:
 	FOnAttributeChangedSignature OnManaChanged;
 	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
 	FOnAttributeChangedSignature OnMaxManaChanged;
+	UPROPERTY(BlueprintAssignable, Category = "GAS: Attributes")
+	FOnAttributeChangedSignature OnSoulChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
@@ -57,6 +59,7 @@ protected:
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
+	void SoulChanged(const FOnAttributeChangeData& Data) const;
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
 
 	template<typename T> // DataTable ÀÐ±â¿ë
