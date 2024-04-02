@@ -57,10 +57,9 @@ void ATDProjectile::Destroyed()
 
 void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
-	{
-		return; // 예외처리. 액터를 던진 자기자신은 Overlap되지 않게 리턴.
-	}
+	if (false == DamageEffectSpecHandle.Data.IsValid()) return; // 예외처리
+	if (DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return; // 액터를 던진 자기자신은 Overlap되지 않게 리턴.
+	
 	if (UTDAbilitySystemBPLibrary::IsSameTeam(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
 	{
 		return; // 예외처리. 같은 팀이면 피격되지 않도록 바로 리턴.

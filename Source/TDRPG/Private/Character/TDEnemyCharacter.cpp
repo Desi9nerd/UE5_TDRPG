@@ -75,6 +75,11 @@ void ATDEnemyCharacter::Die()
 {
 	SetLifeSpan(LifeSpanUntilDead); // 5초 뒤 캐릭터 destroy
 
+	if (IsValid(TDAIController))
+	{	// Blackboard의 key를 찾고 해당 key의 value값을 설정
+		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
+	}
+
 	Super::Die();
 }
 

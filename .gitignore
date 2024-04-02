@@ -73,6 +73,9 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
+# Packaged files
+Packaged/*
+
 # Assets
 Content/ABP/*
 Content/Assets/*
