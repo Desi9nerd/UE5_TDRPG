@@ -37,15 +37,12 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
-	UFUNCTION()
-	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) // BP ver.
 	void UpdateFacingTarget(const FVector& Target);
 	UFUNCTION() // C++ ver.
 	virtual void SetFacingTarget(const FVector& FacingTarget);
 
-	// TODO: 종속된 부분 찾아서 GetHitReactMontageFromCharacter로 대체하기
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
 
@@ -62,11 +59,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	AActor* GetCombatTarget() const;
-	UFUNCTION()
-	virtual AActor* GetCombatTargetCPP() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
-	UFUNCTION()
-	virtual TArray<FTaggedMontage> GetAttackMontagesCPP();
 };

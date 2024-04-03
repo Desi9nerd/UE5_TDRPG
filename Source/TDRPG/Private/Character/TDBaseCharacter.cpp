@@ -121,29 +121,6 @@ FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplay
 	return FVector();
 }
 
-FVector ATDBaseCharacter::GetCombatSocketLocationCPP(const FGameplayTag& MontageTag) // 소켓 위치를 리턴
-{
-	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
-	{
-		return Weapon->GetSocketLocation(WeaponTipSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Head))
-	{
-		return GetMesh()->GetSocketLocation(HeadSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
-	{
-		return GetMesh()->GetSocketLocation(LeftHandSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
-	{
-		return GetMesh()->GetSocketLocation(RightHandSocketName);
-	}
-
-	return FVector();
-}
-
 bool ATDBaseCharacter::IsDead_Implementation() const
 {
 	return bDead;
@@ -157,19 +134,4 @@ AActor* ATDBaseCharacter::GetAvatar_Implementation()
 TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontages_Implementation()
 {
 	return AttackMontages;
-}
-
-TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontagesCPP()
-{
-	return AttackMontages;
-}
-
-AActor* ATDBaseCharacter::GetCombatTargetCPP() const
-{
-	return IICombat::GetCombatTarget();
-}
-
-UAnimMontage* ATDBaseCharacter::GetHitReactMontageFromCharacter()
-{
-	return HitReactMontage;
 }

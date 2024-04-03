@@ -27,7 +27,6 @@ public:
 	virtual void UnHighlightActor() override; // 외곽선 효과 Off
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
-	virtual AActor* GetCombatTargetCPP() const override;
 
 	//** ICombat 함수
 	virtual int32 GetPlayerLevel() override;
