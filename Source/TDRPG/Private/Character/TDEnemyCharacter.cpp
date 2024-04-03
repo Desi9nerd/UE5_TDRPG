@@ -71,6 +71,11 @@ AActor* ATDEnemyCharacter::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
+AActor* ATDEnemyCharacter::GetCombatTargetCPP() const
+{
+	return CombatTarget;
+}
+
 void ATDEnemyCharacter::Die()
 {
 	SetLifeSpan(LifeSpanUntilDead); // 5초 뒤 캐릭터 destroy

@@ -27,10 +27,16 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
+	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag) override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontagesCPP() override;
+	
+	virtual AActor* GetCombatTargetCPP() const override;
 	//********************************************************
+
+	UAnimMontage* GetHitReactMontageFromCharacter();
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(); // 캐릭터 사망 처리
