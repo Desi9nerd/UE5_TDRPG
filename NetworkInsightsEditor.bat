@@ -1,0 +1,1 @@
+UnrealEditor.exe %cd%\TDRPG.uproject -NetTrace=1 -trace=net
