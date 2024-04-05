@@ -32,6 +32,7 @@ UTDAttributeSet::UTDAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	
 	// Resistance Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fireball, GetFireballResistanceAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Meteor, GetMeteorResistanceAttribute);
@@ -82,6 +83,10 @@ void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+	}
+	if (Attribute == GetSoulAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
 	}
 }
 
