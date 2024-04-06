@@ -12,6 +12,7 @@ class UGameplayEffect;
 class UGameplayAbility;
 class UTDDA_CharacterClass;
 class UAnimMontage;
+class UNiagaraSystem;
 
 UCLASS(Abstract)
 class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInterface, public IICombat, public IGenericTeamAgentInterface
@@ -30,6 +31,8 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffectCPP() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -62,6 +65,10 @@ protected:
 	FName LeftHandSocketName;
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName RightHandSocketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
+
 
 	bool bDead = false;
 

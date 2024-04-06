@@ -135,3 +135,13 @@ TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontages_Implementation()
 {
 	return AttackMontages;
 }
+
+UNiagaraSystem* ATDBaseCharacter::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
+UNiagaraSystem* ATDBaseCharacter::GetBloodEffectCPP()
+{
+	return BloodEffect;
+}
