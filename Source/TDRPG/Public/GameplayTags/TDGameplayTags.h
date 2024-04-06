@@ -69,6 +69,9 @@ public:
 	FGameplayTag InputTag_R;
 	//********************************************************
 
+	// Gameplay Cues
+	FGameplayTag GameplayCue_MeleeImpact;
+
 private:
 	static FTDGameplayTags GameplayTags;
 };
