@@ -36,6 +36,8 @@ public:
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag) override;
 	virtual int32 GetMinionCount_Implementation() override;
+	virtual void IncremenetMinionCount_Implementation(int32 Amount) override;
+	virtual void IncremenetMinionCntCPP(int32 Amount) override;
 	virtual int32 GetMinionCountCPP() override;
 	//********************************************************
 

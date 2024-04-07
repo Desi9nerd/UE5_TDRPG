@@ -18,7 +18,7 @@ void UTDGA_DamageProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 //	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 //}
 
-void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
+void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride)
 {
 	// Projectile Actor를 서버에만 스폰시킨다.
 	// 서버가 스폰시킨 Projectile Actor는 replicated actor가 되어 클라이언트는 replicated된 버젼을 보게 된다.
@@ -31,6 +31,11 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 			SocketTag); // Weapon, LeftHand, RightHand Socket 중 맞는것을 가져와서 사용.
 		//const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+
+		if (bOverridePitch)
+		{
+			Rotation.Pitch = PitchOverride;
+		}
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);

@@ -29,3 +29,7 @@ int32 IICombat::GetMinionCountCPP()
 {
 	return 0;
 }
+
+void IICombat::IncremenetMinionCntCPP(int32 Amount)
+{
+}

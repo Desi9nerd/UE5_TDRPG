@@ -187,3 +187,13 @@ int32 ATDBaseCharacter::GetMinionCountCPP()
 {
 	return MinionCnt;
 }
+
+void ATDBaseCharacter::IncremenetMinionCount_Implementation(int32 Amount)
+{
+	MinionCnt += Amount;
+}
+
+void ATDBaseCharacter::IncremenetMinionCntCPP(int32 Amount)
+{
+	MinionCnt += Amount;
+}
