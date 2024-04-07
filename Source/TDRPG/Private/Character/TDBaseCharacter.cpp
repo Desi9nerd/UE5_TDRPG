@@ -37,6 +37,11 @@ UAnimMontage* ATDBaseCharacter::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+UAnimMontage* ATDBaseCharacter::GetHitReactMontageCPP()
+{
+	return HitReactMontage;
+}
+
 void ATDBaseCharacter::Die()
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));

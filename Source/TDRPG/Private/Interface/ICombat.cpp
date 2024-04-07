@@ -11,6 +11,11 @@ void IICombat::SetFacingTarget(const FVector& FacingTarget)
 {
 }
 
+UAnimMontage* IICombat::GetHitReactMontageCPP()
+{
+	return nullptr;
+}
+
 void IICombat::Die()
 {
 }

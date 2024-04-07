@@ -26,6 +26,7 @@ public:
 
 	//** ICombat *********************************************
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual UAnimMontage* GetHitReactMontageCPP() override;
 	virtual void Die() override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual bool IsDead_Implementation() const override;
