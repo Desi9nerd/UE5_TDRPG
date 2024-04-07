@@ -35,3 +35,10 @@ TArray<FVector> UTDGA_Summon::GetSpawnLocations() // 명령한 캐릭터 주변으로 미니
 
 	return SpawnLocations;
 }
+
+TSubclassOf<APawn> UTDGA_Summon::GetRandomMinionClass() // MinionClasses에 담긴 미니언 종류 중 랜덤으로 하나 선택
+{
+	const int32 Selection = FMath::RandRange(0, MinionClasses.Num() - 1);
+
+	return MinionClasses[Selection];
+}
