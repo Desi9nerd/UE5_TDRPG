@@ -109,7 +109,7 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 		checkf(TDDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString()); // 방어코드. ResistanceTag 확인. 
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TDDamageStatics().TagsToCaptureDefs[ResistanceTag];
 
-		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag); // 해당 DamageType의 데미지 값
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // 해당 DamageType의 데미지 값
 
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance); // 저항력값 

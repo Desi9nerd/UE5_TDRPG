@@ -69,6 +69,8 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	if (false == bHit) // 피격 최초 성공 시에 적용. bHit은 아래에서 false로 변경된다.
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("%s spawned"), *GetName()); // 스폰되는 Projectile 개수 확인용
+
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		if (IsValid(LoopingSoundComponent))
