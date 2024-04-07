@@ -101,19 +101,19 @@ void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
 FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // 소켓 위치를 리턴
 {
 	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Weapon) && IsValid(Weapon))
 	{
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Head))
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Head))
 	{
 		return GetMesh()->GetSocketLocation(HeadSocketName);
 	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_LeftHand))
 	{
 		return GetMesh()->GetSocketLocation(LeftHandSocketName);
 	}
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_RightHand))
 	{
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
 	}
@@ -133,7 +133,7 @@ AActor* ATDBaseCharacter::GetAvatar_Implementation()
 
 TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontages_Implementation()
 {
-	return AttackMontages;
+	return ATKMontages;
 }
 
 UNiagaraSystem* ATDBaseCharacter::GetBloodEffect_Implementation()
@@ -144,4 +144,28 @@ UNiagaraSystem* ATDBaseCharacter::GetBloodEffect_Implementation()
 UNiagaraSystem* ATDBaseCharacter::GetBloodEffectCPP()
 {
 	return BloodEffect;
+}
+
+FTaggedMontage ATDBaseCharacter::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	for (FTaggedMontage TaggedMontage : ATKMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
+}
+
+FTaggedMontage ATDBaseCharacter::GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag)
+{
+	for (FTaggedMontage TaggedMontage : ATKMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
 }

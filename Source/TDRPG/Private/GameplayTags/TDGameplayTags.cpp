@@ -50,11 +50,17 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Event
 	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Fireball"), FString("파이어볼"));
 
+	// Socket
+	GameplayTags.Socket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.Weapon"),FString("무기 소켓"));
+	GameplayTags.Socket_Head = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.Head"), FString("머리(대가리) 소켓"));
+	GameplayTags.Socket_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.RightHand"),FString("오른손 소켓"));
+	GameplayTags.Socket_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.LeftHand"),FString("왼손 소켓"));
+
 	// Montage
-	GameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Weapon"),FString("Weapon"));
-	GameplayTags.Montage_Attack_Head = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Head"), FString("머리(대가리)"));
-	GameplayTags.Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.RightHand"),FString("오른손"));
-	GameplayTags.Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.LeftHand"),FString("왼손"));
+	GameplayTags.Montage_ATK_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.1"), FString("공격 1"));
+	GameplayTags.Montage_ATK_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.2"), FString("공격 2"));
+	GameplayTags.Montage_ATK_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.3"), FString("공격 3"));
+	GameplayTags.Montage_ATK_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.4"), FString("공격 4"));
 
 	// Enhanced Input
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LMB"), FString("왼쪽 마우스 버튼 Input Tag"));

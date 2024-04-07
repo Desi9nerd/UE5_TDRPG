@@ -54,11 +54,17 @@ public:
 	// Event
 	FGameplayTag Event_Montage_Fireball;
 
+	// Socket
+	FGameplayTag Socket_Weapon;
+	FGameplayTag Socket_Head;
+	FGameplayTag Socket_RightHand;
+	FGameplayTag Socket_LeftHand;
+
 	// Montage
-	FGameplayTag Montage_Attack_Weapon;
-	FGameplayTag Montage_Attack_Head;
-	FGameplayTag Montage_Attack_RightHand;
-	FGameplayTag Montage_Attack_LeftHand;
+	FGameplayTag Montage_ATK_1;
+	FGameplayTag Montage_ATK_2;
+	FGameplayTag Montage_ATK_3;
+	FGameplayTag Montage_ATK_4;
 
 	// Enhanced Input
 	FGameplayTag InputTag_LMB;

@@ -28,7 +28,7 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 	//if (CombatInterface)
 	{
 		const FVector SocketLocation = IICombat::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
-			FTDGameplayTags::GetTDGameplayTags().Montage_Attack_Weapon); // TODO: Weapon, LeftHand, RightHand
+			FTDGameplayTags::GetTDGameplayTags().Socket_Weapon); // TODO: Weapon, LeftHand, RightHand
 		//const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 

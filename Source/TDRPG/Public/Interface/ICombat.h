@@ -20,6 +20,9 @@ struct FTaggedMontage
 	FGameplayTag MontageTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SocketTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<USoundBase> ImpactSound = nullptr;
 };
 
@@ -71,4 +74,7 @@ public:
 	UNiagaraSystem* GetBloodEffect();
 	virtual UNiagaraSystem* GetBloodEffectCPP();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FTaggedMontage GetTaggedMontageByTag(const FGameplayTag& MontageTag);
+	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag);
 };

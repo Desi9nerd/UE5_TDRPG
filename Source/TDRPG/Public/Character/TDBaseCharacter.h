@@ -33,6 +33,8 @@ public:
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffectCPP() override;
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
+	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag) override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -42,7 +44,7 @@ public:
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	TArray<FTaggedMontage> AttackMontages; // 공격 몽타주 배열
+	TArray<FTaggedMontage> ATKMontages; // 공격 몽타주 배열
 
 protected:
 	virtual void BeginPlay() override;

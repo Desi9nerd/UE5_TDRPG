@@ -19,3 +19,8 @@ UNiagaraSystem* IICombat::GetBloodEffectCPP()
 {
 	return nullptr;
 }
+
+FTaggedMontage IICombat::GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag)
+{
+	return FTaggedMontage();
+}
