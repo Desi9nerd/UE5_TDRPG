@@ -3,6 +3,7 @@
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Kismet/GameplayStatics.h"
 #include "TDRPG/TDRPG.h" // ECC_Projectile
 
 ATDBaseCharacter::ATDBaseCharacter()
@@ -45,6 +46,9 @@ void ATDBaseCharacter::Die()
 
 void ATDBaseCharacter::MulticastHandleDeath_Implementation() // Ä³¸¯ÅÍ »ç¸Á Ã³¸®
 {
+	// »ç¸Á »ç¿îµå Àç»ý
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+
 	// ¹«±â ¹Ù´Ú¿¡ ¶³¾î¶ß¸®±â
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
