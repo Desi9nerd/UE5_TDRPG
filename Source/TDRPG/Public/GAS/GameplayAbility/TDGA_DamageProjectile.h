@@ -5,6 +5,7 @@
 
 class ATDProjectile;
 class UGameplayEffect;
+struct FGameplayTag;
 
 /** TDProjectile 액터를 날리는 GameAbility
  * 
@@ -20,7 +21,7 @@ protected:
 	//virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
