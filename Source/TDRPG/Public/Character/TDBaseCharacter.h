@@ -35,6 +35,8 @@ public:
 	virtual UNiagaraSystem* GetBloodEffectCPP() override;
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag) override;
+	virtual int32 GetMinionCount_Implementation() override;
+	virtual int32 GetMinionCountCPP() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -89,6 +91,8 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	int32 MinionCnt = 0; // ¹Ì´Ï¾ð
 
 private:
 	UPROPERTY(EditAnywhere, Category = "GameplayAbility")

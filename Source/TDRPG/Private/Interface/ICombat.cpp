@@ -24,3 +24,8 @@ FTaggedMontage IICombat::GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag
 {
 	return FTaggedMontage();
 }
+
+int32 IICombat::GetMinionCountCPP()
+{
+	return 0;
+}

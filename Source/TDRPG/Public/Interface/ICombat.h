@@ -77,4 +77,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FTaggedMontage GetTaggedMontageByTag(const FGameplayTag& MontageTag);
 	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	int32 GetMinionCount();
+	virtual int32 GetMinionCountCPP();
 };

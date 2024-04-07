@@ -177,3 +177,13 @@ FTaggedMontage ATDBaseCharacter::GetTaggedMontageByTagCPP(const FGameplayTag& Mo
 	}
 	return FTaggedMontage();
 }
+
+int32 ATDBaseCharacter::GetMinionCount_Implementation()
+{
+	return MinionCnt;
+}
+
+int32 ATDBaseCharacter::GetMinionCountCPP()
+{
+	return MinionCnt;
+}
