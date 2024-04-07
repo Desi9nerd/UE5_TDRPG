@@ -59,6 +59,7 @@ public:
 	FGameplayTag Socket_Head;
 	FGameplayTag Socket_RightHand;
 	FGameplayTag Socket_LeftHand;
+	FGameplayTag Socket_Trail;
 
 	// Montage
 	FGameplayTag Montage_ATK_1;

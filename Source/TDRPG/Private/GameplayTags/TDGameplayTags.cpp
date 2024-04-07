@@ -55,6 +55,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Socket_Head = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.Head"), FString("머리(대가리) 소켓"));
 	GameplayTags.Socket_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.RightHand"),FString("오른손 소켓"));
 	GameplayTags.Socket_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.LeftHand"),FString("왼손 소켓"));
+	GameplayTags.Socket_Trail = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Socket.Trail"),FString("공격 시 무기/손 트레일이펙트 위치"));
 
 	// Montage
 	GameplayTags.Montage_ATK_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.1"), FString("공격 1"));

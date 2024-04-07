@@ -121,6 +121,10 @@ FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplay
 	{
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
 	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Trail))
+	{
+		return GetMesh()->GetSocketLocation(TrailSocketName);
+	}
 
 	return FVector();
 }

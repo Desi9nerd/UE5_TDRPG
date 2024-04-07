@@ -50,6 +50,7 @@ void ATDProjectile::Destroyed()
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
 		}
+		bHit = true;
 	}
 
 	Super::Destroyed();
@@ -74,6 +75,7 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
 		}
+		bHit = true;
 	}
 
 	if (HasAuthority()) // Server
