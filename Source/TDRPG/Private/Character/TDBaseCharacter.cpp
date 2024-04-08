@@ -1,5 +1,6 @@
 #include "Character/TDBaseCharacter.h"
 #include "AbilitySystemComponent.h"
+#include "MotionWarpingComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
@@ -22,6 +23,8 @@ ATDBaseCharacter::ATDBaseCharacter()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true); // Mesh에 Overlap 이벤트 발생 true로 설정
 
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
+
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -30,6 +33,12 @@ ATDBaseCharacter::ATDBaseCharacter()
 UAbilitySystemComponent* ATDBaseCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ATDBaseCharacter::UpdateFacingTargetCPP(const FVector& FacingTarget)
+{
+	// 몽타주에서 MotionWarping 애님스테이트를 지정하고 Warp Target Name을 똑같이 적는다
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(WarpTargetName, FacingTarget);
 }
 
 UAnimMontage* ATDBaseCharacter::GetHitReactMontage_Implementation()

@@ -6,6 +6,7 @@
 #include "Interface/ICombat.h"
 #include "TDBaseCharacter.generated.h"
 
+class UMotionWarpingComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -25,6 +26,7 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//** ICombat *********************************************
+	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontageCPP() override;
 	virtual void Die() override;
@@ -81,6 +83,13 @@ protected:
 	TObjectPtr<USoundBase> DeathSound;
 
 	bool bDead = false;
+
+
+	UPROPERTY(EditAnywhere, Category = "Motion Warping Component")
+	FName WarpTargetName = FName("FacingTarget");
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion Warping Component")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

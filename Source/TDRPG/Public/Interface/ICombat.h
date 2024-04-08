@@ -47,8 +47,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) // BP ver.
 	void UpdateFacingTarget(const FVector& Target);
-	UFUNCTION() // C++ ver.
-	virtual void SetFacingTarget(const FVector& FacingTarget);
+	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
