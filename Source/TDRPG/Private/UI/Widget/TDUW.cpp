@@ -1,17 +1,17 @@
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/TDWidgetController.h"
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
 
-void UTDUserWidget::SetWidgetController(UObject* InWidgetController)
+void UTDUW::SetWidgetController(UObject* InWidgetController)
 {
 	WidgetController = InWidgetController;
 	WidgetControllerSet(); // Blueprint에서 실행
 }
 
-UTDWidgetControllerOverlay* UTDUserWidget::GetWidgetControllerOverlay(const UObject* WorldContextObject)
+UTDWidgetControllerOverlay* UTDUW::GetWidgetControllerOverlay(const UObject* WorldContextObject)
 {
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
 	{
@@ -28,7 +28,7 @@ UTDWidgetControllerOverlay* UTDUserWidget::GetWidgetControllerOverlay(const UObj
 	return nullptr;
 }
 
-UTDWidgetControllerAttributeMenu* UTDUserWidget::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
+UTDWidgetControllerAttributeMenu* UTDUW::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
 {
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
 	{

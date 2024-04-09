@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "TDUW_ProgressBar.generated.h"
 
 class USizeBox;
@@ -12,7 +12,7 @@ struct FSlateBrush;
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_ProgressBar : public UTDUserWidget
+class TDRPG_API UTDUW_ProgressBar : public UTDUW
 {
 	GENERATED_BODY()
 

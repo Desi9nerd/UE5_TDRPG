@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "TDUserWidget.generated.h"
+#include "TDUW.generated.h"
 
 class UTDWidgetController;
 class UTDWidgetControllerOverlay;
@@ -11,7 +11,7 @@ class UTDWidgetControllerAttributeMenu;
  * 
  */
 UCLASS()
-class TDRPG_API UTDUserWidget : public UUserWidget
+class TDRPG_API UTDUW : public UUserWidget
 {
 	GENERATED_BODY()
 

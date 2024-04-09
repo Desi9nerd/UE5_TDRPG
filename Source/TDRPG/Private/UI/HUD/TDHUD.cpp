@@ -1,5 +1,5 @@
 ﻿#include "UI/HUD/TDHUD.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 
@@ -36,7 +36,7 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	//** TDUserWidget
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
-	OverlayWidget = Cast<UTDUserWidget>(Widget);
+	OverlayWidget = Cast<UTDUW>(Widget);
 
 	//** TDOverlayWidgetController
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);

@@ -7,7 +7,7 @@ class UAttributeSet;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
-class UTDUserWidget;
+class UTDUW;
 struct FWidgetControllerParams;
 
 /**
@@ -28,13 +28,13 @@ public:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UTDUserWidget>  OverlayWidget;
+	TObjectPtr<UTDUW>  OverlayWidget;
 	/*UPROPERTY()
 	TObjectPtr<UTDUserWidget>  AttributeMenuWidget;*/
 
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UTDUserWidget> OverlayWidgetClass;
+	TSubclassOf<UTDUW> OverlayWidgetClass;
 	UPROPERTY()
 	TObjectPtr<UTDWidgetControllerOverlay> OverlayWidgetController;
 	UPROPERTY(EditAnywhere)

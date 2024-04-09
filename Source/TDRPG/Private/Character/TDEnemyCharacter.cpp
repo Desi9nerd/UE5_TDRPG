@@ -7,7 +7,7 @@
 #include "TDRPG/TDRPG.h" // CUSTOM_DEPTH_RED
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GameplayTags/TDGameplayTags.h"
 
@@ -118,7 +118,7 @@ void ATDEnemyCharacter::BeginPlay()
 		UTDAbilitySystemBPLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass); // GameplayAbility 초기값. ASC랑 캐릭터직업 넘김.
 	}
 
-	UTDUserWidget* TDUserWidget = Cast<UTDUserWidget>(HealthBar->GetUserWidgetObject());
+	UTDUW* TDUserWidget = Cast<UTDUW>(HealthBar->GetUserWidgetObject());
 	if (IsValid(TDUserWidget))
 	{
 		TDUserWidget->SetWidgetController(this);

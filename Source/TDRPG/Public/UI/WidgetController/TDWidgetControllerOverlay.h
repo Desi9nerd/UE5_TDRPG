@@ -3,7 +3,7 @@
 #include "UI/WidgetController/TDWidgetController.h"
 #include "TDWidgetControllerOverlay.generated.h"
 
-class UTDUserWidget;
+class UTDUW;
 
 /** UTDWidgetController 상속을 받는 클래스
  * 
@@ -21,7 +21,7 @@ struct FUIWidgetRow : public FTableRowBase
 	FText Message = FText();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UTDUserWidget> MessageWidget;
+	TSubclassOf<UTDUW> MessageWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Image = nullptr;

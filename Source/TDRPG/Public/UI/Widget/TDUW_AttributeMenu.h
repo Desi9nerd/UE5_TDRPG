@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "TDUW_AttributeMenu.generated.h"
 
 class UTDWidgetController;
@@ -12,7 +12,7 @@ class UTDUW_TextValueRowButton;
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_AttributeMenu : public UTDUserWidget
+class TDRPG_API UTDUW_AttributeMenu : public UTDUW
 {
 	GENERATED_BODY()
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "TDUW_FrameValue.generated.h"
 
 class UTextBlock;
@@ -10,7 +10,7 @@ class UImage;
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_FrameValue : public UTDUserWidget
+class TDRPG_API UTDUW_FrameValue : public UTDUW
 {
 	GENERATED_BODY()
 	

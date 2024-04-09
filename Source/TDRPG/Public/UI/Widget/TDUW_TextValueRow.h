@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "UI/Widget/TDUserWidget.h"
+#include "UI/Widget/TDUW.h"
 #include "TDUW_TextValueRow.generated.h"
 
 class USizeBox;
@@ -12,7 +12,7 @@ class UTDUW_FrameValue;
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_TextValueRow : public UTDUserWidget
+class TDRPG_API UTDUW_TextValueRow : public UTDUW
 {
 	GENERATED_BODY()
 
