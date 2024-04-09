@@ -33,7 +33,7 @@ void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()
 
 void UTDWidgetControllerAttributeMenu::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
 {
-	FTDDataAttributeInfo Info = DataAttribute->FindAttributeInfoForTag(AttributeTag);
+	FDA_Attribute Info = DataAttribute->FindDA_AttributeForTag(AttributeTag);
 	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
 	DataAttributeInfoDelegate.Broadcast(Info);
 }

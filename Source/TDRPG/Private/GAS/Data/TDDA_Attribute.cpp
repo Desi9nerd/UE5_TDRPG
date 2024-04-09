@@ -1,8 +1,8 @@
 #include "GAS/Data/TDDA_Attribute.h"
 
-FTDDataAttributeInfo UTDDA_Attribute::FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
+FDA_Attribute UTDDA_Attribute::FindDA_AttributeForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
 {
-	for (const FTDDataAttributeInfo& Info : AttributeInfo)
+	for (const FDA_Attribute& Info : DA_AttributeInfo)
 	{
 		if (Info.AttributeTag.MatchesTagExact(AttributeTag)) // AttributeInfo배열에서 AttributeTag 찾기
 		{
@@ -16,5 +16,5 @@ FTDDataAttributeInfo UTDDA_Attribute::FindAttributeInfoForTag(const FGameplayTag
 		UE_LOG(LogTemp, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo [%s]."), *AttributeTag.ToString(), *GetNameSafe(this));
 	}
 
-	return FTDDataAttributeInfo();
+	return FDA_Attribute();
 }

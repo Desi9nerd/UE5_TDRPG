@@ -4,8 +4,8 @@
 #include "TDWidgetControllerAttributeMenu.generated.h"
 
 class UTDDA_Attribute;
-struct FTDDataAttributeInfo;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataAttributeInfoSignature, const FTDDataAttributeInfo&, Info);
+struct FDA_Attribute;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataAttributeInfoSignature, const FDA_Attribute&, Info);
 /**
  * 
  */

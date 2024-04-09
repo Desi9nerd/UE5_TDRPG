@@ -5,7 +5,7 @@
 #include "TDDA_Attribute.generated.h"
 
 USTRUCT(BlueprintType)
-struct FTDDataAttributeInfo
+struct FDA_Attribute
 {
 	GENERATED_BODY()
 
@@ -31,8 +31,8 @@ class TDRPG_API UTDDA_Attribute : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	FTDDataAttributeInfo FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound = false) const;
+	FDA_Attribute FindDA_AttributeForTag(const FGameplayTag& AttributeTag, bool bLogNotFound = false) const;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FTDDataAttributeInfo> AttributeInfo;
+	TArray<FDA_Attribute> DA_AttributeInfo;
 };
