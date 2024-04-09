@@ -143,6 +143,33 @@ FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplay
 	return FVector();
 }
 
+FVector ATDBaseCharacter::GetCombatSocketLocationCPP(const FGameplayTag& MontageTag)
+{
+	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Head))
+	{
+		return GetMesh()->GetSocketLocation(HeadSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Trail))
+	{
+		return GetMesh()->GetSocketLocation(TrailSocketName);
+	}
+
+	return FVector();
+}
+
 bool ATDBaseCharacter::IsDead_Implementation() const
 {
 	return bDead;
@@ -154,6 +181,11 @@ AActor* ATDBaseCharacter::GetAvatar_Implementation()
 }
 
 TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontages_Implementation()
+{
+	return ATKMontages;
+}
+
+TArray<FTaggedMontage> ATDBaseCharacter::GetAttackMontagesCPP()
 {
 	return ATKMontages;
 }

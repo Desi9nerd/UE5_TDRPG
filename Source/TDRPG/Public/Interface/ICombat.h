@@ -44,6 +44,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
+	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) // BP ver.
 	void UpdateFacingTarget(const FVector& Target);
@@ -66,9 +67,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	AActor* GetCombatTarget() const;
+	virtual AActor* GetCombatTargetCPP() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
+	virtual TArray<FTaggedMontage> GetAttackMontagesCPP();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
