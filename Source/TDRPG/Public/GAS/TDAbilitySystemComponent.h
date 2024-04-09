@@ -8,6 +8,7 @@
  */
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FGivenASC, UTDAbilitySystemComponent*);
 
 UCLASS()
 class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
@@ -22,6 +23,9 @@ public:
 	void InputTagHeld(const FGameplayTag& InputTag);
 
 	FEffectAssetTags EffectAssetTags;
+	FGivenASC GivenASCDelegate;
+
+	bool bStartGivenASC = false;
 
 protected:
 	UFUNCTION(Client, Reliable) // Client RPC

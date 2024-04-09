@@ -5,6 +5,7 @@
 
 class UTDUW;
 class UTDDA_Ability;
+class UTDAbilitySystemComponent;
 
 /** UTDWidgetController 상속을 받는 클래스
  * 
@@ -62,6 +63,7 @@ protected:
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SoulChanged(const FOnAttributeChangeData& Data) const;
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
+	void OnInitializeStartGivenASC(UTDAbilitySystemComponent* TDASC);
 
 	template<typename T> // DataTable 읽기용
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

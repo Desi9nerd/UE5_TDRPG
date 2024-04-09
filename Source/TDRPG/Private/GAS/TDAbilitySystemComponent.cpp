@@ -19,6 +19,9 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 			GiveAbility(AbilitySpec);
 		}
 	}
+
+	bStartGivenASC = true;
+	GivenASCDelegate.Broadcast(this);
 }
 
 void UTDAbilitySystemComponent::InputTagPressed(const FGameplayTag& InputTag)

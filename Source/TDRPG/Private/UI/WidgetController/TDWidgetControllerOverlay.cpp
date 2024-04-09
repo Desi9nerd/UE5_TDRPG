@@ -30,6 +30,7 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		TDAttributeSet->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
 
+
 	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 		{
@@ -42,9 +43,18 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 			}
 		}
 	);*/ // 위: 람다함수 버젼, 아래: 함수를 밖으로 뺀 버젼 
-	TWeakObjectPtr<UTDAbilitySystemComponent> TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
-	if(TDASC.IsValid())
+	UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
+	if (IsValid(TDASC))
 	{
+		if (TDASC->bStartGivenASC) // AbilitySystemComponent 데이터가 적용되어 있다면
+		{
+			OnInitializeStartGivenASC(TDASC); 
+		}
+		else // AbilitySystemComponent 데이터가 적용이 안 되어 있다면
+		{
+			TDASC->GivenASCDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnInitializeStartGivenASC);		
+		}
+
 		TDASC->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
 	}
 }
@@ -60,6 +70,14 @@ void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContain
 			MessageWidgetRowDelegate.Broadcast(*Row); // Delegate Broadcast
 		}
 	}
+}
+
+void UTDWidgetControllerOverlay::OnInitializeStartGivenASC(UTDAbilitySystemComponent* TDASC)
+{
+	if (false == TDASC->bStartGivenASC) return; // 방어코드. 이미 적용되었다면 다시 적용하지 않고 리턴.
+
+	// TODO: 위젯에 TDASC 데이터 브로드캐스팅.
+	
 }
 
 void UTDWidgetControllerOverlay::HealthChanged(const FOnAttributeChangeData& Data) const
