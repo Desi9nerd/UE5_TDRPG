@@ -26,6 +26,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Abilities
 	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"), FString("Abilities: 공격"));
 	GameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Summon"), FString("Abilities: 미니언 소환"));
+	GameplayTags.Abilities_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fireball"), FString("Abilities: 파이어볼"));
 
 
 	//** Meta

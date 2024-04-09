@@ -4,6 +4,7 @@
 #include "TDWidgetControllerOverlay.generated.h"
 
 class UTDUW;
+class UTDDA_Ability;
 
 /** UTDWidgetController 상속을 받는 클래스
  * 
@@ -67,6 +68,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UTDDA_Ability> TDDA_Ability;
 };
 
 template <typename T>

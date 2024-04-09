@@ -38,6 +38,8 @@ public:
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 
+	FGameplayTag Abilities_Skill_Fireball;
+
 	//** Meta ************************************************
 	// Damage Type
 	FGameplayTag Damage;
