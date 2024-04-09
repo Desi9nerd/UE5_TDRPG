@@ -1,6 +1,6 @@
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "GAS/TDAttributeSet.h"
-#include "GAS/Data/TDDataAttribute.h"
+#include "GAS/Data/TDDA_Attribute.h"
 #include "GameplayTags/TDGameplayTags.h"
 
 void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()

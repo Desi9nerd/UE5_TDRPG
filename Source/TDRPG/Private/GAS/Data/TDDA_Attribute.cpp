@@ -1,6 +1,6 @@
-#include "GAS/Data/TDDataAttribute.h"
+#include "GAS/Data/TDDA_Attribute.h"
 
-FTDDataAttributeInfo UTDDataAttribute::FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
+FTDDataAttributeInfo UTDDA_Attribute::FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
 {
 	for (const FTDDataAttributeInfo& Info : AttributeInfo)
 	{

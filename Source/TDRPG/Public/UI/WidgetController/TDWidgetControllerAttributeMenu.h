@@ -3,7 +3,7 @@
 #include "UI/WidgetController/TDWidgetController.h"
 #include "TDWidgetControllerAttributeMenu.generated.h"
 
-class UTDDataAttribute;
+class UTDDA_Attribute;
 struct FTDDataAttributeInfo;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataAttributeInfoSignature, const FTDDataAttributeInfo&, Info);
 /**
@@ -23,7 +23,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTDDataAttribute> DataAttribute;
+	TObjectPtr<UTDDA_Attribute> DataAttribute;
 
 private:
 	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;

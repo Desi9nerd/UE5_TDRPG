@@ -2,7 +2,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
-#include "TDDataAttribute.generated.h"
+#include "TDDA_Attribute.generated.h"
 
 USTRUCT(BlueprintType)
 struct FTDDataAttributeInfo
@@ -26,7 +26,7 @@ struct FTDDataAttributeInfo
  * 
  */
 UCLASS()
-class TDRPG_API UTDDataAttribute : public UDataAsset
+class TDRPG_API UTDDA_Attribute : public UDataAsset
 {
 	GENERATED_BODY()
 
