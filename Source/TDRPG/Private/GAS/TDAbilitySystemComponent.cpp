@@ -7,6 +7,8 @@ void UTDAbilitySystemComponent::AbilityActorInfoSet()
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UTDAbilitySystemComponent::ClientEffectApplied); // Delegate에 바인딩. Delegate가 서버에서 broadcast되면 서버에서 콜 되어 클라이언트에서 실행된다.
 }
 
+// AddCharacterAbilities()함수는 서버에서만 불려진다.
+// GivenASCDelegate을 클라이언트들에게도 Broadcast하기 위해서 아래의 OnRep_ActivateAbilities()함수를 사용하였다.
 void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
 	// 에디터에서 할당한 GameplayAbility를 모두 등록
@@ -105,6 +107,19 @@ FGameplayTag UTDAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbili
 		}
 	}
 	return FGameplayTag();
+}
+
+// 상위 클래스인 AbilitySystemComponent에 ActivateAbilities 값이 변경될 때마다 호출되는 OnRep_ActivateAbilities 함수를 재정의하여 사용.
+// GivenASCDelegate을 클라이언트들에게도 Broadcast한다.
+void UTDAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if (false == bStartGivenASC)
+	{
+		bStartGivenASC = true;
+		GivenASCDelegate.Broadcast(this);
+	}
 }
 
 // AbilitySystemComponent.h 107줄

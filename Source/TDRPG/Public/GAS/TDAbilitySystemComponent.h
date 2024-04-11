@@ -35,5 +35,7 @@ public:
 
 protected:
 	UFUNCTION(Client, Reliable) // Client RPC
-	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);\
+	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+
+	virtual void OnRep_ActivateAbilities() override;
 };
