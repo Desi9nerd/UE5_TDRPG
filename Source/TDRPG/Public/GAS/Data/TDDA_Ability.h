@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
 #include "TDDA_Ability.generated.h"
 
 /**
@@ -32,8 +32,8 @@ class TDRPG_API UTDDA_Ability : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	FDA_Ability FindDA_AbilityForTag(const FGameplayTag& AbilityTag, bool bLogNotFound = false) const;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilityInformation")
 	TArray<FDA_Ability> DA_AbilityInfo;
-
-	FDA_Ability FindDA_AbilityForTag(const FGameplayTag& AbilityTag, bool bLogNotFound = false) const;
 };

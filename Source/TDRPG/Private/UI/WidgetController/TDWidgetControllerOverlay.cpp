@@ -1,6 +1,7 @@
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
+#include "GAS/Data/TDDA_Ability.h"
 
 void UTDWidgetControllerOverlay::BroadcastInitialValues()
 {
@@ -76,8 +77,18 @@ void UTDWidgetControllerOverlay::OnInitializeStartGivenASC(UTDAbilitySystemCompo
 {
 	if (false == TDASC->bStartGivenASC) return; // 방어코드. 이미 적용되었다면 다시 적용하지 않고 리턴.
 
-	// TODO: 위젯에 TDASC 데이터 브로드캐스팅.
-	
+	// 위젯에 TDASC 데이터 브로드캐스팅.
+	// BroadcastDelegate 생성 후 람다로 바인딩.
+	FForEachAbility BroadcastDelegate; 
+	BroadcastDelegate.BindLambda([this, TDASC](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			//TODO: Given Ability Spec을 위한 AbilityTag 필요
+			FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(TDASC->GetAbilityTagFromSpec(AbilitySpec));
+			DA_AbilityInfo.InputTag = TDASC->GetInputTagFromSpec(AbilitySpec); // 어떤 InputTag와 어떤 AbilitySpec이 매칭되는지 알기위해
+			DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo);
+		});
+
+	TDASC->ForEachAbility(BroadcastDelegate); // 델리게이트 보내기
 }
 
 void UTDWidgetControllerOverlay::HealthChanged(const FOnAttributeChangeData& Data) const

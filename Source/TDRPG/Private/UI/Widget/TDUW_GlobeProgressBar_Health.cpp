@@ -11,6 +11,7 @@ void UTDUW_GlobeProgressBar_Health::NativeConstruct()
 
 	TDWidgetControllerOverlay->OnHealthChanged.AddDynamic(this, &ThisClass::OnHealthChanged_Event);
 	TDWidgetControllerOverlay->OnMaxHealthChanged.AddDynamic(this, &ThisClass::OnMaxHealthChanged_Event);
+
 }
 
 void UTDUW_GlobeProgressBar_Health::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -31,4 +32,3 @@ void UTDUW_GlobeProgressBar_Health::OnMaxHealthChanged_Event(float InValue)
 
 	SetProgressBarPercent(UKismetMathLibrary::SafeDivide(Health, MaxHealth));
 }
-
