@@ -5,7 +5,7 @@
 #include "TDDA_Ability.generated.h"
 
 /**
- * 
+ *
  */
 
 USTRUCT(BlueprintType)
