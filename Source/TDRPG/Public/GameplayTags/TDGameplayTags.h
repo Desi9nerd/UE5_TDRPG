@@ -40,6 +40,9 @@ public:
 
 	FGameplayTag Abilities_Skill_Fireball;
 
+	// Cooldown
+	FGameplayTag Cooldown_Skill_Fireball;
+
 	//** Meta ************************************************
 	// Damage Type
 	FGameplayTag Damage;

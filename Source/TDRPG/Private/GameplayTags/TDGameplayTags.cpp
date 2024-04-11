@@ -28,6 +28,8 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Summon"), FString("Abilities: 미니언 소환"));
 	GameplayTags.Abilities_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fireball"), FString("Abilities: 파이어볼"));
 
+	// Cooldown
+	GameplayTags.Cooldown_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Fireball"), FString("Cooldown: 파이어볼"));
 
 	//** Meta
 	// Damage Type
