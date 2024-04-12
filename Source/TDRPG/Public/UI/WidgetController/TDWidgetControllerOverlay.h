@@ -60,6 +60,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FDA_AbilitySignature DA_AbilityInfoDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Exp")
+	FOnAttributeChangedSignature OnExpPercentChangedDelegate;
 
 protected:
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
@@ -67,6 +69,7 @@ protected:
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SoulChanged(const FOnAttributeChangeData& Data) const;
+	void OnExpChanged(int32 InNewExp) const;
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
 	void OnInitializeStartGivenASC(UTDAbilitySystemComponent* TDASC);
 

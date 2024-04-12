@@ -6,6 +6,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UTDDA_LevelUp;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /* StatValue */)
 
@@ -34,6 +35,9 @@ public:
 
 	FOnPlayerStatChanged OnExpChangedDelegate;
 	FOnPlayerStatChanged OnPlayerLevelChangedDelegate;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UTDDA_LevelUp> TDDA_LevelUpInfo;
 
 protected:
 	UPROPERTY(VisibleAnywhere)

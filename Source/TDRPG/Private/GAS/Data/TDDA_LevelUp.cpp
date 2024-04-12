@@ -1,6 +1,6 @@
 #include "GAS/Data/TDDA_LevelUp.h"
 
-int32 UTDDA_LevelUp::FindDA_LevelUpForExp(int32 Exp)
+int32 UTDDA_LevelUp::FindDA_LevelUpForExp(int32 Exp) const
 {
 	int32 Lv = 1; // 캐릭터 레벨
 	bool bSearching = true;

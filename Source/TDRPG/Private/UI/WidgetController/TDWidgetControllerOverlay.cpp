@@ -2,6 +2,8 @@
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/TDAttributeSet.h"
 #include "GAS/Data/TDDA_Ability.h"
+#include "GAS/Data/TDDA_LevelUp.h"
+#include "Player/TDPlayerState.h"
 
 void UTDWidgetControllerOverlay::BroadcastInitialValues()
 {
@@ -58,6 +60,10 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 
 		TDASC->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
 	}
+
+
+	ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
+	TDPlayerState->OnExpChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnExpChanged);
 }
 
 void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
@@ -114,4 +120,27 @@ void UTDWidgetControllerOverlay::MaxManaChanged(const FOnAttributeChangeData& Da
 void UTDWidgetControllerOverlay::SoulChanged(const FOnAttributeChangeData& Data) const
 {
 	OnSoulChanged.Broadcast(Data.NewValue);
+}
+
+void UTDWidgetControllerOverlay::OnExpChanged(int32 InNewExp) const
+{
+	const ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
+	const UTDDA_LevelUp* TDDA_LevelUpInfo = TDPlayerState->TDDA_LevelUpInfo;
+	check(TDDA_LevelUpInfo);
+
+	const int32 PlayerLevel = TDDA_LevelUpInfo->FindDA_LevelUpForExp(InNewExp);
+	const int32 MaxPlayerLevel = TDDA_LevelUpInfo->DA_LevelUpInfo.Num();
+
+	if (PlayerLevel <= MaxPlayerLevel && PlayerLevel > 0)
+	{
+		const int32 LevelUpRequirement = TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].LevelUpRequirement;
+		const int32 PreviousLevelUpRequirement = TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel - 1].LevelUpRequirement;
+
+		const int32 DeltaLevelRequirement = LevelUpRequirement - PreviousLevelUpRequirement;
+		const int32 ExpForThisLevel = InNewExp - PreviousLevelUpRequirement;
+
+		const float ExpBarPercent = static_cast<float>(ExpForThisLevel) / static_cast<float>(DeltaLevelRequirement);
+
+		OnExpPercentChangedDelegate.Broadcast(ExpBarPercent);
+	}
 }

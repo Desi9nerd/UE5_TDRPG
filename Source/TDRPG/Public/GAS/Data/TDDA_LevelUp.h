@@ -29,7 +29,7 @@ class TDRPG_API UTDDA_LevelUp : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	int32 FindDA_LevelUpForExp(int32 Exp);
+	int32 FindDA_LevelUpForExp(int32 Exp) const;
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FDA_LevelUp> DA_LevelUpInfo;
