@@ -6,9 +6,13 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /* StatValue */)
+
 /**
  * 
  */
+
 UCLASS()
 class TDRPG_API ATDPlayerState : public APlayerState, public IAbilitySystemInterface
 {
@@ -20,7 +24,16 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
-	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
+	void AddToPlayerLevel(int32 InPlayerLevel);
+	void AddToExp(int32 InExp);
+	void SetPlayerLevel(int32 InPlayerLevel);
+	void SetExp(int32 InExp);
+
+	FORCEINLINE int32 GetPlayerLevel() const { return PlayerLevel; }
+	FORCEINLINE int32 GetExp() const { return Exp; }
+
+	FOnPlayerStatChanged OnExpChangedDelegate;
+	FOnPlayerStatChanged OnPlayerLevelChangedDelegate;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -30,9 +43,15 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 private:
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Level)
-	int32 Level = 1;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_PlayerLevel)
+	int32 PlayerLevel = 1;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Exp)
+	int32 Exp = 1;
 
 	UFUNCTION()
-	void OnRep_Level(int32 OldLevel);
+	void OnRep_PlayerLevel(int32 OldPlayerLevel);
+
+	UFUNCTION()
+	void OnRep_Exp(int32 OldExp);
 };
