@@ -114,6 +114,7 @@ void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
 	if (false == HasAuthority()) return; // 서버가 아니면 return
 
 	TDASC->AddCharacterAbilities(StartupAbilities);
+	TDASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
 
 FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // 소켓 위치를 리턴

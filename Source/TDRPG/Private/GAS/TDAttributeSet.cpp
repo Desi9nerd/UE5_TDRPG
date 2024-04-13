@@ -140,6 +140,14 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit); // 데미지 숫자 띄우기. FEffectProperties, 데미지, Block, CriticalHit 정보 전달
 		}
 	}
+
+	//** 경험치 처리
+	if (Data.EvaluatedData.Attribute == GetIncomingExpAttribute())
+	{
+		const float LocalIncomingXP = GetIncomingExp();
+		SetIncomingExp(0.f);
+		UE_LOG(LogTemp, Log, TEXT("Incoming XP: %f"), LocalIncomingXP);
+	}
 }
 
 void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // 이펙트 속성 설정하기

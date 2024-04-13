@@ -116,6 +116,8 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "GameplayAbility")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; // GameplayAbility를 에디터에서 모두 할당
+	UPROPERTY(EditAnywhere, Category = "GameplayAbility")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

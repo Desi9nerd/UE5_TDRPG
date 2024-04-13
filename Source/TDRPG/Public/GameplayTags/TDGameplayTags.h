@@ -34,6 +34,9 @@ public:
 
 	FGameplayTag Attributes_Resistance_Melee;
 
+	// Meta Attributes
+	FGameplayTag Attributes_Meta_IncomingExp;
+
 	// Abilities
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;

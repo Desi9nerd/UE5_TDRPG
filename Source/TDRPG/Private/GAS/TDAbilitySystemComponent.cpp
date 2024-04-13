@@ -27,6 +27,16 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 	GivenASCDelegate.Broadcast(this);
 }
 
+void UTDAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities)
+{
+	// 에디터에서 할당한 GameplayAbility를 모두 등록
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec); // Activate 
+	}
+}
+
 void UTDAbilitySystemComponent::InputTagPressed(const FGameplayTag& InputTag)
 {
 	if (false == InputTag.IsValid()) return;

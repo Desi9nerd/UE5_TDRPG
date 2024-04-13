@@ -19,6 +19,7 @@ class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
 	void InputTagPressed(const FGameplayTag& InputTag);
 	void InputTagReleased(const FGameplayTag& InputTag);
 	void InputTagHeld(const FGameplayTag& InputTag);
