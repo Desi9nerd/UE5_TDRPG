@@ -2,7 +2,6 @@
 #include "CoreMinimal.h"
 #include "Character/TDBaseCharacter.h"
 #include "Interface/IEnemy.h"
-#include "GAS/Data/TDDA_CharacterClass.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "TDEnemyCharacter.generated.h"
 
@@ -59,9 +58,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	int32 Level = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
-	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;

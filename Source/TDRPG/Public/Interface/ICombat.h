@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "GameplayTagContainer.h"
+#include "GAS/Data/TDDA_CharacterClass.h"
 #include "ICombat.generated.h"
 
 class UAnimMontage;
@@ -90,4 +91,7 @@ public:
 	void IncremenetMinionCount(int32 Amount);
 	virtual void IncremenetMinionCntCPP(int32 Amount);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	ECharacterClass GetCharacterClass();
+	virtual ECharacterClass GetCharacterClassCPP();
 };

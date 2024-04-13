@@ -234,6 +234,16 @@ int32 ATDBaseCharacter::GetMinionCountCPP()
 	return MinionCnt;
 }
 
+ECharacterClass ATDBaseCharacter::GetCharacterClass_Implementation()
+{
+	return CharacterClass;
+}
+
+ECharacterClass ATDBaseCharacter::GetCharacterClassCPP()
+{
+	return CharacterClass;
+}
+
 void ATDBaseCharacter::IncremenetMinionCount_Implementation(int32 Amount)
 {
 	MinionCnt += Amount;

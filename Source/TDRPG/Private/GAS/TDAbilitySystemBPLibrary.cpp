@@ -175,3 +175,14 @@ bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondAct
 
 	return false;
 }
+
+int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel)
+{
+	UTDDA_CharacterClass* TDDA_CharacterClass = GetTDDA_CharacterClass(WorldContextObject);
+	if (false == IsValid(TDDA_CharacterClass)) return 0;
+
+	const FCharacterClassDefaultInfo& DA_CharacterClassInfo = TDDA_CharacterClass->GetClassDefaultInfo(CharacterClass);
+	const float ExpReward = DA_CharacterClassInfo.ExpReward.GetValueAtLevel(CharacterLevel);
+
+	return static_cast<int32>(ExpReward);
+}

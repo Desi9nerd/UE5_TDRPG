@@ -3,6 +3,7 @@
 #include "AbilitySystemInterface.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
+#include "GAS/Data/TDDA_CharacterClass.h"
 #include "Interface/ICombat.h"
 #include "TDBaseCharacter.generated.h"
 
@@ -11,7 +12,6 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
-class UTDDA_CharacterClass;
 class UAnimMontage;
 class UNiagaraSystem;
 
@@ -44,6 +44,8 @@ public:
 	virtual void IncremenetMinionCount_Implementation(int32 Amount) override;
 	virtual void IncremenetMinionCntCPP(int32 Amount) override;
 	virtual int32 GetMinionCountCPP() override;
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
+	virtual ECharacterClass GetCharacterClassCPP() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -107,6 +109,9 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	int32 MinionCnt = 0; // ¹Ì´Ï¾ð
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "GameplayAbility")

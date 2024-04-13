@@ -53,3 +53,8 @@ int32 IICombat::GetMinionCountCPP()
 void IICombat::IncremenetMinionCntCPP(int32 Amount)
 {
 }
+
+ECharacterClass IICombat::GetCharacterClassCPP()
+{
+	return ECharacterClass();
+}
