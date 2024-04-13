@@ -127,6 +127,7 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				{
 					CombatInterface->Die(); // 캐릭터 사망 처리
 				}
+				SendExpEvent(Props); // 경험치 보내기
 			}
 			else // 체력 0 초과
 			{
@@ -146,7 +147,6 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	{
 		const float LocalIncomingXP = GetIncomingExp();
 		SetIncomingExp(0.f);
-		UE_LOG(LogTemp, Log, TEXT("Incoming XP: %f"), LocalIncomingXP);
 	}
 }
 
@@ -198,6 +198,24 @@ void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Dam
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
+	}
+}
+
+void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // 자신을 죽인 캐릭터에 경험치 보내기
+{
+	IICombat* CombatInterface = Cast<IICombat>(Props.TargetCharacter);
+	if (CombatInterface)
+	{
+		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		//const ECharacterClass TargetClass = IICombat::Execute_GetCharacterClass(Props.TargetCharacter);
+		const ECharacterClass TargetClass = CombatInterface->GetCharacterClassCPP();
+		const int32 ExpReward = UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+
+		const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+		FGameplayEventData Payload;
+		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingExp;
+		Payload.EventMagnitude = ExpReward;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingExp, Payload);
 	}
 }
 
