@@ -47,7 +47,7 @@ void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* World
 	AActor* AvatarActor = ASC->GetAvatarActor(); // GameplayEffect가 적용될 Source
 
 	UTDDA_CharacterClass* DataAssetCharacterClass = GetTDDA_CharacterClass(WorldContextObject);
-	FCharacterClassDefaultInfo ClassDefaultInfo = DataAssetCharacterClass->GetClassDefaultInfo(CharacterClass);
+	FDA_CharacterClass ClassDefaultInfo = DataAssetCharacterClass->GetDA_ClassClass(CharacterClass);
 
 	FGameplayEffectContextHandle StatAttributesContextHandle = ASC->MakeEffectContext();
 	StatAttributesContextHandle.AddSourceObject(AvatarActor);
@@ -77,7 +77,7 @@ void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContext
 		ASC->GiveAbility(AbilitySpec);
 	}
 
-	const FCharacterClassDefaultInfo& CharacterClassDefaultInfo = TDDACharacterClass->GetClassDefaultInfo(CharacterClass);
+	const FDA_CharacterClass& CharacterClassDefaultInfo = TDDACharacterClass->GetDA_ClassClass(CharacterClass);
 	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassDefaultInfo.StartupAbilities)
 	{
 		IICombat* CombatInterface = Cast<IICombat>(ASC->GetAvatarActor());
@@ -178,10 +178,10 @@ bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondAct
 
 int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel)
 {
-	UTDDA_CharacterClass* TDDA_CharacterClass = GetTDDA_CharacterClass(WorldContextObject);
+	TObjectPtr<UTDDA_CharacterClass> TDDA_CharacterClass = GetTDDA_CharacterClass(WorldContextObject);
 	if (false == IsValid(TDDA_CharacterClass)) return 0;
 
-	const FCharacterClassDefaultInfo& DA_CharacterClassInfo = TDDA_CharacterClass->GetClassDefaultInfo(CharacterClass);
+	const FDA_CharacterClass& DA_CharacterClassInfo = TDDA_CharacterClass->GetDA_ClassClass(CharacterClass);
 	const float ExpReward = DA_CharacterClassInfo.ExpReward.GetValueAtLevel(CharacterLevel);
 
 	return static_cast<int32>(ExpReward);

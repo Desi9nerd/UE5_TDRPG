@@ -20,17 +20,17 @@ enum class ECharacterClass : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FCharacterClassDefaultInfo
+struct FDA_CharacterClass
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	TSubclassOf<UGameplayEffect> StatAttributes;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	FScalableFloat ExpReward = FScalableFloat();
 };
 
@@ -40,10 +40,10 @@ class TDRPG_API UTDDA_CharacterClass : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
+	FDA_CharacterClass GetDA_ClassClass(ECharacterClass CharacterClass);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Defaults")
-	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
+	TMap<ECharacterClass, FDA_CharacterClass> CharacterClassTMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;

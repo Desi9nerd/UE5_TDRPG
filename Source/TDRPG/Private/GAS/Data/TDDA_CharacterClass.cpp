@@ -1,6 +1,6 @@
 #include "GAS/Data/TDDA_CharacterClass.h"
 
-FCharacterClassDefaultInfo UTDDA_CharacterClass::GetClassDefaultInfo(ECharacterClass CharacterClass)
+FDA_CharacterClass UTDDA_CharacterClass::GetDA_ClassClass(ECharacterClass CharacterClass)
 {
-	return CharacterClassInformation.FindChecked(CharacterClass);
+	return CharacterClassTMap.FindChecked(CharacterClass);
 }

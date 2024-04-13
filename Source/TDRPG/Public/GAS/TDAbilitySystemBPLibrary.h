@@ -25,32 +25,32 @@ public:
 	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController")
 	static UTDWidgetControllerAttributeMenu* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass); // GameplayAbility 초기화
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
 	static UTDDA_CharacterClass* GetTDDA_CharacterClass(const UObject* WorldContextObject); // TDGameMode의 UTDDACharacterClass를 가져오는 함수
 
 	//********************************************************
 	//** Block Hit, Critical Hit
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary| GameplayEffects")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
 	//********************************************************
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary| GameplayMechanics")
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
 
-	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayMechanics")
 	static bool IsSameTeam(AActor* FirstActor, AActor* SecondActor);
 
 
