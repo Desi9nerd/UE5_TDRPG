@@ -6,6 +6,7 @@
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "Interface/ICombat.h"
+#include "Interface/IPlayer.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
 
@@ -145,8 +146,16 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	//** 경험치 처리
 	if (Data.EvaluatedData.Attribute == GetIncomingExpAttribute())
 	{
-		const float LocalIncomingXP = GetIncomingExp();
+		const float LocalIncomingExp = GetIncomingExp();
 		SetIncomingExp(0.f);
+
+		// TODO: 레벨업이 필요한 경우, 코드 구현
+
+		IIPlayer* PlayerInterface = Cast<IIPlayer>(Props.SourceCharacter);
+		if (PlayerInterface)
+		{
+			PlayerInterface->AddToExpCPP(LocalIncomingExp);
+		}
 	}
 }
 

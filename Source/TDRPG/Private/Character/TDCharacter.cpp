@@ -30,11 +30,14 @@ ATDCharacter::ATDCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	TDPlayerState = GetPlayerState<ATDPlayerState>();
 }
 
 void ATDCharacter::PossessedBy(AController* NewController) // 서버
 {
 	Super::PossessedBy(NewController);
+
 
 	// 서버에 Init Ability actor info 
 	InitAbilityActorInfo(); 
@@ -51,15 +54,39 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 
 int32 ATDCharacter::GetPlayerLevel()
 {
-	const ATDPlayerState* TDPlayerState = GetPlayerState<ATDPlayerState>();
+	if (false == IsValid(TDPlayerState))
+	{
+		TDPlayerState = GetPlayerState<ATDPlayerState>();
+	}
 	check(TDPlayerState);
 
 	return TDPlayerState->GetPlayerLevel();
 }
 
+//void ATDCharacter::AddToExp_Implementation(int32 InExp)
+//{
+//	check(TDPlayerState);
+//
+//	TDPlayerState->AddToExp(InExp);
+//}
+
+void ATDCharacter::AddToExpCPP(int32 InExp)
+{
+	if (false == IsValid(TDPlayerState))
+	{
+		TDPlayerState = GetPlayerState<ATDPlayerState>();
+	}
+	check(TDPlayerState);
+
+	TDPlayerState->AddToExp(InExp);
+}
+
 void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜
 {
-	TObjectPtr<ATDPlayerState> TDPlayerState = GetPlayerState<ATDPlayerState>();
+	if (false == IsValid(TDPlayerState))
+	{
+		TDPlayerState = GetPlayerState<ATDPlayerState>();
+	}
 	check(TDPlayerState); // 예외처리. PlayerState 없을시 종료
 
 	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
