@@ -29,6 +29,22 @@ public:
 	//virtual void AddToExp_Implementation(int32 InExp) override;
 	virtual void AddToExpCPP(int32 InExp) override;
 	//virtual void LevelUp_Implementation() override;
+	virtual void AddToPlayerLevel(int32 InPlayerLevel) override;
+	virtual void AddToPlayerLevelBP_Implementation(int32 InPlayerLevel) override;
+	virtual void AddToAttributePoints(int32 InAttributePoints) override;
+	virtual void AddToAttributePointsBP_Implementation(int32 InAttributePoints) override;
+	virtual void AddToSkillPoints(int32 InSkillPoints) override;
+	virtual void AddToSkillPointsBP_Implementation(int32 InSpellPoints) override;
+
+	virtual int32 GetExp() const override;
+	virtual int32 GetExpBP_Implementation() const override;
+	virtual int32 FindLevelForExp(int32 InExp) const override;
+	virtual int32 FindLevelForExpBP_Implementation(int32 InExp) const override;
+	virtual int32 GetAttributePointsReward(int32 PlayerLevel) const override;
+	virtual int32 GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const override;
+	virtual int32 GetSkillPointsReward(int32 PlayerLevel) const override;
+	virtual int32 GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const override;
+
 	virtual void LevelUpCPP() override;
 	//********************************************************
 

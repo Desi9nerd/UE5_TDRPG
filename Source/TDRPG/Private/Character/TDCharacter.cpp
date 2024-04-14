@@ -8,6 +8,7 @@
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
 #include "MotionWarpingComponent.h"
+#include "GAS/Data/TDDA_LevelUp.h"
 
 ATDCharacter::ATDCharacter()
 {
@@ -30,14 +31,11 @@ ATDCharacter::ATDCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
-
-	TDPlayerState = GetPlayerState<ATDPlayerState>();
 }
 
 void ATDCharacter::PossessedBy(AController* NewController) // 서버
 {
 	Super::PossessedBy(NewController);
-
 
 	// 서버에 Init Ability actor info 
 	InitAbilityActorInfo(); 
@@ -65,10 +63,6 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 
 int32 ATDCharacter::GetPlayerLevel()
 {
-	if (false == IsValid(TDPlayerState))
-	{
-		TDPlayerState = GetPlayerState<ATDPlayerState>();
-	}
 	check(TDPlayerState);
 
 	return TDPlayerState->GetPlayerLevel();
@@ -83,13 +77,107 @@ int32 ATDCharacter::GetPlayerLevel()
 
 void ATDCharacter::AddToExpCPP(int32 InExp)
 {
-	if (false == IsValid(TDPlayerState))
-	{
-		TDPlayerState = GetPlayerState<ATDPlayerState>();
-	}
 	check(TDPlayerState);
 
 	TDPlayerState->AddToExp(InExp);
+}
+
+void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
+{
+	check(TDPlayerState);
+
+	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+}
+
+void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
+{
+	check(TDPlayerState);
+
+	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+}
+
+void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
+{
+	check(TDPlayerState);
+
+	// TODO: TDPlayerState->AddToAttributePoints(InPlayerLevel);
+}
+
+void ATDCharacter::AddToAttributePointsBP_Implementation(int32 InAttributePoints)
+{
+	check(TDPlayerState);
+
+	// TODO: TDPlayerState->AddToAttributePoints(InPlayerLevel);
+}
+
+void ATDCharacter::AddToSkillPoints(int32 InSkillPoints)
+{
+	check(TDPlayerState);
+
+	// TODO: TDPlayerState->AddToSkillPoints(InPlayerLevel);
+}
+
+void ATDCharacter::AddToSkillPointsBP_Implementation(int32 InSpellPoints)
+{
+	check(TDPlayerState);
+
+	// TODO: TDPlayerState->AddToSkillPoints(InPlayerLevel);
+}
+
+int32 ATDCharacter::GetExp() const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->GetExp();
+}
+
+int32 ATDCharacter::GetExpBP_Implementation() const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->GetExp();
+}
+
+int32 ATDCharacter::FindLevelForExp(int32 InExp) const
+{
+	check(TDPlayerState);
+	
+	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
+}
+
+int32 ATDCharacter::FindLevelForExpBP_Implementation(int32 InExp) const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
+}
+
+int32 ATDCharacter::GetAttributePointsReward(int32 PlayerLevel) const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
+}
+
+int32 ATDCharacter::GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
+}
+
+int32 ATDCharacter::GetSkillPointsReward(int32 PlayerLevel) const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
+}
+
+int32 ATDCharacter::GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const
+{
+	check(TDPlayerState);
+
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
 }
 
 //void ATDCharacter::LevelUp_Implementation()

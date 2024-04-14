@@ -149,11 +149,28 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		const float LocalIncomingExp = GetIncomingExp();
 		SetIncomingExp(0.f);
 
-		// TODO: 레벨업이 필요한 경우, 코드 구현
-
-		IIPlayer* PlayerInterface = Cast<IIPlayer>(Props.SourceCharacter);
-		if (PlayerInterface)
+		IICombat* CombatInterface = Cast<IICombat>(Props.SourceCharacter); 
+		IIPlayer* PlayerInterface = Cast<IIPlayer>(Props.SourceCharacter); 
+		if (PlayerInterface && CombatInterface)
 		{
+			const int32 CurrentPlayerLevel = CombatInterface->GetPlayerLevel(); // 현재 레벨
+			const int32 CurrentExp = PlayerInterface->GetExp(); // 현재 경험치
+
+			const int32 NewPlayerLevel = PlayerInterface->FindLevelForExp(CurrentExp + LocalIncomingExp); // 경험치 추가 후 새로운 레벨
+			const int32 AmountOfLevelUps = NewPlayerLevel - CurrentPlayerLevel; // 레벨 변동값
+
+			if (AmountOfLevelUps > 0)
+			{
+				const int32 AttributePointsReward = PlayerInterface->GetAttributePointsReward(CurrentPlayerLevel);
+				const int32 SkillPointsReward = PlayerInterface->GetSkillPointsReward(CurrentPlayerLevel);
+
+				PlayerInterface->AddToPlayerLevel(AmountOfLevelUps);		  // 레벨업
+				PlayerInterface->AddToAttributePoints(AttributePointsReward); // Attribute Point 추가
+				PlayerInterface->AddToSkillPoints(SkillPointsReward);		  // Skill Point 추가
+
+				PlayerInterface->LevelUpCPP(); // 레벨업
+			}
+
 			PlayerInterface->AddToExpCPP(LocalIncomingExp);
 		}
 	}
