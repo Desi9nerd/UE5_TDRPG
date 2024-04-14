@@ -21,12 +21,15 @@ public:
 	virtual void OnRep_PlayerState() override; // Client
 
 	//** ICombat *********************************************
+	//virtual int32 GetPlayerLevelBP_Implementation() override;
 	virtual int32 GetPlayerLevel() override;
 	//********************************************************
 
 	//** IPlayer *********************************************
 	//virtual void AddToExp_Implementation(int32 InExp) override;
 	virtual void AddToExpCPP(int32 InExp) override;
+	//virtual void LevelUp_Implementation() override;
+	virtual void LevelUpCPP() override;
 	//********************************************************
 
 protected:

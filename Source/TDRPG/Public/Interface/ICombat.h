@@ -41,6 +41,8 @@ class TDRPG_API IICombat
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetPlayerLevelBP();
 	virtual int32 GetPlayerLevel();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

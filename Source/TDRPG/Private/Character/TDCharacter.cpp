@@ -52,6 +52,17 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 	InitAbilityActorInfo(); 
 }
 
+//int32 ATDCharacter::GetPlayerLevelBP_Implementation()
+//{
+//	if (false == IsValid(TDPlayerState))
+//	{
+//		TDPlayerState = GetPlayerState<ATDPlayerState>();
+//	}
+//	check(TDPlayerState);
+//
+//	return TDPlayerState->GetPlayerLevel();
+//}
+
 int32 ATDCharacter::GetPlayerLevel()
 {
 	if (false == IsValid(TDPlayerState))
@@ -79,6 +90,16 @@ void ATDCharacter::AddToExpCPP(int32 InExp)
 	check(TDPlayerState);
 
 	TDPlayerState->AddToExp(InExp);
+}
+
+//void ATDCharacter::LevelUp_Implementation()
+//{
+//	
+//}
+
+void ATDCharacter::LevelUpCPP()
+{
+	
 }
 
 void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜

@@ -21,4 +21,7 @@ public:
 	void AddToExp(int32 InExp);
 	virtual void AddToExpCPP(int32 InExp);
 
+	UFUNCTION(BlueprintNativeEvent)
+	void LevelUp();
+	virtual void LevelUpCPP();
 };
