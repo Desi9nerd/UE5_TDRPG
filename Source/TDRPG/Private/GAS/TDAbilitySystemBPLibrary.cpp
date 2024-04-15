@@ -6,6 +6,7 @@
 #include "GameMode/TDGameModeBase.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
+#include "Inventory/Item/TDItemStaticData.h"
 
 UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetWidgetControllerOverlay(const UObject* WorldContextObject)
 {
@@ -185,4 +186,14 @@ int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* Wor
 	const float ExpReward = DA_CharacterClassInfo.ExpReward.GetValueAtLevel(CharacterLevel);
 
 	return static_cast<int32>(ExpReward);
+}
+
+const UTDItemStaticData* UTDAbilitySystemBPLibrary::GetTDItemStaticData(TSubclassOf<UTDItemStaticData> TDItemStaticDataSubClass)
+{
+	if (IsValid(TDItemStaticDataSubClass))
+	{
+		return GetDefault<UTDItemStaticData>(TDItemStaticDataSubClass);
+	}
+
+	return nullptr;
 }

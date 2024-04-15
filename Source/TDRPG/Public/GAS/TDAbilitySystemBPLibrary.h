@@ -8,6 +8,7 @@ struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
+class UTDItemStaticData;
 
 /**
  * 
@@ -55,4 +56,10 @@ public:
 
 
 	static int32 GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel);
+
+	//********************************************************
+	//** Inventory
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static const UTDItemStaticData* GetTDItemStaticData(TSubclassOf<UTDItemStaticData> TDItemStaticDataSubClass);
+	//********************************************************
 };
