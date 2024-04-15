@@ -64,6 +64,7 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 
 	ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
 	TDPlayerState->OnExpChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnExpChanged);
+	TDPlayerState->OnPlayerLevelChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnPlayerLevelChanged);
 }
 
 void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
@@ -143,4 +144,9 @@ void UTDWidgetControllerOverlay::OnExpChanged(int32 InNewExp) const
 
 		OnExpPercentChangedDelegate.Broadcast(ExpBarPercent);
 	}
+}
+
+void UTDWidgetControllerOverlay::OnPlayerLevelChanged(int32 InNewPlayerLevel) const
+{
+	OnPlayerLevelChangedDelegate.Broadcast(InNewPlayerLevel);
 }
