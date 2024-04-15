@@ -1,4 +1,4 @@
-﻿#include "Inventory/InventoryList.h"
+﻿#include "Inventory/TDInventoryList.h"
 #include "Inventory/Item/TDItemInstance.h"
 #include "Net/Serialization/FastArraySerializer.h"
 
@@ -11,7 +11,7 @@ bool FInventoryList::NetDeltaSerialize(FNetDeltaSerializeInfo& InDelta)
 }
 
 // 아이템을 인벤토리에 추가
-void FInventoryList::AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass) 
+void FInventoryList::AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
 {
 	FInventoryListItem& ItemInfo = InventoryListItems.AddDefaulted_GetRef();
 	ItemInfo.TDItemInstance = NewObject<UTDItemInstance>();

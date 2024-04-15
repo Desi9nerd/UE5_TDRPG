@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
 #include "Net/Serialization/FastArraySerializer.h"
-#include "InventoryList.generated.h"
+#include "TDInventoryList.generated.h"
 
 class UTDItemStaticData;
 class UTDItemInstance;
