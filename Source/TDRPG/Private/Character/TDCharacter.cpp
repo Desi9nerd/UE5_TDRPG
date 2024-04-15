@@ -9,6 +9,7 @@
 #include "UI/HUD/TDHUD.h"
 #include "MotionWarpingComponent.h"
 #include "GAS/Data/TDDA_LevelUp.h"
+#include "NiagaraComponent.h"
 
 ATDCharacter::ATDCharacter()
 {
@@ -27,10 +28,17 @@ ATDCharacter::ATDCharacter()
 	CameraSpringArm->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 0.f), FRotator(-45.f, 0.f, 0.f));
 	CameraSpringArm->TargetArmLength = 750.0f;
 	CameraSpringArm->bUsePawnControlRotation = false;
+	CameraSpringArm->SetUsingAbsoluteRotation(true); // 캐릭터 회전 시 카메라 회전이 되는것이 아닌 Absolute Rotation
+	CameraSpringArm->bDoCollisionTest = false;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	// Niagara
+	Niagara_LevelUp = CreateDefaultSubobject<UNiagaraComponent>("LevelUpEffect");
+	Niagara_LevelUp->SetupAttachment(RootComponent);
+	Niagara_LevelUp->bAutoActivate = false;
 }
 
 void ATDCharacter::PossessedBy(AController* NewController) // 서버
@@ -182,12 +190,12 @@ int32 ATDCharacter::GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) con
 
 //void ATDCharacter::LevelUp_Implementation()
 //{
-//	
+//	Multicast_LevelUpParticleEffect();  // 서버 + 모든 클라이언트들에게 레벨업 이펙트를 보여줌.
 //}
 
 void ATDCharacter::LevelUpCPP()
 {
-	
+	Multicast_LevelUpParticleEffect(); // 서버 + 모든 클라이언트들에게 레벨업 이펙트를 보여줌.
 }
 
 void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와 Client 모두에서 콜
@@ -216,4 +224,16 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Server와
 			TDHUD->InitOverlay(TDPlayerController, TDPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+}
+
+void ATDCharacter::Multicast_LevelUpParticleEffect_Implementation() const
+{
+	check(Niagara_LevelUp);
+
+	const FVector FollowCameraLocation = FollowCamera->GetComponentLocation();
+	const FVector NiagaraLocation = Niagara_LevelUp->GetComponentLocation();
+	const FRotator ToCameraRotation = (FollowCameraLocation - NiagaraLocation).Rotation();
+
+	Niagara_LevelUp->SetWorldRotation(ToCameraRotation);
+	Niagara_LevelUp->Activate(true);
 }

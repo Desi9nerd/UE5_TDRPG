@@ -6,6 +6,9 @@
 #include "TDCharacter.generated.h"
 
 class ATDPlayerState;
+class USpringArmComponent;
+class UCameraComponent;
+class UNiagaraComponent;
 
 /**
  * 
@@ -29,6 +32,7 @@ public:
 	//virtual void AddToExp_Implementation(int32 InExp) override;
 	virtual void AddToExpCPP(int32 InExp) override;
 	//virtual void LevelUp_Implementation() override;
+	virtual void LevelUpCPP() override;
 	virtual void AddToPlayerLevel(int32 InPlayerLevel) override;
 	virtual void AddToPlayerLevelBP_Implementation(int32 InPlayerLevel) override;
 	virtual void AddToAttributePoints(int32 InAttributePoints) override;
@@ -44,19 +48,23 @@ public:
 	virtual int32 GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const override;
 	virtual int32 GetSkillPointsReward(int32 PlayerLevel) const override;
 	virtual int32 GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const override;
-
-	virtual void LevelUpCPP() override;
 	//********************************************************
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category = Camera, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USpringArmComponent> CameraSpringArm;
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<USpringArmComponent> CameraSpringArm;
 
-	UPROPERTY(VisibleAnywhere, Category = Camera, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent> FollowCamera;
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<UCameraComponent> FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UNiagaraComponent> Niagara_LevelUp;
 
 private:
 	virtual void InitAbilityActorInfo() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_LevelUpParticleEffect() const;
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerState> TDPlayerState;
