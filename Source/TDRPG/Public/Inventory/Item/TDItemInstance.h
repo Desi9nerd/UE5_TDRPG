@@ -9,7 +9,7 @@ class UTDItemStaticData;
  * 
  */
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class TDRPG_API UTDItemInstance : public UObject
 {
 	GENERATED_BODY()
@@ -20,6 +20,9 @@ public:
 	virtual bool IsSupportedForNetworking() const override;
 	virtual void OnEquipped();
 	virtual void OnUnequipped();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	const UTDItemStaticData* GetTDItemStaticData() const;
 
 	UPROPERTY(Replicated)
 	TSubclassOf<UTDItemStaticData> TDItemStaticDataClass;

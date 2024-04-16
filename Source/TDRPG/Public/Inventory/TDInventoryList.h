@@ -30,6 +30,8 @@ public:
 	void AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 	void RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 
+	TArray<FInventoryListItem>& GetInventoryListItemsRef();
+
 protected:
 	UPROPERTY()
 	TArray<FInventoryListItem> InventoryListItems;

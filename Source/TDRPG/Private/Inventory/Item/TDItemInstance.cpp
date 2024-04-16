@@ -1,4 +1,5 @@
 #include "Inventory/Item/TDItemInstance.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 void UTDItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -27,6 +28,11 @@ void UTDItemInstance::OnEquipped()
 void UTDItemInstance::OnUnequipped()
 {
 	bEquipped = false;
+}
+
+const UTDItemStaticData* UTDItemInstance::GetTDItemStaticData() const
+{
+	return UTDAbilitySystemBPLibrary::GetTDItemStaticData(TDItemStaticDataClass);
 }
 
 void UTDItemInstance::OnRep_Equipped()

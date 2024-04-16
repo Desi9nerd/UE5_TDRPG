@@ -9,6 +9,7 @@ class ATDPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
 class UNiagaraComponent;
+class UTDInventoryComponent;
 
 /**
  * 
@@ -20,6 +21,7 @@ class TDRPG_API ATDCharacter : public ATDBaseCharacter, public IIPlayer
 
 public:
 	ATDCharacter();
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
 
@@ -59,6 +61,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> Niagara_LevelUp;
+
+	UPROPERTY(EditAnywhere, Replicated)
+	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
 
 private:
 	virtual void InitAbilityActorInfo() override;

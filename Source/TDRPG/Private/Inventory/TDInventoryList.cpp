@@ -36,6 +36,11 @@ void FInventoryList::RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDat
 	}
 }
 
+TArray<FInventoryListItem>& FInventoryList::GetInventoryListItemsRef()
+{
+	return InventoryListItems;
+}
+
 
 //**************************************************************************************
 /* 부연설명
