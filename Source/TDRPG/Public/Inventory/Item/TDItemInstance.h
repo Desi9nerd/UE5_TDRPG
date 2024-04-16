@@ -20,7 +20,8 @@ public:
 	virtual void Init(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 	virtual bool IsSupportedForNetworking() const override;
 	virtual void OnEquipped(AActor* InOwner);
-	virtual void OnUnequipped();
+	virtual void OnUnequipped(AActor* InOwner);
+	virtual void OnDropped(AActor* InOwner);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	const UTDItemStaticData* GetTDItemStaticData() const;

@@ -26,13 +26,13 @@ bool UTDItemInstance::IsSupportedForNetworking() const
 
 void UTDItemInstance::OnEquipped(AActor* InOwner) // 장착
 {
-	UWorld* World = InOwner->GetWorld();
+	UWorld* World = InOwner->GetWorld(); // 인스턴스 클래스이기 때문에 오너의 월드를 가져와야 한다. 그냥 GetWorld()를 선언하면 NULL이다.
 	if (IsValid(World))
 	{
 		const UTDItemStaticData* ItemStaticData = GetTDItemStaticData();
 
 		FTransform TransformTemp; 
-		ItemActor = World->SpawnActorDeferred<ATDItemActor>(ItemStaticData->TDItemActorClass, TransformTemp); // ItemActor 스폰 
+		ItemActor = World->SpawnActorDeferred<ATDItemActor>(ItemStaticData->TDItemActorClass, TransformTemp, InOwner); // ItemActor 스폰. 스폰시킬 때 오너를 InOwner로 지정하여 캐릭터가 오너가 되도록함.
 
 		ItemActor->InitItemActor(this);
 		ItemActor->OnEquipped();
@@ -47,13 +47,22 @@ void UTDItemInstance::OnEquipped(AActor* InOwner) // 장착
 	}
 }
 
-void UTDItemInstance::OnUnequipped() // 장착 해제
+void UTDItemInstance::OnUnequipped(AActor* InOwner) // 장착 해제
 {
-	UWorld* World = GetWorld();
+	UWorld* World = InOwner->GetWorld();
 	if (IsValid(World))
 	{
 		ItemActor->Destroy();
 		ItemActor = nullptr;
+	}
+}
+
+void UTDItemInstance::OnDropped(AActor* InOwner) // 바닥에 떨어뜨리기
+{
+	UWorld* World = InOwner->GetWorld();
+	if (IsValid(World))
+	{
+		ItemActor->OnDropped();
 	}
 }
 

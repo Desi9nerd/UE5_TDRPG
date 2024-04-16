@@ -30,7 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EquipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 	UFUNCTION(BlueprintCallable)
-	void UnequipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+	void UnequipItem();
+	UFUNCTION(BlueprintCallable)
+	void DropItem();
 
 protected:
 	UPROPERTY(Replicated) // 네트워크 동기화됨.

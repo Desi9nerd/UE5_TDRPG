@@ -117,16 +117,30 @@ void UTDInventoryComponent::EquipItem(TSubclassOf<UTDItemStaticData> InTDItemSta
 				break;
 			}
 		}
+
+		DropItem();
 	}
 }
 
-void UTDInventoryComponent::UnequipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
+void UTDInventoryComponent::UnequipItem()
 {
 	if (GetOwner()->HasAuthority()) // Server
 	{
 		if (IsValid(CurrentItem))
 		{
-			CurrentItem->OnUnequipped();
+			CurrentItem->OnUnequipped(GetOwner());
+			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
+		}
+	}
+}
+
+void UTDInventoryComponent::DropItem()
+{
+	if (GetOwner()->HasAuthority()) // Server
+	{
+		if (IsValid(CurrentItem))
+		{
+			CurrentItem->OnDropped(GetOwner());
 			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
 		}
 	}
