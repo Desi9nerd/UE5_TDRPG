@@ -60,11 +60,6 @@ void UTDInventoryComponent::InitializeComponent() // 초기화. 서버에서만 
 		{
 			InventoryList.AddItem(ItemStaticDataClass);
 		}
-
-		if (InventoryList.GetInventoryListItemsRef().Num() > 0)
-		{
-			EquipItem(InventoryList.GetInventoryListItemsRef()[0].TDItemInstance->TDItemStaticDataClass);
-		}
 	}
 }
 
@@ -81,7 +76,7 @@ bool UTDInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunc
 		if (IsValid(ItemInstance))
 		{
 			// Channel을 통해 ItemInstance를 복제. 네트워크를 통해 해당 ItemInstance의 상태가 클라이언트에 동기화되도록 함.
-			bRenewed = Channel->ReplicateSubobject(ItemInstance, *Bunch, *RepFlags);
+			bRenewed |= Channel->ReplicateSubobject(ItemInstance, *Bunch, *RepFlags);
 		}
 	}
 
@@ -141,6 +136,7 @@ void UTDInventoryComponent::DropItem()
 		if (IsValid(CurrentItem))
 		{
 			CurrentItem->OnDropped(GetOwner());
+			RemoveItem(CurrentItem->TDItemStaticDataClass);
 			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿#include "Inventory/TDInventoryList.h"
 #include "Inventory/Item/TDItemInstance.h"
+#include "Inventory/Item/TDItemStaticData.h"
 #include "Net/Serialization/FastArraySerializer.h"
 
 // 네트워크를 통해 아이템 리스트의 변화를 동기화하는 역할.
@@ -27,7 +28,7 @@ void FInventoryList::RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDat
 	for (int32 i = 0; i < InventoryListItems.Num(); i++)
 	{
 		FInventoryListItem& Item = InventoryListItems[i];
-		if (Item.TDItemInstance && Item.TDItemInstance->IsA(InTDItemStaticDataClass))
+		if (Item.TDItemInstance && Item.TDItemInstance->GetTDItemStaticData()->IsA(InTDItemStaticDataClass))
 		{
 			InventoryListItems.RemoveAt(i); // 해당 i의 아이템을 제거
 			MarkArrayDirty();				// 배열 자체가 변경되었음을 시스템에 알림.

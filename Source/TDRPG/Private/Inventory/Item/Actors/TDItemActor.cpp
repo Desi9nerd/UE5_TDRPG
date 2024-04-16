@@ -1,4 +1,6 @@
 ﻿#include "Inventory/Item/Actors/TDItemActor.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 #include "Inventory/Item/TDItemInstance.h"
@@ -8,6 +10,10 @@ ATDItemActor::ATDItemActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+
+	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	SphereComponent->SetupAttachment(RootComponent);
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereComponentOverlap);
 }
 
 void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -15,6 +21,7 @@ void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATDItemActor, TDItemInstance);
+	DOREPLIFETIME(ATDItemActor, ItemState);
 }
 
 bool ATDItemActor::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
@@ -35,14 +42,25 @@ void ATDItemActor::InitItemActor(UTDItemInstance* InTDItemInstance)
 
 void ATDItemActor::OnEquipped()
 {
+	ItemState = EItemState::Equipped;
+
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATDItemActor::OnUnequipped()
 {
+	ItemState = EItemState::None;
+
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATDItemActor::OnDropped()
 {
+	ItemState = EItemState::Dropped;
+
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+
 	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
 	if (AActor* ActorOwner = GetOwner())
@@ -72,4 +90,20 @@ void ATDItemActor::OnDropped()
 void ATDItemActor::OnRep_TDItemInstance(UTDItemInstance* OldTDItemInstance)
 {
 
+}
+
+void ATDItemActor::OnRep_ItemState()
+{
+}
+
+void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (HasAuthority())
+	{
+		FGameplayEventData EventPayload;
+		EventPayload.Instigator = this;
+		EventPayload.OptionalObject = TDItemInstance;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, OverlapEventTag, EventPayload);
+	}
 }
