@@ -20,10 +20,26 @@ public:
 	virtual void InitializeComponent() override;
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UTDItemInstance* GetEquippedItem() const;
+
+	UFUNCTION(BlueprintCallable)
+	void AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+	UFUNCTION(BlueprintCallable)
+	void RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+	UFUNCTION(BlueprintCallable)
+	void EquipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+	UFUNCTION(BlueprintCallable)
+	void UnequipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+
 protected:
 	UPROPERTY(Replicated) // 네트워크 동기화됨.
 	FInventoryList InventoryList; // 인벤토리 아이템 목록
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UTDItemStaticData>> DefaultItemStaticDatas; // 기본 아이템 데이터의 클래스. 게임 시작 시 인벤토리에 추가됨.
+
+	UPROPERTY(Replicated)
+	UTDItemInstance* CurrentItem;
+
 };

@@ -2,6 +2,8 @@
 #include "CoreMinimal.h"
 #include "TDItemStaticData.generated.h"
 
+class ATDItemActor;
+
 /**
  * 
  */
@@ -14,4 +16,10 @@ class UTDItemStaticData : public UObject
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName Name;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<ATDItemActor> TDItemActorClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName AttachmentSocket; // 해당 아이템이 캐릭터에 장착될 시 사용되는 소켓 이름
 };

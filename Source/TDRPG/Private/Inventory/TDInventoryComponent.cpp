@@ -16,7 +16,7 @@ static TAutoConsoleVariable<int32> ConsoleVarShowInventory( // 디버깅용 콘�
 UTDInventoryComponent::UTDInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;   // 매 틱마다 업데이트 가능하도록 설정
-	bWantsInitializeComponent = true;           // 초기화 함수 호출을 원함
+	bWantsInitializeComponent = true;           // InitializeComponent() 함수 호출을 원함
 	SetIsReplicatedByDefault(true); // 아래 내용 참조.
 }
 
@@ -25,6 +25,7 @@ void UTDInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UTDInventoryComponent, InventoryList);
+	DOREPLIFETIME(UTDInventoryComponent, CurrentItem);
 }
 
 void UTDInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -48,26 +49,32 @@ void UTDInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	}
 }
 
-void UTDInventoryComponent::InitializeComponent()
+void UTDInventoryComponent::InitializeComponent() // 초기화. 서버에서만 실행.
 {
 	Super::InitializeComponent();
 
 	if (GetOwner()->HasAuthority()) // Server
 	{
 		// DefaultItemStaticDatas 배열에 있는 모든 아이템을 InventoryList에 추가
-		for (TSubclassOf<UTDItemStaticData> ItemStaticDataClass : DefaultItemStaticDatas)
+		for (const TSubclassOf<UTDItemStaticData>& ItemStaticDataClass : DefaultItemStaticDatas)
 		{
 			InventoryList.AddItem(ItemStaticDataClass);
-		}		
+		}
+
+		if (InventoryList.GetInventoryListItemsRef().Num() > 0)
+		{
+			EquipItem(InventoryList.GetInventoryListItemsRef()[0].TDItemInstance->TDItemStaticDataClass);
+		}
 	}
 }
 
-// 네트워크 동기화를 위한 함수
+// 네트워크 동기화를 위한 함수. 인벤토리 내의 각 아이템 인스턴스도 네트워크를 통해 복제되도록 함.
+// 멀티플레이어에서 다른 플레이어들도 해당 아이템의 상태를 볼 수 있도록 하는 데 필요함.
 bool UTDInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool bRenewed = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
-	for (FInventoryListItem& Item : InventoryList.GetInventoryListItemsRef()) // InventoryList 내의 모든 아이템을 순회
+	for (const FInventoryListItem& Item : InventoryList.GetInventoryListItemsRef()) // InventoryList 내의 모든 아이템을 순회
 	{
 		UTDItemInstance* ItemInstance = Item.TDItemInstance;  // 각 아이템 인스턴스를 가져옴.
 
@@ -79,6 +86,50 @@ bool UTDInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunc
 	}
 
 	return bRenewed; // 복제가 성공적으로 이루어졌는지 여부를 반환
+}
+
+UTDItemInstance* UTDInventoryComponent::GetEquippedItem() const
+{
+	return CurrentItem;
+}
+
+void UTDInventoryComponent::AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
+{
+	InventoryList.AddItem(InTDItemStaticDataClass);
+}
+
+void UTDInventoryComponent::RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
+{
+	InventoryList.RemoveItem(InTDItemStaticDataClass);
+}
+
+void UTDInventoryComponent::EquipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
+{
+	if (GetOwner()->HasAuthority()) // Server
+	{
+		for (const FInventoryListItem& Item: InventoryList.GetInventoryListItemsRef())
+		{
+			if (Item.TDItemInstance->TDItemStaticDataClass == InTDItemStaticDataClass)
+			{
+				Item.TDItemInstance->OnEquipped(GetOwner());
+				CurrentItem = Item.TDItemInstance; // 현재 아이템을 장착하는 아이템으로 설정.
+
+				break;
+			}
+		}
+	}
+}
+
+void UTDInventoryComponent::UnequipItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
+{
+	if (GetOwner()->HasAuthority()) // Server
+	{
+		if (IsValid(CurrentItem))
+		{
+			CurrentItem->OnUnequipped();
+			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
+		}
+	}
 }
 
 /**************************************************************************************
