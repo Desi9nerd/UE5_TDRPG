@@ -51,12 +51,15 @@ void UTDInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 void UTDInventoryComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	
-	// DefaultItemStaticDatas 배열에 있는 모든 아이템을 InventoryList에 추가
-	for (TSubclassOf<UTDItemStaticData> ItemStaticDataClass : DefaultItemStaticDatas)
+
+	if (GetOwner()->HasAuthority()) // Server
 	{
-		InventoryList.AddItem(ItemStaticDataClass);
-	}		
+		// DefaultItemStaticDatas 배열에 있는 모든 아이템을 InventoryList에 추가
+		for (TSubclassOf<UTDItemStaticData> ItemStaticDataClass : DefaultItemStaticDatas)
+		{
+			InventoryList.AddItem(ItemStaticDataClass);
+		}		
+	}
 }
 
 // 네트워크 동기화를 위한 함수
