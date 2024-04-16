@@ -1,4 +1,4 @@
-#include "Inventory/Item/Actors/TDItemActor.h"
+ï»¿#include "Inventory/Item/Actors/TDItemActor.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 #include "Inventory/Item/TDItemInstance.h"
@@ -21,7 +21,7 @@ bool ATDItemActor::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch,
 {
 	bool bRenewed = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 	
-	// ChannelÀ» ÅëÇØ TDItemInstance¸¦ º¹Á¦. ³×Æ®¿öÅ©¸¦ ÅëÇØ ÇØ´ç TDItemInstanceÀÇ »óÅÂ°¡ Å¬¶óÀÌ¾ðÆ®¿¡ µ¿±âÈ­µÇµµ·Ï ÇÔ.
+	// Channelì„ í†µí•´ TDItemInstanceë¥¼ ë³µì œ. ë„¤íŠ¸ì›Œí¬ë¥¼ í†µí•´ í•´ë‹¹ TDItemInstanceì˜ ìƒíƒœê°€ í´ë¼ì´ì–¸íŠ¸ì— ë™ê¸°í™”ë˜ë„ë¡ í•¨.
 	bRenewed |= Channel->ReplicateSubobject(TDItemInstance, *Bunch, *RepFlags);
 
 	return bRenewed;

@@ -1,4 +1,4 @@
-#include "Inventory/Item/TDItemInstance.h"
+ï»¿#include "Inventory/Item/TDItemInstance.h"
 #include "Character/TDCharacter.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "Inventory/Item/TDItemStaticData.h"
@@ -24,15 +24,15 @@ bool UTDItemInstance::IsSupportedForNetworking() const
 	return true;
 }
 
-void UTDItemInstance::OnEquipped(AActor* InOwner) // ÀåÂø
+void UTDItemInstance::OnEquipped(AActor* InOwner) // ìž¥ì°©
 {
-	UWorld* World = InOwner->GetWorld(); // ÀÎ½ºÅÏ½º Å¬·¡½ºÀÌ±â ¶§¹®¿¡ ¿À³ÊÀÇ ¿ùµå¸¦ °¡Á®¿Í¾ß ÇÑ´Ù. ±×³É GetWorld()¸¦ ¼±¾ðÇÏ¸é NULLÀÌ´Ù.
+	UWorld* World = InOwner->GetWorld(); // ì¸ìŠ¤í„´ìŠ¤ í´ëž˜ìŠ¤ì´ê¸° ë•Œë¬¸ì— ì˜¤ë„ˆì˜ ì›”ë“œë¥¼ ê°€ì ¸ì™€ì•¼ í•œë‹¤. ê·¸ëƒ¥ GetWorld()ë¥¼ ì„ ì–¸í•˜ë©´ NULLì´ë‹¤.
 	if (IsValid(World))
 	{
 		const UTDItemStaticData* ItemStaticData = GetTDItemStaticData();
 
 		FTransform TransformTemp; 
-		ItemActor = World->SpawnActorDeferred<ATDItemActor>(ItemStaticData->TDItemActorClass, TransformTemp, InOwner); // ItemActor ½ºÆù. ½ºÆù½ÃÅ³ ¶§ ¿À³Ê¸¦ InOwner·Î ÁöÁ¤ÇÏ¿© Ä³¸¯ÅÍ°¡ ¿À³Ê°¡ µÇµµ·ÏÇÔ.
+		ItemActor = World->SpawnActorDeferred<ATDItemActor>(ItemStaticData->TDItemActorClass, TransformTemp, InOwner); // ItemActor ìŠ¤í°. ìŠ¤í°ì‹œí‚¬ ë•Œ ì˜¤ë„ˆë¥¼ InOwnerë¡œ ì§€ì •í•˜ì—¬ ìºë¦­í„°ê°€ ì˜¤ë„ˆê°€ ë˜ë„ë¡í•¨.
 
 		ItemActor->InitItemActor(this);
 		ItemActor->OnEquipped();
@@ -42,12 +42,12 @@ void UTDItemInstance::OnEquipped(AActor* InOwner) // ÀåÂø
 		USkeletalMeshComponent* SkeletalMesh = TDCharacter ? TDCharacter->GetMesh() : nullptr;
 		if (IsValid(SkeletalMesh))
 		{
-			ItemActor->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemStaticData->AttachmentSocket); // AttachmentSocket À§Ä¡¿¡ ¾ÆÀÌÅÛ ºÙÀÌ±â
+			ItemActor->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemStaticData->AttachmentSocket); // AttachmentSocket ìœ„ì¹˜ì— ì•„ì´í…œ ë¶™ì´ê¸°
 		}
 	}
 }
 
-void UTDItemInstance::OnUnequipped(AActor* InOwner) // ÀåÂø ÇØÁ¦
+void UTDItemInstance::OnUnequipped(AActor* InOwner) // ìž¥ì°© í•´ì œ
 {
 	UWorld* World = InOwner->GetWorld();
 	if (IsValid(World))
@@ -57,7 +57,7 @@ void UTDItemInstance::OnUnequipped(AActor* InOwner) // ÀåÂø ÇØÁ¦
 	}
 }
 
-void UTDItemInstance::OnDropped(AActor* InOwner) // ¹Ù´Ú¿¡ ¶³¾î¶ß¸®±â
+void UTDItemInstance::OnDropped(AActor* InOwner) // ë°”ë‹¥ì— ë–¨ì–´ëœ¨ë¦¬ê¸°
 {
 	UWorld* World = InOwner->GetWorld();
 	if (IsValid(World))
