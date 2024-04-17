@@ -83,4 +83,17 @@ private:
 	IIEnemy* LastActor;
 	IIEnemy* ThisActor;
 
+
+
+
+	////////////////////////////////////////////////////////////
+	void OnDropItemTriggered(const FInputActionValue& Value);
+	void OnEquipNextTriggered(const FInputActionValue& Value);
+	void OnUnequipTriggered(const FInputActionValue& Value);
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* DropItemInputAction;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* EquipNextInputAction;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* UnequipInputAction;
 };

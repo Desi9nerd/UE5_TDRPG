@@ -27,6 +27,11 @@ public:
 	virtual void OnDropped();
 
 protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UTDItemStaticData> TDItemStaticDataClass;
+
 	UPROPERTY(ReplicatedUsing = OnRep_TDItemInstance)
 	UTDItemInstance* TDItemInstance;
 
@@ -34,14 +39,13 @@ protected:
 	void OnRep_TDItemInstance(UTDItemInstance* OldTDItemInstance);
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemState)
-	TEnumAsByte<EItemState> ItemState = EItemState::None;
+	EItemState ItemState = EItemState::None;
 	UFUNCTION()
 	void OnRep_ItemState();
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* SphereComponent = nullptr;
 	UFUNCTION()
 	void OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	FGameplayTag OverlapEventTag;
+	
 };

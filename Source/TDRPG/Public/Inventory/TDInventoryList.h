@@ -28,6 +28,7 @@ struct FInventoryList : public FFastArraySerializer
 public:
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InDelta);
 	void AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
+	void AddItemInstanceOnly(UTDItemInstance* InTDItemInstance);
 	void RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 
 	TArray<FInventoryListItem>& GetInventoryListItemsRef();

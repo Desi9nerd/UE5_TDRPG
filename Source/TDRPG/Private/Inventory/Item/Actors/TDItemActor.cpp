@@ -3,6 +3,7 @@
 #include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
+#include "Inventory/TDInventoryComponent.h"
 #include "Inventory/Item/TDItemInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -10,6 +11,7 @@ ATDItemActor::ATDItemActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	SetReplicateMovement(true); // 위치, 회전 등 움직임이 replicated 되도록 true 설정.
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
@@ -45,6 +47,7 @@ void ATDItemActor::OnEquipped()
 	ItemState = EItemState::Equipped;
 
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SphereComponent->SetGenerateOverlapEvents(false);
 }
 
 void ATDItemActor::OnUnequipped()
@@ -52,14 +55,12 @@ void ATDItemActor::OnUnequipped()
 	ItemState = EItemState::None;
 
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SphereComponent->SetGenerateOverlapEvents(false);
 }
 
 void ATDItemActor::OnDropped()
 {
 	ItemState = EItemState::Dropped;
-
-	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
 
 	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
@@ -71,29 +72,79 @@ void ATDItemActor::OnDropped()
 		const FVector TraceStartLocation = CurrentLocation - ForwardDirection * 10.f;
 		const FVector TraceEndLocation = TraceStartLocation - FVector(0.f, 0.f, 1.f) * 500.f;
 
+		// 디버깅용 EDrawDebugTrace타입 설정: ShowDebugInventory1일 때는 ForDurtaion, 0일때는 None.
+		static const auto CVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ShowDebugInventory"));
+		const bool bShowInventory = CVar->GetInt() > 0;
+		EDrawDebugTrace::Type DebugDrawType = bShowInventory ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
+
 		TArray<AActor*> ActorsToIgnore = { GetOwner() };
 		FHitResult HitResult;
-		bool bHit = UKismetSystemLibrary::LineTraceSingleByProfile(this, TraceStartLocation, TraceEndLocation, TEXT("WorldStatic"), true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
+		FVector TargetDroppingLocation = TraceEndLocation;
+		bool bHit = UKismetSystemLibrary::LineTraceSingleByProfile(this, TraceStartLocation, TraceEndLocation, TEXT("WorldStatic"), true, ActorsToIgnore, DebugDrawType, HitResult, true);
 		if (bHit)
 		{
 			if (HitResult.bBlockingHit)
 			{
-				SetActorLocation(HitResult.Location);
-				return;
+				TargetDroppingLocation = HitResult.Location;
 			}
 		}
 
-		SetActorLocation(TraceEndLocation);
+		SetActorLocation(TargetDroppingLocation);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetGenerateOverlapEvents(true);
+	}
+}
+
+void ATDItemActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (HasAuthority()) // Server
+	{
+		check(TDItemStaticDataClass);
+
+		if (false == IsValid(TDItemInstance) && IsValid(TDItemStaticDataClass))
+		{
+			TDItemInstance = NewObject<UTDItemInstance>();
+			TDItemInstance->Init(TDItemStaticDataClass);
+
+			// 게임 시작 시 Collsion 켜주기.
+			SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			SphereComponent->SetGenerateOverlapEvents(true);
+		}
 	}
 }
 
 void ATDItemActor::OnRep_TDItemInstance(UTDItemInstance* OldTDItemInstance)
 {
-
+	if (false == IsValid(OldTDItemInstance) && IsValid(TDItemInstance))
+	{
+		// TODO
+	}
 }
 
 void ATDItemActor::OnRep_ItemState()
 {
+	switch (ItemState)
+	{
+	case EItemState::Stored:
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetGenerateOverlapEvents(false);
+		break;
+	case EItemState::Equipped:
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetGenerateOverlapEvents(false);
+		break;
+	case EItemState::Dropped:
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetGenerateOverlapEvents(true);
+		break;
+	default:
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetGenerateOverlapEvents(true);
+		break;
+	}
 }
 
 void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -103,7 +154,8 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 		FGameplayEventData EventPayload;
 		EventPayload.Instigator = this;
 		EventPayload.OptionalObject = TDItemInstance;
+		EventPayload.EventTag = UTDInventoryComponent::EquipItemTag;
 
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, OverlapEventTag, EventPayload);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, EventPayload.EventTag, EventPayload);
 	}
 }

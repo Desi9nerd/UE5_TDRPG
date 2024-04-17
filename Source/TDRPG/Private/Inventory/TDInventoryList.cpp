@@ -21,6 +21,14 @@ void FInventoryList::AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataCl
 	MarkItemDirty(ItemInfo); // 특정 아이템(ItemInfo)이 변경되었음을 시스템에 알림.
 }
 
+void FInventoryList::AddItemInstanceOnly(UTDItemInstance* InTDItemInstance)
+{
+	FInventoryListItem& ItemInfo = InventoryListItems.AddDefaulted_GetRef();
+	ItemInfo.TDItemInstance = InTDItemInstance;
+
+	MarkItemDirty(ItemInfo);
+}
+
 // 아이템을 인벤토리에서 제거
 void FInventoryList::RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass)
 {

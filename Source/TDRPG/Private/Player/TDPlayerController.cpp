@@ -11,6 +11,8 @@
 #include "GameFramework/Character.h"
 #include "UI/WidgetComponent/TDWidgetComponent.h"
 
+#include "Inventory/TDInventoryComponent.h"
+
 ATDPlayerController::ATDPlayerController()
 {
 	bReplicates = true;
@@ -93,6 +95,11 @@ void ATDPlayerController::SetupInputComponent()
 	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ATDPlayerController::ShiftPressed);
 	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ATDPlayerController::ShiftReleased);
 	TDEnhancedInputComponent->BindAbilityActions(InputData, this, &ATDPlayerController::AbilityInputTagPressed, &ATDPlayerController::AbilityInputTagReleased, &ATDPlayerController::AbilityInputTagHeld);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	TDEnhancedInputComponent->BindAction(DropItemInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnDropItemTriggered);
+	TDEnhancedInputComponent->BindAction(EquipNextInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnEquipNextTriggered);
+	TDEnhancedInputComponent->BindAction(UnequipInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnUnequipTriggered);
 }
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -228,4 +235,32 @@ void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 		PlayerControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y); // Back
 		PlayerControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X); // Left
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void ATDPlayerController::OnDropItemTriggered(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Drop Button!!"));
+	FGameplayEventData EventPayload;
+	EventPayload.EventTag = UTDInventoryComponent::DropItemTag;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UTDInventoryComponent::DropItemTag, EventPayload);
+}
+
+void ATDPlayerController::OnEquipNextTriggered(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Equip Next Button!!"));
+	FGameplayEventData EventPayload;
+	EventPayload.EventTag = UTDInventoryComponent::EquipNextItemTag;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UTDInventoryComponent::EquipNextItemTag, EventPayload);
+}
+
+void ATDPlayerController::OnUnequipTriggered(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Unequip Button!!"));
+	FGameplayEventData EventPayload;
+	EventPayload.EventTag = UTDInventoryComponent::UnequipItemTag;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UTDInventoryComponent::UnequipItemTag, EventPayload);
 }

@@ -45,6 +45,8 @@ void UTDItemInstance::OnEquipped(AActor* InOwner) // 장착
 			ItemActor->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemStaticData->AttachmentSocket); // AttachmentSocket 위치에 아이템 붙이기
 		}
 	}
+
+	bEquipped = true;
 }
 
 void UTDItemInstance::OnUnequipped(AActor* InOwner) // 장착 해제
@@ -55,6 +57,8 @@ void UTDItemInstance::OnUnequipped(AActor* InOwner) // 장착 해제
 		ItemActor->Destroy();
 		ItemActor = nullptr;
 	}
+
+	bEquipped = false;
 }
 
 void UTDItemInstance::OnDropped(AActor* InOwner) // 바닥에 떨어뜨리기
@@ -64,6 +68,8 @@ void UTDItemInstance::OnDropped(AActor* InOwner) // 바닥에 떨어뜨리기
 	{
 		ItemActor->OnDropped();
 	}
+
+	bEquipped = false;
 }
 
 const UTDItemStaticData* UTDItemInstance::GetTDItemStaticData() const
