@@ -32,9 +32,13 @@ public:
 
 	FORCEINLINE int32 GetPlayerLevel() const { return PlayerLevel; }
 	FORCEINLINE int32 GetExp() const { return Exp; }
+	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
+	FORCEINLINE int32 GetSkillPoints() const { return SkillPoints; }
 
 	FOnPlayerStatChanged OnExpChangedDelegate;
 	FOnPlayerStatChanged OnPlayerLevelChangedDelegate;
+	FOnPlayerStatChanged OnAttributePointsChangedDelegate;
+	FOnPlayerStatChanged OnSkillPointsChangedDelegate;
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UTDDA_LevelUp> TDDA_LevelUpInfo;
@@ -49,13 +53,19 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_PlayerLevel)
 	int32 PlayerLevel = 1;
-
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Exp)
 	int32 Exp = 1;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
+	int32 AttributePoints = 1;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SkillPoints)
+	int32 SkillPoints = 1;
 
 	UFUNCTION()
-	void OnRep_PlayerLevel(int32 OldPlayerLevel);
-
+	void OnRep_PlayerLevel();
 	UFUNCTION()
-	void OnRep_Exp(int32 OldExp);
+	void OnRep_Exp();
+	UFUNCTION()
+	void OnRep_AttributePoints(int32 InNewAttributePoints);
+	UFUNCTION()
+	void OnRep_SkillPoints(int32 InNewSkillPoints);
 };

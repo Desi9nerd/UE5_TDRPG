@@ -2,6 +2,7 @@
 #include "GAS/TDAttributeSet.h"
 #include "GAS/Data/TDDA_Attribute.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Player/TDPlayerState.h"
 
 void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()
 {
@@ -26,8 +27,13 @@ void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()
 			[this, Pair](const FOnAttributeChangeData& Data)
 			{
 				BroadcastAttributeInfo(Pair.Key, Pair.Value());
-			}
-		);
+			});
+
+		ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
+		TDPlayerState->OnAttributePointsChangedDelegate.AddLambda([this](int32 Points)
+			{
+				AttributePointsChangedDelegate.Broadcast(Points);
+			});
 	}
 }
 

@@ -7,6 +7,8 @@
 class UAttributeSet;
 class UAbilitySystemComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32, NewValue);
+
 /** TDWidgetController는 위젯과 데이터를 관리하는 클래스 사이의 교량역할
  *  위젯의 변경사항(ex.버튼클릭)을 클래스에 알려주는 역할
  */
