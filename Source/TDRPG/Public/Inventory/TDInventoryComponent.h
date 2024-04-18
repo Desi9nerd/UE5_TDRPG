@@ -42,10 +42,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DropItem();
 
-	static FGameplayTag EquipItemTag;
-	static FGameplayTag EquipNextItemTag;
-	static FGameplayTag UnequipItemTag;
-	static FGameplayTag DropItemTag;
+	//static FGameplayTag EquipItemTag;
+	//static FGameplayTag EquipNextItemTag;
+	//static FGameplayTag UnequipItemTag;
+	//static FGameplayTag DropItemTag;
 
 protected:
 	void HandleGameplayEvent(FGameplayEventData Payload);

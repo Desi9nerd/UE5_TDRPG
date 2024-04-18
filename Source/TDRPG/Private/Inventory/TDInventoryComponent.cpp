@@ -5,16 +5,19 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayTagsManager.h"
 #include "Engine/ActorChannel.h"
+#include "Inventory/TDInventoryList.h"
 #include "Inventory/Item/TDItemInstance.h"
 #include "Inventory/Item/TDItemStaticData.h"
 #include "Inventory/Item/Actors/TDItemActor.h"
 
 #include "Abilities/GameplayAbilityTypes.h"
+#include "GameplayTags/TDGameplayTags.h"
+#include "GAS/TDAbilitySystemComponent.h"
 
-FGameplayTag UTDInventoryComponent::EquipItemTag;
-FGameplayTag UTDInventoryComponent::EquipNextItemTag;
-FGameplayTag UTDInventoryComponent::UnequipItemTag;
-FGameplayTag UTDInventoryComponent::DropItemTag;
+//FGameplayTag UTDInventoryComponent::EquipItemTag;
+//FGameplayTag UTDInventoryComponent::EquipNextItemTag;
+//FGameplayTag UTDInventoryComponent::UnequipItemTag;
+//FGameplayTag UTDInventoryComponent::DropItemTag;
 
 
 static TAutoConsoleVariable<int32> ConsoleVarShowInventory( // 디버깅용 콘솔 변수
@@ -32,23 +35,23 @@ UTDInventoryComponent::UTDInventoryComponent()
 	bWantsInitializeComponent = true;           // InitializeComponent() 함수 호출을 원함
 	SetIsReplicatedByDefault(true); // 아래 내용 참조.
 
-	static bool bHandledAddingTags = false;
-	if (false == bHandledAddingTags)
-	{
-		UGameplayTagsManager::Get().OnLastChanceToAddNativeTags().AddUObject(this, &ThisClass::AddInventoryTags);		
-	}
+	//static bool bHandledAddingTags = false;
+	//if (false == bHandledAddingTags)
+	//{
+	//	UGameplayTagsManager::Get().OnLastChanceToAddNativeTags().AddUObject(this, &ThisClass::AddInventoryTags);		
+	//}
 }
 
 void UTDInventoryComponent::AddInventoryTags()
 {
-	UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
-
-	UTDInventoryComponent::EquipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipItem"), TEXT("이벤트: 아이템 장착"));
-	UTDInventoryComponent::EquipNextItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipNextItem"), TEXT("이벤트: 다음 아이템 장착"));
-	UTDInventoryComponent::UnequipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.UnequipItem"), TEXT("이벤트: 아이템 장착해제"));
-	UTDInventoryComponent::DropItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.DropItem"), TEXT("이벤트: 아이템 떨어뜨리기"));
-
-	TagsManager.OnLastChanceToAddNativeTags().RemoveAll(this); // UnSubscribe
+	//UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
+	//
+	//UTDInventoryComponent::EquipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipItem"), TEXT("이벤트: 아이템 장착"));
+	//UTDInventoryComponent::EquipNextItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipNextItem"), TEXT("이벤트: 다음 아이템 장착"));
+	//UTDInventoryComponent::UnequipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.UnequipItem"), TEXT("이벤트: 아이템 장착해제"));
+	//UTDInventoryComponent::DropItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.DropItem"), TEXT("이벤트: 아이템 떨어뜨리기"));
+	//
+	//TagsManager.OnLastChanceToAddNativeTags().RemoveAll(this); // UnSubscribe
 }
 
 void UTDInventoryComponent::HandleGameplayEvent(FGameplayEventData Payload)
@@ -59,7 +62,7 @@ void UTDInventoryComponent::HandleGameplayEvent(FGameplayEventData Payload)
 	{
 		FGameplayTag EventTag = Payload.EventTag;
 
-		if (EventTag == UTDInventoryComponent::EquipItemTag)
+		if (EventTag == FTDGameplayTags::GetTDGameplayTags().Item_Equip)
 		{
 			const UTDItemInstance* ItemInstance = Cast<UTDItemInstance>(Payload.OptionalObject);
 			if (IsValid(ItemInstance))
@@ -72,9 +75,9 @@ void UTDInventoryComponent::HandleGameplayEvent(FGameplayEventData Payload)
 				}
 			}
 		}
-		else if (EventTag == UTDInventoryComponent::EquipNextItemTag) { EquipNextItem(); }
-		else if (EventTag == UTDInventoryComponent::UnequipItemTag) { UnequipItem(); }
-		else if (EventTag == UTDInventoryComponent::DropItemTag) { DropItem(); }
+		else if (EventTag == FTDGameplayTags::GetTDGameplayTags().Item_EquipNext) { EquipNextItem(); }
+		else if (EventTag == FTDGameplayTags::GetTDGameplayTags().Item_Unequip) { UnequipItem(); }
+		else if (EventTag == FTDGameplayTags::GetTDGameplayTags().Item_Drop) { DropItem(); }
 	}
 }
 
@@ -125,12 +128,25 @@ void UTDInventoryComponent::InitializeComponent() // 초기화. 서버에서만 
 		}
 	}
 
-	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
+	// 추후에 제거하기
+	//FString TempName = GetOwner()->GetName();
+	//UE_LOG(LogTemp, Warning, TEXT("GetOwner Name is   %s !!!"), *TempName);
+
+	// TODO: 여기에 왜 AbilitySystemComponent 캐스팅 시 NULL인지 확인하기. 여기가 NULL이 나와 GameplayTag 연결이 안 되어 동작하지 않음.
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner());
+	UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()));
+
+	if (IsValid(ASC) && IsValid(TDASC))
 	{
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipNextItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::UnequipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::DropItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
+		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Equip).AddUObject(this, &ThisClass::GameplayEventCallback);
+		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_EquipNext).AddUObject(this, &ThisClass::GameplayEventCallback);
+		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Unequip).AddUObject(this, &ThisClass::GameplayEventCallback);
+		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Drop).AddUObject(this, &ThisClass::GameplayEventCallback);
+
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Equip).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_EquipNext).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Unequip).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Drop).AddUObject(this, &ThisClass::GameplayEventCallback);
 	}
 }
 

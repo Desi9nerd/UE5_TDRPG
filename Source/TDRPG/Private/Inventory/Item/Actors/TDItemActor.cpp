@@ -3,6 +3,7 @@
 #include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
+#include "GameplayTags/TDGameplayTags.h"
 #include "Inventory/TDInventoryComponent.h"
 #include "Inventory/Item/TDItemInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -154,7 +155,7 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 		FGameplayEventData EventPayload;
 		EventPayload.Instigator = this;
 		EventPayload.OptionalObject = TDItemInstance;
-		EventPayload.EventTag = UTDInventoryComponent::EquipItemTag;
+		EventPayload.EventTag = FTDGameplayTags::GetTDGameplayTags().Item_Equip;
 
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, EventPayload.EventTag, EventPayload);
 	}

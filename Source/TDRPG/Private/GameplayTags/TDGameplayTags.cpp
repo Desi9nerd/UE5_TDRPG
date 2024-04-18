@@ -80,4 +80,11 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 
 	// Gameplay Cues
 	GameplayTags.GameplayCue_MeleeImpact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.MeleeImpact"), FString("MeleeAttack 피격 시 이펙트"));
+
+	// Inventory + Item
+	GameplayTags.Item_Equip = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Equip"), FString("아이템 장착"));
+	GameplayTags.Item_EquipNext = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.EquipNext"), FString("다음 아이템 장착"));
+	GameplayTags.Item_Unequip = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Unequip"), FString("아이템 장착해제"));
+	GameplayTags.Item_Drop = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Drop"), FString("아이템 떨어뜨리기"));
+
 }

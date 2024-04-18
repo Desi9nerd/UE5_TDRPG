@@ -88,6 +88,12 @@ public:
 	// Gameplay Cues
 	FGameplayTag GameplayCue_MeleeImpact;
 
+	// Inventory + Item
+	FGameplayTag Item_Equip;
+	FGameplayTag Item_EquipNext;
+	FGameplayTag Item_Unequip;
+	FGameplayTag Item_Drop;
+
 private:
 	static FTDGameplayTags GameplayTags;
 };
