@@ -121,28 +121,28 @@ void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
 {
 	check(TDPlayerState);
 
-	// TODO: TDPlayerState->AddToAttributePoints(InPlayerLevel);
+	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToAttributePointsBP_Implementation(int32 InAttributePoints)
 {
 	check(TDPlayerState);
 
-	// TODO: TDPlayerState->AddToAttributePoints(InPlayerLevel);
+	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToSkillPoints(int32 InSkillPoints)
 {
 	check(TDPlayerState);
 
-	// TODO: TDPlayerState->AddToSkillPoints(InPlayerLevel);
+	TDPlayerState->AddToSkillPoints(InSkillPoints);
 }
 
 void ATDCharacter::AddToSkillPointsBP_Implementation(int32 InSpellPoints)
 {
 	check(TDPlayerState);
 
-	// TODO: TDPlayerState->AddToSkillPoints(InPlayerLevel);
+	TDPlayerState->AddToSkillPoints(InSpellPoints);
 }
 
 int32 ATDCharacter::GetExp() const

@@ -14,6 +14,9 @@ void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
+
+	ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
+	AttributePointsChangedDelegate.Broadcast(TDPlayerState->GetAttributePoints());
 }
 
 void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()

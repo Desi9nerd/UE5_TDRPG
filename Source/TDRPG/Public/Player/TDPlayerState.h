@@ -27,6 +27,8 @@ public:
 
 	void AddToPlayerLevel(int32 InPlayerLevel);
 	void AddToExp(int32 InExp);
+	void AddToAttributePoints(int32 InNewAttributePoints);
+	void AddToSkillPoints(int32 InNewSkillPoints);
 	void SetPlayerLevel(int32 InPlayerLevel);
 	void SetExp(int32 InExp);
 
@@ -65,7 +67,7 @@ private:
 	UFUNCTION()
 	void OnRep_Exp();
 	UFUNCTION()
-	void OnRep_AttributePoints(int32 InNewAttributePoints);
+	void OnRep_AttributePoints();
 	UFUNCTION()
-	void OnRep_SkillPoints(int32 InNewSkillPoints);
+	void OnRep_SkillPoints();
 };

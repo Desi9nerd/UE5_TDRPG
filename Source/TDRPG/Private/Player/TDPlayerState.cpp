@@ -41,6 +41,18 @@ void ATDPlayerState::AddToExp(int32 InExp)
 	OnExpChangedDelegate.Broadcast(Exp);
 }
 
+void ATDPlayerState::AddToAttributePoints(int32 InNewAttributePoints)
+{
+	AttributePoints += InNewAttributePoints;
+	OnAttributePointsChangedDelegate.Broadcast(AttributePoints);
+}
+
+void ATDPlayerState::AddToSkillPoints(int32 InNewSkillPoints)
+{
+	SkillPoints += InNewSkillPoints;
+	OnSkillPointsChangedDelegate.Broadcast(SkillPoints);
+}
+
 void ATDPlayerState::SetPlayerLevel(int32 InPlayerLevel)
 {
 	PlayerLevel = InPlayerLevel;
@@ -63,14 +75,12 @@ void ATDPlayerState::OnRep_Exp()
 	OnExpChangedDelegate.Broadcast(Exp);
 }
 
-void ATDPlayerState::OnRep_AttributePoints(int32 InNewAttributePoints)
+void ATDPlayerState::OnRep_AttributePoints()
 {
-	AttributePoints += InNewAttributePoints;
 	OnAttributePointsChangedDelegate.Broadcast(AttributePoints);
 }
 
-void ATDPlayerState::OnRep_SkillPoints(int32 InNewSkillPoints)
+void ATDPlayerState::OnRep_SkillPoints()
 {
-	SkillPoints += InNewSkillPoints;
 	OnSkillPointsChangedDelegate.Broadcast(SkillPoints);
 }
