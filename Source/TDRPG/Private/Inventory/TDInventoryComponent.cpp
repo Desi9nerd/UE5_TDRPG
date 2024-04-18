@@ -309,10 +309,10 @@ void UTDInventoryComponent::BeginPlay()
 		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Unequip).AddUObject(this, &ThisClass::GameplayEventCallback);
 		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Drop).AddUObject(this, &ThisClass::GameplayEventCallback);
 
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipNextItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::UnequipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::DropItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipNextItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::UnequipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
+		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::DropItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
 	}
 }
 

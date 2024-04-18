@@ -54,8 +54,8 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerHandleGameplayEvent(FGameplayEventData Payload);
 
-	UFUNCTION()
-	void AddInventoryTags();
+	//UFUNCTION()
+	//void AddInventoryTags();
 
 
 	UPROPERTY(Replicated) // 네트워크 동기화됨.

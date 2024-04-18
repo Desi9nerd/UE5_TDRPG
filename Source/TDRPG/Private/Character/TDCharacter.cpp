@@ -1,4 +1,4 @@
-#include "Character/TDCharacter.h"
+ï»¿#include "Character/TDCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -30,7 +30,7 @@ ATDCharacter::ATDCharacter()
 	CameraSpringArm->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 0.f), FRotator(-45.f, 0.f, 0.f));
 	CameraSpringArm->TargetArmLength = 750.0f;
 	CameraSpringArm->bUsePawnControlRotation = false;
-	CameraSpringArm->SetUsingAbsoluteRotation(true); // Ä³¸¯ÅÍ È¸Àü ½Ã Ä«¸Ş¶ó È¸ÀüÀÌ µÇ´Â°ÍÀÌ ¾Æ´Ñ Absolute Rotation
+	CameraSpringArm->SetUsingAbsoluteRotation(true); // ìºë¦­í„° íšŒì „ ì‹œ ì¹´ë©”ë¼ íšŒì „ì´ ë˜ëŠ”ê²ƒì´ ì•„ë‹Œ Absolute Rotation
 	CameraSpringArm->bDoCollisionTest = false;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -54,20 +54,20 @@ void ATDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	DOREPLIFETIME(ATDCharacter, TDInventoryComponent);
 }
 
-void ATDCharacter::PossessedBy(AController* NewController) // ¼­¹ö
+void ATDCharacter::PossessedBy(AController* NewController) // ì„œë²„
 {
 	Super::PossessedBy(NewController);
 
-	// ¼­¹ö¿¡ Init Ability actor info 
+	// ì„œë²„ì— Init Ability actor info 
 	InitAbilityActorInfo(); 
 	AddCharacterAbilities();
 }
 
-void ATDCharacter::OnRep_PlayerState() // Å¬¶óÀÌ¾ğÆ®
+void ATDCharacter::OnRep_PlayerState() // í´ë¼ì´ì–¸íŠ¸
 {
 	Super::OnRep_PlayerState();
 
-	// Å¬¶óÀÌ¾ğÆ®¿¡ Init Ability actor info
+	// í´ë¼ì´ì–¸íŠ¸ì— Init Ability actor info
 	InitAbilityActorInfo(); 
 }
 
@@ -99,137 +99,122 @@ int32 ATDCharacter::GetPlayerLevel()
 void ATDCharacter::AddToExpCPP(int32 InExp)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToExp(InExp);
 }
 
 void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 }
 
 void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 }
 
 void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToAttributePointsBP_Implementation(int32 InAttributePoints)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToSkillPoints(int32 InSkillPoints)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToSkillPoints(InSkillPoints);
 }
 
 void ATDCharacter::AddToSkillPointsBP_Implementation(int32 InSpellPoints)
 {
 	check(TDPlayerState);
-
 	TDPlayerState->AddToSkillPoints(InSpellPoints);
 }
 
 int32 ATDCharacter::GetExp() const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->GetExp();
 }
 
 int32 ATDCharacter::GetExpBP_Implementation() const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->GetExp();
 }
 
 int32 ATDCharacter::FindLevelForExp(int32 InExp) const
 {
 	check(TDPlayerState);
-	
 	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
 }
 
 int32 ATDCharacter::FindLevelForExpBP_Implementation(int32 InExp) const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
 }
 
 int32 ATDCharacter::GetAttributePointsReward(int32 PlayerLevel) const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
 }
 
 int32 ATDCharacter::GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
 }
 
 int32 ATDCharacter::GetSkillPointsReward(int32 PlayerLevel) const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
 }
 
 int32 ATDCharacter::GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const
 {
 	check(TDPlayerState);
-
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
 }
 
 //void ATDCharacter::LevelUp_Implementation()
 //{
-//	Multicast_LevelUpParticleEffect();  // ¼­¹ö + ¸ğµç Å¬¶óÀÌ¾ğÆ®µé¿¡°Ô ·¹º§¾÷ ÀÌÆåÆ®¸¦ º¸¿©ÁÜ.
+//	Multicast_LevelUpParticleEffect();  // ì„œë²„ + ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ë“¤ì—ê²Œ ë ˆë²¨ì—… ì´í™íŠ¸ë¥¼ ë³´ì—¬ì¤Œ.
 //}
 
 void ATDCharacter::LevelUpCPP()
 {
-	Multicast_LevelUpParticleEffect(); // ¼­¹ö + ¸ğµç Å¬¶óÀÌ¾ğÆ®µé¿¡°Ô ·¹º§¾÷ ÀÌÆåÆ®¸¦ º¸¿©ÁÜ.
+	Multicast_LevelUpParticleEffect(); // ì„œë²„ + ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ë“¤ì—ê²Œ ë ˆë²¨ì—… ì´í™íŠ¸ë¥¼ ë³´ì—¬ì¤Œ.
 }
 
-void ATDCharacter::InitAbilityActorInfo() // Ability actor Á¤º¸ ÃÊ±âÈ­. Server¿Í Client ¸ğµÎ¿¡¼­ Äİ
+void ATDCharacter::InitAbilityActorInfo() // Ability actor ì •ë³´ ì´ˆê¸°í™”. Serverì™€ Client ëª¨ë‘ì—ì„œ ì½œ
 {
 	if (false == IsValid(TDPlayerState))
 	{
 		TDPlayerState = GetPlayerState<ATDPlayerState>();
 	}
-	check(TDPlayerState); // ¿¹¿ÜÃ³¸®. PlayerState ¾øÀ»½Ã Á¾·á
+	check(TDPlayerState); // ì˜ˆì™¸ì²˜ë¦¬. PlayerState ì—†ì„ì‹œ ì¢…ë£Œ
 
 	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
-	Cast<UTDAbilitySystemComponent>(TDPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet(); // AbilityActorInfo ¼³Á¤ÇÏ±â
+	Cast<UTDAbilitySystemComponent>(TDPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet(); // AbilityActorInfo ì„¤ì •í•˜ê¸°
 
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
 
-	InitializeDefaultAttributes(); // Attibutes ÃÊ±â°ª ¼³Á¤ÇÏ±â
+	InitializeDefaultAttributes(); // Attibutes ì´ˆê¸°ê°’ ì„¤ì •í•˜ê¸°
 
-	// ¼­¹ö´Â ¸ğµç PlayerController¸¦ ¼ÒÀ¯.
-	// ÇÏÁö¸¸ °¢°¢ÀÇ Å¬¶óÀÌ¾ğÆ®´Â ÇÏ³ªÀÇ PlayerController¸¸ ¼ÒÀ¯ÇÏ°í ³ª¸ÓÁø Proxy·Î °¡Áö°í ÀÖ´Ù
-	// ±×·¸±â ¶§¹®¿¡ Assert·Î Ã¼Å©ÇÏ¸é ¾È µÈ´Ù.
+	// ì„œë²„ëŠ” ëª¨ë“  PlayerControllerë¥¼ ì†Œìœ .
+	// í•˜ì§€ë§Œ ê°ê°ì˜ í´ë¼ì´ì–¸íŠ¸ëŠ” í•˜ë‚˜ì˜ PlayerControllerë§Œ ì†Œìœ í•˜ê³  ë‚˜ë¨¸ì§„ Proxyë¡œ ê°€ì§€ê³  ìˆë‹¤
+	// ê·¸ë ‡ê¸° ë•Œë¬¸ì— Assertë¡œ ì²´í¬í•˜ë©´ ì•ˆ ëœë‹¤.
 	if (ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(GetController()))
 	{
 		if (ATDHUD* TDHUD = Cast<ATDHUD>(TDPlayerController->GetHUD()))
