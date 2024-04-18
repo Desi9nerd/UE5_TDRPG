@@ -48,6 +48,7 @@ public:
 	//static FGameplayTag DropItemTag;
 
 protected:
+	virtual void BeginPlay() override;
 	void HandleGameplayEvent(FGameplayEventData Payload);
 
 	UFUNCTION(Server, Reliable)

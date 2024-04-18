@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CoreMinimal.h"
 #include "UI/WidgetController/TDWidgetController.h"
 #include "TDWidgetControllerAttributeMenu.generated.h"

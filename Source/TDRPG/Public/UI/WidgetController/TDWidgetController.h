@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "UObject/NoExportTypes.h"
@@ -9,8 +9,8 @@ class UAbilitySystemComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32, NewValue);
 
-/** TDWidgetController´Â À§Á¬°ú µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â Å¬·¡½º »çÀÌÀÇ ±³·®¿ªÇÒ
- *  À§Á¬ÀÇ º¯°æ»çÇ×(ex.¹öÆ°Å¬¸¯)À» Å¬·¡½º¿¡ ¾Ë·ÁÁÖ´Â ¿ªÇÒ
+/** TDWidgetControllerëŠ” ìœ„ì ¯ê³¼ ë°ì´í„°ë¥¼ ê´€ë¦¬í•˜ëŠ” í´ë˜ìŠ¤ ì‚¬ì´ì˜ êµëŸ‰ì—­í• 
+ *  ìœ„ì ¯ì˜ ë³€ê²½ì‚¬í•­(ex.ë²„íŠ¼í´ë¦­)ì„ í´ë˜ìŠ¤ì— ì•Œë ¤ì£¼ëŠ” ì—­í• 
  */
 
 USTRUCT(BlueprintType)
@@ -20,7 +20,7 @@ struct FWidgetControllerParams
 
 	FWidgetControllerParams() {}
 	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
-		: PlayerController(PC), PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS) {} // ¸â¹ö ÃÊ±âÈ­ ¸®½ºÆ®
+		: PlayerController(PC), PlayerState(PS), AbilitySystemComponent(ASC), AttributeSet(AS) {} // ë©¤ë²„ ì´ˆê¸°í™” ë¦¬ìŠ¤íŠ¸
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<APlayerController> PlayerController = nullptr;
@@ -41,7 +41,7 @@ class TDRPG_API UTDWidgetController : public UObject
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable) // BP¿¡¼­ È£Ãâ°¡´É
+	UFUNCTION(BlueprintCallable) // BPì—ì„œ í˜¸ì¶œê°€ëŠ¥
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
 	UFUNCTION(BlueprintCallable)

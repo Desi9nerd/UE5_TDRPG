@@ -1,4 +1,4 @@
-#include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
+ï»¿#include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "GAS/TDAttributeSet.h"
 #include "GAS/Data/TDDA_Attribute.h"
 #include "GameplayTags/TDGameplayTags.h"
@@ -9,7 +9,7 @@ void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()
 	UTDAttributeSet* AS = CastChecked<UTDAttributeSet>(AttributeSet);
 	check(DataAttribute);
 
-	// UTDAttributeSet ³» TagsToAttributes ¸Ê º¯¼öÀÇ GameplayTag¸¦ ¼øÈ¸ÇÏ¿© valueµéÀ» Broadcast½ÃÅ²´Ù.
+	// UTDAttributeSet ë‚´ TagsToAttributes ë§µ ë³€ìˆ˜ì˜ GameplayTagë¥¼ ìˆœíšŒí•˜ì—¬ valueë“¤ì„ Broadcastì‹œí‚¨ë‹¤.
 	for (auto& Pair : AS->TagsToAttributes)
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
