@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
+#include "Inventory/TDInventoryList.h"
 #include "UObject/NoExportTypes.h"
 #include "TDItemInstance.generated.h"
 
+enum class EItemState : uint8;
 class UTDItemStaticData;
-class ATDItemActor;
+class UImage;
 
 /**
  * 
@@ -17,25 +19,23 @@ class TDRPG_API UTDItemInstance : public UObject
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
-	virtual void Init(TSubclassOf<UTDItemStaticData> InTDItemStaticDataClass);
 	virtual bool IsSupportedForNetworking() const override;
-	virtual void OnEquipped(AActor* InOwner);
-	virtual void OnUnequipped(AActor* InOwner);
-	virtual void OnDropped(AActor* InOwner);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	const UTDItemStaticData* GetTDItemStaticData() const;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName ItemID;
 
-	UPROPERTY(Replicated)
-	TSubclassOf<UTDItemStaticData> TDItemStaticDataClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	uint8 SerialNumber;
 
-protected:
-	UPROPERTY(ReplicatedUsing = OnRep_Equipped)
-	bool bEquipped = false;
-	UFUNCTION()
-	void OnRep_Equipped();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName ItemType;
 
-	UPROPERTY(Replicated)
-	ATDItemActor* ItemActor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool bStackable = true;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	uint8 Quantity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UImage> IconImage;
 };

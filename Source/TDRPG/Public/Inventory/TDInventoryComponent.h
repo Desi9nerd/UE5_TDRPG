@@ -41,12 +41,7 @@ public:
 	void UnequipItem();
 	UFUNCTION(BlueprintCallable)
 	void DropItem();
-
-	//static FGameplayTag EquipItemTag;
-	//static FGameplayTag EquipNextItemTag;
-	//static FGameplayTag UnequipItemTag;
-	//static FGameplayTag DropItemTag;
-
+	
 protected:
 	virtual void BeginPlay() override;
 	void HandleGameplayEvent(FGameplayEventData Payload);
@@ -54,18 +49,36 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerHandleGameplayEvent(FGameplayEventData Payload);
 
-	//UFUNCTION()
-	//void AddInventoryTags();
 
 
 	UPROPERTY(Replicated) // 네트워크 동기화됨.
 	FInventoryList InventoryList; // 인벤토리 아이템 목록
 
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_InventoryItems)
+	TArray<FInventoryList> InventoryItem;
+
+	TMap<FName, TArray<FInventoryList>> InventoryItemsMap;
+
+	UFUNCTION()
+	void OnRep_InventoryItems();
+
 	UPROPERTY(EditDefaultsOnly)
-	TArray<TSubclassOf<UTDItemStaticData>> DefaultItemStaticDatas; // 기본 아이템 데이터의 클래스. 게임 시작 시 인벤토리에 추가됨. 게임시작과 동시에 캐릭터에 주어지는 아이템만 등록.
+	TArray<TSubclassOf<UTDItemStaticData>> DefaultItemStaticDatas; // 게임 시작 시 주어지는 ItemStaticData. 
 
 	UPROPERTY(Replicated)
 	UTDItemInstance* CurrentItem;
 
 	FDelegateHandle ItemTagDelegateHandle;
+
+private:
+	static UDataTable* GetItemDataTable();
+	static bool IsValidItemID(FName InItemID); // Item ID 체크
+
+	static FInventoryListItem GetSelectedItemOverallData(FName InItemID);
+
+	
+	////////////////////////////////////////////////////////////
+	//** DataTable
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory|DataTable")
+	TObjectPtr<UDataTable> ItemDataTable;
 };

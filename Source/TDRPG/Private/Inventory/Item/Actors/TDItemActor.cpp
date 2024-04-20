@@ -45,7 +45,7 @@ void ATDItemActor::InitItemActor(UTDItemInstance* InTDItemInstance)
 
 void ATDItemActor::OnEquipped()
 {
-	ItemState = EItemState::Equipped;
+	ItemState = EItemState::EIS_Equipped;
 
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SphereComponent->SetGenerateOverlapEvents(false);
@@ -53,7 +53,7 @@ void ATDItemActor::OnEquipped()
 
 void ATDItemActor::OnUnequipped()
 {
-	ItemState = EItemState::None;
+	ItemState = EItemState::EIS_None;
 
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SphereComponent->SetGenerateOverlapEvents(false);
@@ -61,7 +61,7 @@ void ATDItemActor::OnUnequipped()
 
 void ATDItemActor::OnDropped()
 {
-	ItemState = EItemState::Dropped;
+	ItemState = EItemState::EIS_Dropped;
 
 	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
@@ -103,12 +103,9 @@ void ATDItemActor::BeginPlay()
 
 	if (HasAuthority()) // Server
 	{
-		check(TDItemStaticDataClass);
-
-		if (false == IsValid(TDItemInstance) && IsValid(TDItemStaticDataClass))
+		if (false == IsValid(TDItemInstance))
 		{
 			TDItemInstance = NewObject<UTDItemInstance>();
-			TDItemInstance->Init(TDItemStaticDataClass);
 
 			// 게임 시작 시 Collsion 켜주기.
 			SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -117,9 +114,9 @@ void ATDItemActor::BeginPlay()
 	}
 }
 
-void ATDItemActor::OnRep_TDItemInstance(UTDItemInstance* OldTDItemInstance)
+void ATDItemActor::OnRep_TDItemInstance()
 {
-	if (false == IsValid(OldTDItemInstance) && IsValid(TDItemInstance))
+	if (IsValid(TDItemInstance))
 	{
 		// TODO
 	}
@@ -129,15 +126,15 @@ void ATDItemActor::OnRep_ItemState()
 {
 	switch (ItemState)
 	{
-	case EItemState::Stored:
+	case EItemState::EIS_Stored:
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		SphereComponent->SetGenerateOverlapEvents(false);
 		break;
-	case EItemState::Equipped:
+	case EItemState::EIS_Equipped:
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		SphereComponent->SetGenerateOverlapEvents(false);
 		break;
-	case EItemState::Dropped:
+	case EItemState::EIS_Dropped:
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		SphereComponent->SetGenerateOverlapEvents(true);
 		break;

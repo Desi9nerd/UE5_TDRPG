@@ -2,7 +2,6 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
-#include "Inventory/Item/TDItemStaticData.h"
 #include "TDItemActor.generated.h"
 
 class UTDItemInstance;
@@ -11,6 +10,15 @@ class USphereComponent;
 /**
  *
  */
+
+UENUM(BlueprintType)
+enum class EItemState : uint8
+{
+	EIS_None	 UMETA(DisplayName = "None"),
+	EIS_Stored	 UMETA(DisplayName = "Stored"),
+	EIS_Equipped UMETA(DisplayName = "Equipped"),
+	EIS_Dropped  UMETA(DisplayName = "Dropped"),
+};
 
 UCLASS()
 class TDRPG_API ATDItemActor : public AActor
@@ -29,17 +37,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UTDItemStaticData> TDItemStaticDataClass;
-
 	UPROPERTY(ReplicatedUsing = OnRep_TDItemInstance)
 	UTDItemInstance* TDItemInstance;
 
 	UFUNCTION()
-	void OnRep_TDItemInstance(UTDItemInstance* OldTDItemInstance);
+	void OnRep_TDItemInstance();
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemState)
-	EItemState ItemState = EItemState::None;
+	EItemState ItemState = EItemState::EIS_None;
 	UFUNCTION()
 	void OnRep_ItemState();
 

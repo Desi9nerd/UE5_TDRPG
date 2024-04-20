@@ -9,15 +9,8 @@
 #include "Inventory/Item/TDItemInstance.h"
 #include "Inventory/Item/TDItemStaticData.h"
 #include "Inventory/Item/Actors/TDItemActor.h"
-
 #include "Abilities/GameplayAbilityTypes.h"
 #include "GameplayTags/TDGameplayTags.h"
-
-//FGameplayTag UTDInventoryComponent::EquipItemTag;
-//FGameplayTag UTDInventoryComponent::EquipNextItemTag;
-//FGameplayTag UTDInventoryComponent::UnequipItemTag;
-//FGameplayTag UTDInventoryComponent::DropItemTag;
-
 
 static TAutoConsoleVariable<int32> ConsoleVarShowInventory( // 디버깅용 콘솔 변수
 	TEXT("ShowDebugInventory"),
@@ -33,25 +26,15 @@ UTDInventoryComponent::UTDInventoryComponent()
 	PrimaryComponentTick.bCanEverTick = true;   // 매 틱마다 업데이트 가능하도록 설정
 	bWantsInitializeComponent = true;           // InitializeComponent() 함수 호출을 원함
 	SetIsReplicatedByDefault(true); // 아래 내용 참조.
-
-	//static bool bHandledAddingTags = false;
-	//if (false == bHandledAddingTags)
-	//{
-	//	UGameplayTagsManager::Get().OnLastChanceToAddNativeTags().AddUObject(this, &ThisClass::AddInventoryTags);		
-	//}
 }
 
-//void UTDInventoryComponent::AddInventoryTags()
-//{
-//	UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
-//	
-//	UTDInventoryComponent::EquipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipItem"), TEXT("이벤트: 아이템 장착"));
-//	UTDInventoryComponent::EquipNextItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.EquipNextItem"), TEXT("이벤트: 다음 아이템 장착"));
-//	UTDInventoryComponent::UnequipItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.UnequipItem"), TEXT("이벤트: 아이템 장착해제"));
-//	UTDInventoryComponent::DropItemTag = TagsManager.AddNativeGameplayTag(TEXT("Event.Inventory.DropItem"), TEXT("이벤트: 아이템 떨어뜨리기"));
-//	
-//	TagsManager.OnLastChanceToAddNativeTags().RemoveAll(this); // UnSubscribe
-//}
+void UTDInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UTDInventoryComponent, InventoryList);
+	DOREPLIFETIME(UTDInventoryComponent, CurrentItem);
+}
 
 void UTDInventoryComponent::HandleGameplayEvent(FGameplayEventData Payload)
 {
@@ -80,46 +63,34 @@ void UTDInventoryComponent::HandleGameplayEvent(FGameplayEventData Payload)
 	}
 }
 
+void UTDInventoryComponent::OnRep_InventoryItems()
+{
+	// TODO: 인벤토리에 변경사항(추가, 삭제 등등)이 생길 시 변경사항 갱신.
+}
+
 void UTDInventoryComponent::ServerHandleGameplayEvent_Implementation(FGameplayEventData Payload)
 {
 	HandleGameplayEvent(Payload);
 }
 
-void UTDInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UTDInventoryComponent, InventoryList);
-	DOREPLIFETIME(UTDInventoryComponent, CurrentItem);
-}
-
 void UTDInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	const bool bShowDebug = (ConsoleVarShowInventory.GetValueOnGameThread() != 0);
-	if (bShowDebug)
-	{
-		// 인벤토리 아이템 목록을 순회하며 디버그 정보 출력
-		for (FInventoryListItem& Item : InventoryList.GetInventoryListItemsRef())
-		{
-			UTDItemInstance* ItemInstance = Item.TDItemInstance;
-			const UTDItemStaticData* ItemStaticData = ItemInstance->GetTDItemStaticData();
-
-			if (IsValid(ItemInstance) && IsValid(ItemStaticData))
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Magenta, FString::Printf(TEXT("Item: %s"), *ItemStaticData->Name.ToString())); // 아이템 이름을 화면에 출력
-			}
-		}
-	}
+	
 }
 
 void UTDInventoryComponent::InitializeComponent() // 초기화. 서버에서만 실행.
 {
 	Super::InitializeComponent();
 
-
-
+	if (GetOwner()->HasAuthority()) // Server
+	{
+		// DefaultItemStaticDatas 배열에 있는 모든 아이템을 InventoryList에 추가
+		for (const TSubclassOf<UTDItemStaticData>& ItemStaticDataClass : DefaultItemStaticDatas)
+		{
+			InventoryList.AddItem(ItemStaticDataClass);
+		}
+	}
 }
 
 // 네트워크 동기화를 위한 함수. 인벤토리 내의 각 아이템 인스턴스도 네트워크를 통해 복제되도록 함.
@@ -186,16 +157,16 @@ void UTDInventoryComponent::EquipItem(TSubclassOf<UTDItemStaticData> InTDItemSta
 {
 	if (GetOwner()->HasAuthority()) // Server
 	{
-		for (const FInventoryListItem& Item: InventoryList.GetInventoryListItemsRef())
-		{
-			if (Item.TDItemInstance->TDItemStaticDataClass == InTDItemStaticDataClass)
-			{
-				Item.TDItemInstance->OnEquipped(GetOwner());
-				CurrentItem = Item.TDItemInstance; // 현재 아이템을 장착하는 아이템으로 설정.
-
-				break;
-			}
-		}
+		//or (const FInventoryListItem& Item: InventoryList.GetInventoryListItemsRef())
+		//
+		//	if (Item.TDItemInstance->TDItemStaticDataClass == InTDItemStaticDataClass)
+		//	{
+		//		Item.TDItemInstance->OnEquipped(GetOwner());
+		//		CurrentItem = Item.TDItemInstance; // 현재 아이템을 장착하는 아이템으로 설정.
+		//
+		//		break;
+		//	}
+		//
 
 		DropItem();
 	}
@@ -205,16 +176,16 @@ void UTDInventoryComponent::EquipItemInstanceOnly(UTDItemInstance* InTDItemInsta
 {
 	if (GetOwner()->HasAuthority()) // Server
 	{
-		for (const FInventoryListItem& Item : InventoryList.GetInventoryListItemsRef())
-		{
-			if (Item.TDItemInstance == InTDItemInstance) // 해당 TDItemInstance를 찾으면
-			{
-				Item.TDItemInstance->OnEquipped(GetOwner());
-				CurrentItem = Item.TDItemInstance; // 현재 아이템을 장착하는 아이템으로 설정.
-
-				break;
-			}
-		}
+		//for (const FInventoryListItem& Item : InventoryList.GetInventoryListItemsRef())
+		//{
+		//	if (Item.TDItemInstance == InTDItemInstance) // 해당 TDItemInstance를 찾으면
+		//	{
+		//		Item.TDItemInstance->OnEquipped(GetOwner());
+		//		CurrentItem = Item.TDItemInstance; // 현재 아이템을 장착하는 아이템으로 설정.
+		//
+		//		break;
+		//	}
+		//}
 
 		DropItem();
 	}
@@ -233,14 +204,14 @@ void UTDInventoryComponent::EquipNextItem()
 
 	for (const FInventoryListItem& Item : InventoryListItems)
 	{
-		if (Item.TDItemInstance->GetTDItemStaticData()->bCanBeEquipped)
-		{
-			if (Item.TDItemInstance != CurrentItem)
-			{
-				NewEquipItem = Item.TDItemInstance; // 새롭게 장착할 아이템
-				break;
-			}
-		}
+		//if (Item.TDItemInstance->GetTDItemStaticData()->bCanBeEquipped)
+		//{
+		//	if (Item.TDItemInstance != CurrentItem)
+		//	{
+		//		NewEquipItem = Item.TDItemInstance; // 새롭게 장착할 아이템
+		//		break;
+		//	}
+		//}
 	}
 
 	if (CurrentItem)
@@ -262,7 +233,7 @@ void UTDInventoryComponent::UnequipItem()
 	{
 		if (IsValid(CurrentItem))
 		{
-			CurrentItem->OnUnequipped(GetOwner());
+			//CurrentItem->OnUnequipped(GetOwner());
 			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
 		}
 	}
@@ -274,8 +245,8 @@ void UTDInventoryComponent::DropItem()
 	{
 		if (IsValid(CurrentItem))
 		{
-			CurrentItem->OnDropped(GetOwner());
-			RemoveItem(CurrentItem->TDItemStaticDataClass);
+			//CurrentItem->OnDropped(GetOwner());
+			//RemoveItem(CurrentItem->TDItemStaticDataClass);
 			CurrentItem = nullptr; // 현재 아이템을 nullptr로 설정.
 		}
 	}
@@ -284,15 +255,6 @@ void UTDInventoryComponent::DropItem()
 void UTDInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (GetOwner()->HasAuthority()) // Server
-	{
-		// DefaultItemStaticDatas 배열에 있는 모든 아이템을 InventoryList에 추가
-		for (const TSubclassOf<UTDItemStaticData>& ItemStaticDataClass : DefaultItemStaticDatas)
-		{
-			InventoryList.AddItem(ItemStaticDataClass);
-		}
-	}
 
 	// 추후에 제거하기
 	//FString TempName = GetOwner()->GetName();
@@ -308,12 +270,46 @@ void UTDInventoryComponent::BeginPlay()
 		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_EquipNext).AddUObject(this, &ThisClass::GameplayEventCallback);
 		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Unequip).AddUObject(this, &ThisClass::GameplayEventCallback);
 		ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FTDGameplayTags::GetTDGameplayTags().Item_Drop).AddUObject(this, &ThisClass::GameplayEventCallback);
-
-		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::EquipNextItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::UnequipItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
-		//ItemTagDelegateHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(UTDInventoryComponent::DropItemTag).AddUObject(this, &ThisClass::GameplayEventCallback);
 	}
+}
+
+
+UDataTable* UTDInventoryComponent::GetItemDataTable()
+{
+	TMap<FName, FInventoryListItem*> ItemDatas;
+	//ItemDataTable->GetAllRows<FInventoryListItem>("", ItemDatas);
+
+	return nullptr;
+}
+
+bool UTDInventoryComponent::IsValidItemID(FName InItemID)
+{
+	if (UDataTable* DataTable = GetItemDataTable())
+	{
+		TArray<FName> RowNames = DataTable->GetRowNames();
+
+		if (RowNames.Contains(InItemID))
+		{
+			return true;
+		}
+		UE_LOG(LogTemp, Warning, TEXT("UTDItemInstance::IsValidItemID -  [%s] is invalid."), *InItemID.ToString());
+		return false;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("UTDItemInstance::IsValidItemID -  DataTable is invalid."));
+	return false;
+}
+
+FInventoryListItem UTDInventoryComponent::GetSelectedItemOverallData(FName InItemID)
+{
+	if (IsValidItemID(InItemID))
+	{
+		//if (const UDataTable* DataTable = GetItemDataTable(EPRCategory::Default))
+		//{
+		//	return DataTable->FindRow<FPRBaseData>(InItemID, TEXT("??????"));
+		//}
+		return FInventoryListItem();
+	}
+	return FInventoryListItem();
 }
 
 

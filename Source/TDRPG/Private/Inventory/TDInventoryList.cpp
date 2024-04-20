@@ -16,7 +16,6 @@ void FInventoryList::AddItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDataCl
 {
 	FInventoryListItem& ItemInfo = InventoryListItems.AddDefaulted_GetRef();
 	ItemInfo.TDItemInstance = NewObject<UTDItemInstance>();
-	ItemInfo.TDItemInstance->Init(InTDItemStaticDataClass);
 
 	MarkItemDirty(ItemInfo); // 특정 아이템(ItemInfo)이 변경되었음을 시스템에 알림.
 }
@@ -36,7 +35,7 @@ void FInventoryList::RemoveItem(TSubclassOf<UTDItemStaticData> InTDItemStaticDat
 	for (int32 i = 0; i < InventoryListItems.Num(); i++)
 	{
 		FInventoryListItem& Item = InventoryListItems[i];
-		if (Item.TDItemInstance && Item.TDItemInstance->GetTDItemStaticData()->IsA(InTDItemStaticDataClass))
+		if (Item.TDItemInstance)
 		{
 			InventoryListItems.RemoveAt(i); // 해당 i의 아이템을 제거
 			MarkArrayDirty();				// 배열 자체가 변경되었음을 시스템에 알림.
