@@ -58,7 +58,7 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Exp)
 	int32 Exp = 1;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
-	int32 AttributePoints = 1;
+	int32 AttributePoints = 0;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SkillPoints)
 	int32 SkillPoints = 1;
 

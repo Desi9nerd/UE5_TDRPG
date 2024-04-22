@@ -7,6 +7,7 @@ UTDGA_HitReact::UTDGA_HitReact()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerExecution;
 }
 
+
 void UTDGA_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -22,9 +23,9 @@ void UTDGA_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 		check(MontageToPlay);
 
 		UAbilityTask_PlayMontageAndWait* PlayHitReactTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("TDGA_HitReact"), MontageToPlay, 1.0f);
-		PlayHitReactTask->OnCompleted.AddDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
-		PlayHitReactTask->OnInterrupted.AddDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
-		PlayHitReactTask->OnCancelled.AddDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
+		PlayHitReactTask->OnCompleted.AddUniqueDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
+		PlayHitReactTask->OnInterrupted.AddUniqueDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
+		PlayHitReactTask->OnCancelled.AddUniqueDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);
 		PlayHitReactTask->ReadyForActivation();
 	}
 }

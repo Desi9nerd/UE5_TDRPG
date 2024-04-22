@@ -62,9 +62,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> Niagara_LevelUp;
 
-	UPROPERTY(EditAnywhere, Replicated)
-	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
-
 private:
 	virtual void InitAbilityActorInfo() override;
 
