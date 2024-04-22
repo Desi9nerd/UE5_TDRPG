@@ -32,7 +32,6 @@ struct FUIWidgetRow : public FTableRowBase
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDA_AbilitySignature, const FDA_Ability&, DA_AbilityInfo);
 
 UCLASS(BlueprintType, Blueprintable)
 class TDRPG_API UTDWidgetControllerOverlay : public UTDWidgetController
@@ -57,9 +56,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
-	FDA_AbilitySignature DA_AbilityInfoDelegate;
-
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Exp")
 	FOnAttributeChangedSignature OnExpPercentChangedDelegate;
 
@@ -72,10 +68,9 @@ protected:
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SoulChanged(const FOnAttributeChangeData& Data) const;
-	void OnExpChanged(int32 InNewExp) const;
+	void OnExpChanged(int32 InNewExp);
 	void OnPlayerLevelChanged(int32 InNewPlayerLevel) const;
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
-	void OnInitializeStartGivenASC(UTDAbilitySystemComponent* TDASC);
 
 	template<typename T> // DataTable ÀÐ±â¿ë
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
@@ -83,8 +78,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UTDDA_Ability> TDDA_Ability;
 };
 
 template <typename T>

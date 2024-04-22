@@ -27,7 +27,7 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 	}
 
 	bStartGivenASC = true;
-	GivenASCDelegate.Broadcast(this);
+	GivenASCDelegate.Broadcast();
 }
 
 void UTDAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities)
@@ -158,7 +158,7 @@ void UTDAbilitySystemComponent::OnRep_ActivateAbilities()
 	if (false == bStartGivenASC)
 	{
 		bStartGivenASC = true;
-		GivenASCDelegate.Broadcast(this);
+		GivenASCDelegate.Broadcast();
 	}
 }
 

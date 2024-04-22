@@ -8,7 +8,7 @@
  */
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
-DECLARE_MULTICAST_DELEGATE_OneParam(FGivenASC, UTDAbilitySystemComponent*);
+DECLARE_MULTICAST_DELEGATE(FGivenASC);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 
 UCLASS()

@@ -7,31 +7,27 @@
 
 void UTDWidgetControllerOverlay::BroadcastInitialValues()
 {
-	const UTDAttributeSet* TDAttributeSet = CastChecked<UTDAttributeSet>(AttributeSet);
-
-	OnHealthChanged.Broadcast(TDAttributeSet->GetHealth());
-	OnMaxHealthChanged.Broadcast(TDAttributeSet->GetMaxHealth());
-	OnManaChanged.Broadcast(TDAttributeSet->GetMana());
-	OnMaxManaChanged.Broadcast(TDAttributeSet->GetMaxMana());
-	OnSoulChanged.Broadcast(TDAttributeSet->GetSoul());
+	OnHealthChanged.Broadcast(GetTDAttributeSet()->GetHealth());
+	OnMaxHealthChanged.Broadcast(GetTDAttributeSet()->GetMaxHealth());
+	OnManaChanged.Broadcast(GetTDAttributeSet()->GetMana());
+	OnMaxManaChanged.Broadcast(GetTDAttributeSet()->GetMaxMana());
+	OnSoulChanged.Broadcast(GetTDAttributeSet()->GetSoul());
 }
 
 void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet의 데이터와 콜백함수 바인딩
 {
-	const UTDAttributeSet* TDAttributeSet = CastChecked<UTDAttributeSet>(AttributeSet);
-
 	//** Health, MaxHealth가 변경될때 마다 아래함수(HealthChanged, MaxHealthChanged)가 callback됨
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::HealthChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxHealthChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(
+		GetTDAttributeSet()->GetHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::HealthChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(
+		GetTDAttributeSet()->GetMaxHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxHealthChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		TDAttributeSet->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(
+		GetTDAttributeSet()->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(
+		GetTDAttributeSet()->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(
+		GetTDAttributeSet()->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
 
 
 	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
@@ -46,25 +42,23 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 			}
 		}
 	);*/ // 위: 람다함수 버젼, 아래: 함수를 밖으로 뺀 버젼 
-	UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
-	if (IsValid(TDASC))
+	if (GetTDASC())
 	{
-		if (TDASC->bStartGivenASC) // AbilitySystemComponent 데이터가 적용되어 있다면
+		if (GetTDASC()->bStartGivenASC) // AbilitySystemComponent 데이터가 적용되어 있다면
 		{
-			OnInitializeStartGivenASC(TDASC); 
+			BroadcastDA_AbilityInfo();
 		}
 		else // AbilitySystemComponent 데이터가 적용이 안 되어 있다면
 		{
-			TDASC->GivenASCDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnInitializeStartGivenASC);		
+			GetTDASC()->GivenASCDelegate.AddUObject(this, &UTDWidgetControllerOverlay::BroadcastDA_AbilityInfo);
 		}
 
-		TDASC->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
+		GetTDASC()->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
 	}
 
-
-	ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
-	TDPlayerState->OnExpChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnExpChanged);
-	TDPlayerState->OnPlayerLevelChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnPlayerLevelChanged);
+	
+	GetTDPlayerState()->OnExpChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnExpChanged);
+	GetTDPlayerState()->OnPlayerLevelChangedDelegate.AddUObject(this, &UTDWidgetControllerOverlay::OnPlayerLevelChanged);
 }
 
 void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags)
@@ -78,24 +72,6 @@ void UTDWidgetControllerOverlay::ReadDataTableRowByTag(const FGameplayTagContain
 			MessageWidgetRowDelegate.Broadcast(*Row); // Delegate Broadcast
 		}
 	}
-}
-
-void UTDWidgetControllerOverlay::OnInitializeStartGivenASC(UTDAbilitySystemComponent* TDASC)
-{
-	if (false == TDASC->bStartGivenASC) return; // 방어코드. 이미 적용되었다면 다시 적용하지 않고 리턴.
-
-	// 위젯에 TDASC 데이터 브로드캐스팅.
-	// BroadcastDelegate 생성 후 람다로 바인딩.
-	FForEachAbility BroadcastDelegate; 
-	BroadcastDelegate.BindLambda([this, TDASC](const FGameplayAbilitySpec& AbilitySpec)
-		{
-			//TODO: Given Ability Spec을 위한 AbilityTag 필요
-			FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(TDASC->GetAbilityTagFromSpec(AbilitySpec));
-			DA_AbilityInfo.InputTag = TDASC->GetInputTagFromSpec(AbilitySpec); // 어떤 InputTag와 어떤 AbilitySpec이 매칭되는지 알기위해
-			DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo);
-		});
-
-	TDASC->ForEachAbility(BroadcastDelegate); // 델리게이트 보내기
 }
 
 void UTDWidgetControllerOverlay::HealthChanged(const FOnAttributeChangeData& Data) const
@@ -123,11 +99,10 @@ void UTDWidgetControllerOverlay::SoulChanged(const FOnAttributeChangeData& Data)
 	OnSoulChanged.Broadcast(Data.NewValue);
 }
 
-void UTDWidgetControllerOverlay::OnExpChanged(int32 InNewExp) const
+void UTDWidgetControllerOverlay::OnExpChanged(int32 InNewExp)
 {
-	const ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
-	const UTDDA_LevelUp* TDDA_LevelUpInfo = TDPlayerState->TDDA_LevelUpInfo;
-	check(TDDA_LevelUpInfo);
+	const UTDDA_LevelUp* TDDA_LevelUpInfo = GetTDPlayerState()->TDDA_LevelUpInfo;
+	checkf(TDDA_LevelUpInfo, TEXT("No TDDA_LevelUpInfo. Check: UTDWidgetControllerOverlay::OnExpChanged & TDPlayerState BP"));
 
 	const int32 PlayerLevel = TDDA_LevelUpInfo->FindDA_LevelUpForExp(InNewExp);
 	const int32 MaxPlayerLevel = TDDA_LevelUpInfo->DA_LevelUpInfo.Num();

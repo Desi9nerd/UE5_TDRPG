@@ -7,34 +7,30 @@
 
 void UTDWidgetControllerAttributeMenu::BroadcastInitialValues()
 {
-	UTDAttributeSet* AS = CastChecked<UTDAttributeSet>(AttributeSet);
 	checkf(DataAttribute, TEXT("No DataAttribute. Check: UTDWidgetControllerAttributeMenu::BroadcastInitialValues()"));
 
 	// UTDAttributeSet 내 TagsToAttributes 맵 변수의 GameplayTag를 순회하여 value들을 Broadcast시킨다.
-	for (auto& Pair : AS->TagsToAttributes)
+	for (auto& Pair : GetTDAttributeSet()->TagsToAttributes)
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
 
-	ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
-	AttributePointsChangedDelegate.Broadcast(TDPlayerState->GetAttributePoints());
+	AttributePointsChangedDelegate.Broadcast(GetTDPlayerState()->GetAttributePoints());
 }
 
 void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()
 {
-	UTDAttributeSet* AS = CastChecked<UTDAttributeSet>(AttributeSet);
 	checkf(DataAttribute, TEXT("No DataAttribute. Check: UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()"));
 
-	for (auto& Pair : AS->TagsToAttributes)
+	for (auto& Pair : GetTDAttributeSet()->TagsToAttributes)
 	{
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
+		GetASC()->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)
 			{
 				BroadcastAttributeInfo(Pair.Key, Pair.Value());
 			});
-
-		ATDPlayerState* TDPlayerState = CastChecked<ATDPlayerState>(PlayerState);
-		TDPlayerState->OnAttributePointsChangedDelegate.AddLambda([this](int32 Points)
+		
+		GetTDPlayerState()->OnAttributePointsChangedDelegate.AddLambda([this](int32 Points)
 			{
 				AttributePointsChangedDelegate.Broadcast(Points);
 			});
@@ -43,15 +39,14 @@ void UTDWidgetControllerAttributeMenu::BindCallbacksToDependencies()
 
 void UTDWidgetControllerAttributeMenu::EnhanceAttribute(const FGameplayTag& AttributeTag)
 {
-	UTDAbilitySystemComponent* TDASC = CastChecked<UTDAbilitySystemComponent>(AbilitySystemComponent);
-	checkf(TDASC, TEXT("No TDASC. Check: UTDWidgetControllerAttributeMenu::EnhanceAttribute"));
+	checkf(GetTDASC(), TEXT("No TDASC. Check: UTDWidgetControllerAttributeMenu::EnhanceAttribute"));
 
-	TDASC->EnhanceAttribute(AttributeTag);
+	GetTDASC()->EnhanceAttribute(AttributeTag);
 }
 
-void UTDWidgetControllerAttributeMenu::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
+void UTDWidgetControllerAttributeMenu::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute)
 {
 	FDA_Attribute Info = DataAttribute->FindDA_AttributeForTag(AttributeTag);
-	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
+	Info.AttributeValue = Attribute.GetNumericValue(GetAttributeSet());
 	DataAttributeInfoDelegate.Broadcast(Info);
 }
