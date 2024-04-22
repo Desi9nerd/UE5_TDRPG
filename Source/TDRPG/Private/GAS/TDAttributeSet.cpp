@@ -70,9 +70,10 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeleeResistance, COND_None, REPNOTIFY_Always);
 }
 
+/** Called just before modifying the value of an attribute. AttributeSet can make additional modifications here. Return true to continue, or false to throw out the modification.*/
+// PreAttributeChange함수는 Attribute의 변수 변경 전에 관찰하여 범위를 설정해둔 값이 범위를 벗어났을시 적용되지 않게 한다. Clamp 용도로만 사용하는걸 권장한다.
 void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	// PreAttributeChange함수는 Attribute의 변수 변경 전에 관찰하여 범위를 설정해둔 값이 범위를 벗어났을시 적용되지 않게 한다. Clamp 용도로만 사용하는걸 권장한다.
 	Super::PreAttributeChange(Attribute, NewValue);
 
 	//** 수치 Clamp 범위 주기 (attribute 변경 전에 clamp 적용)
@@ -91,6 +92,7 @@ void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	}
 }
 
+/**	Called just before a GameplayEffect is executed to modify the base value of an attribute. No more changes can be made.*/
 void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -168,11 +170,32 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				PlayerInterface->AddToAttributePoints(AttributePointsReward); // Attribute Point 추가
 				PlayerInterface->AddToSkillPoints(SkillPointsReward);		  // Skill Point 추가
 
+				// bMakeMaxHealth, bMakeMaxMana = true면 PostAttributeChange()에서 체력과 마나 최대로 설정
+				bMakeMaxHealth = true;
+				bMakeMaxMana = true;
+
 				PlayerInterface->LevelUpCPP(); // 레벨업
 			}
 
 			PlayerInterface->AddToExpCPP(LocalIncomingExp);
 		}
+	}
+}
+
+/** Called just after any modification happens to an attribute. */
+void UTDAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
+	if (bMakeMaxHealth && Attribute == GetMaxHealthAttribute())
+	{
+		SetHealth(GetMaxHealth());
+		bMakeMaxHealth = false;
+	}
+	if (bMakeMaxMana && Attribute == GetMaxManaAttribute())
+	{
+		SetMana(GetMaxMana());
+		bMakeMaxMana = false;
 	}
 }
 
