@@ -24,6 +24,9 @@ public:
 	void InputTagReleased(const FGameplayTag& InputTag);
 	void InputTagHeld(const FGameplayTag& InputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
+	void EnhanceAttribute(const FGameplayTag& AttributeTag);
+	UFUNCTION(Server, Reliable)
+	void ServerEnhanceAttribute(const FGameplayTag& AttributeTag);
 
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);

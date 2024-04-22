@@ -50,6 +50,10 @@ public:
 	virtual int32 GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const override;
 	virtual int32 GetSkillPointsReward(int32 PlayerLevel) const override;
 	virtual int32 GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const override;
+	virtual int32 GetAttributePoints() const override;
+	virtual int32 GetAttributePointsBP_Implementation() const override;
+	virtual int32 GetSkillPoints() const override;
+	virtual int32 GetSkillPointsBP_Implementation() const override;
 	//********************************************************
 
 protected:

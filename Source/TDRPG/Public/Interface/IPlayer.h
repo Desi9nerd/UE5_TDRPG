@@ -42,6 +42,14 @@ public:
 	virtual int32 GetExp() const;
 
 	UFUNCTION(BlueprintNativeEvent)
+	int32 GetAttributePointsBP() const;
+	virtual int32 GetAttributePoints() const;
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetSkillPointsBP() const;
+	virtual int32 GetSkillPoints() const;
+
+	UFUNCTION(BlueprintNativeEvent)
 	int32 GetAttributePointsRewardBP(int32 PlayerLevel) const;
 	virtual int32 GetAttributePointsReward(int32 PlayerLevel) const;
 

@@ -1,6 +1,9 @@
 #include "GAS/TDAbilitySystemComponent.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/GameplayAbility/TDGA.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Interface/IPlayer.h"
 
 void UTDAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -89,6 +92,33 @@ void UTDAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}
+	}
+}
+
+void UTDAbilitySystemComponent::EnhanceAttribute(const FGameplayTag& AttributeTag)
+{
+	IIPlayer* PlayerInterface = Cast<IIPlayer>(GetAvatarActor());
+	if (PlayerInterface)
+	{
+		if (PlayerInterface->GetAttributePoints() > 0)
+		{
+			ServerEnhanceAttribute(AttributeTag); // Serverø° æÀ∑¡¡‹.
+		}
+	}
+}
+
+void UTDAbilitySystemComponent::ServerEnhanceAttribute_Implementation(const FGameplayTag& AttributeTag)
+{
+	FGameplayEventData Payload;
+	Payload.EventTag = AttributeTag;
+	Payload.EventMagnitude = 1.f;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
+
+	IIPlayer* PlayerInterface = Cast<IIPlayer>(GetAvatarActor());
+	if (PlayerInterface)
+	{
+		PlayerInterface->AddToAttributePoints(-1);
 	}
 }
 

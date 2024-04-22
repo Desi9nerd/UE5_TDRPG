@@ -26,6 +26,16 @@ int32 IIPlayer::GetExp() const
 	return 0;
 }
 
+int32 IIPlayer::GetAttributePoints() const
+{
+	return 0;
+}
+
+int32 IIPlayer::GetSkillPoints() const
+{
+	return 0;
+}
+
 int32 IIPlayer::GetAttributePointsReward(int32 PlayerLevel) const
 {
 	return 0;

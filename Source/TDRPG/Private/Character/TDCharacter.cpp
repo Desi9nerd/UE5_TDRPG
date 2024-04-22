@@ -68,19 +68,13 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 
 //int32 ATDCharacter::GetPlayerLevelBP_Implementation()
 //{
-//	if (false == IsValid(TDPlayerState))
-//	{
-//		TDPlayerState = GetPlayerState<ATDPlayerState>();
-//	}
-//	check(TDPlayerState);
-//
+//	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevelBP_Implementation()"));
 //	return TDPlayerState->GetPlayerLevel();
 //}
 
 int32 ATDCharacter::GetPlayerLevel()
 {
-	check(TDPlayerState);
-
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevel()"));
 	return TDPlayerState->GetPlayerLevel();
 }
 
@@ -93,92 +87,116 @@ int32 ATDCharacter::GetPlayerLevel()
 
 void ATDCharacter::AddToExpCPP(int32 InExp)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToExpCPP()"));
 	TDPlayerState->AddToExp(InExp);
 }
 
 void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevel()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 }
 
 void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevelBP_Implementation()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 }
 
 void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToAttributePoints()"));
 	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToAttributePointsBP_Implementation(int32 InAttributePoints)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToAttributePointsBP_Implementation()"));
 	TDPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToSkillPoints(int32 InSkillPoints)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToSkillPoints()"));
 	TDPlayerState->AddToSkillPoints(InSkillPoints);
 }
 
 void ATDCharacter::AddToSkillPointsBP_Implementation(int32 InSpellPoints)
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToSkillPointsBP_Implementation()"));
 	TDPlayerState->AddToSkillPoints(InSpellPoints);
 }
 
 int32 ATDCharacter::GetExp() const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetExp()"));
 	return TDPlayerState->GetExp();
 }
 
 int32 ATDCharacter::GetExpBP_Implementation() const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetExpBP_Implementation()"));
 	return TDPlayerState->GetExp();
 }
 
 int32 ATDCharacter::FindLevelForExp(int32 InExp) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::FindLevelForExp()"));
 	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
 }
 
 int32 ATDCharacter::FindLevelForExpBP_Implementation(int32 InExp) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::FindLevelForExpBP_Implementation()"));
 	return TDPlayerState->TDDA_LevelUpInfo->FindDA_LevelUpForExp(InExp);
 }
 
 int32 ATDCharacter::GetAttributePointsReward(int32 PlayerLevel) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePointsReward()"));
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
 }
 
 int32 ATDCharacter::GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePointsRewardBP_Implementation()"));
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
 }
 
 int32 ATDCharacter::GetSkillPointsReward(int32 PlayerLevel) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPointsReward()"));
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
 }
 
 int32 ATDCharacter::GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const
 {
-	check(TDPlayerState);
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPointsRewardBP_Implementation()"));
 	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
+}
+
+int32 ATDCharacter::GetAttributePoints() const
+{
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePoints()"));
+	return TDPlayerState->GetAttributePoints();
+}
+
+int32 ATDCharacter::GetAttributePointsBP_Implementation() const
+{
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePointsBP_Implementation()"));
+	return TDPlayerState->GetAttributePoints();
+}
+
+int32 ATDCharacter::GetSkillPoints() const
+{
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPoints()"));
+	return TDPlayerState->GetSkillPoints();
+}
+
+int32 ATDCharacter::GetSkillPointsBP_Implementation() const
+{
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPointsBP_Implementation()"));
+	return TDPlayerState->GetSkillPoints();
 }
 
 //void ATDCharacter::LevelUp_Implementation()

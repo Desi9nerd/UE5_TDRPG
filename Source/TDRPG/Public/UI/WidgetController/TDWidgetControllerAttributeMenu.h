@@ -5,6 +5,8 @@
 
 class UTDDA_Attribute;
 struct FDA_Attribute;
+struct FGameplayTag;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataAttributeInfoSignature, const FDA_Attribute&, Info);
 /**
  * 
@@ -17,6 +19,9 @@ class TDRPG_API UTDWidgetControllerAttributeMenu : public UTDWidgetController
 public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
+
+	UFUNCTION(BlueprintCallable)
+	void EnhanceAttribute(const FGameplayTag& AttributeTag);
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FDataAttributeInfoSignature DataAttributeInfoDelegate;
