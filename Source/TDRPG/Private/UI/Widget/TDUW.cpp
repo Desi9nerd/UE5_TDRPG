@@ -22,7 +22,7 @@ UTDWidgetControllerOverlay* UTDUW::GetWidgetControllerOverlay(const UObject* Wor
 			UAttributeSet* AS = PS->GetAttributeSet();
 			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
 
-			return tdHUD->GetWidgetControllerOverlay(WidgetControllerParams);
+			return tdHUD->GetTDWidgetControllerOverlay(WidgetControllerParams);
 		}
 	}
 	return nullptr;
@@ -39,7 +39,7 @@ UTDWidgetControllerAttributeMenu* UTDUW::GetAttributeMenuWidgetController(const 
 			UAttributeSet* AS = PS->GetAttributeSet();
 			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
 
-			return tdHUD->GetWidgetControllerAttributeMenu(WidgetControllerParams);
+			return tdHUD->GetTDWidgetControllerAttributeMenu(WidgetControllerParams);
 		}
 	}
 	return nullptr;

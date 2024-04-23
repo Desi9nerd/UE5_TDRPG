@@ -7,38 +7,63 @@
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
 
-UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetWidgetControllerOverlay(const UObject* WorldContextObject)
+bool UTDAbilitySystemBPLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& ResultWCParams, ATDHUD*& OutTDHUD)
 {
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
 	{
-		if (ATDHUD* tdHUD = Cast<ATDHUD>(PlayerController->GetHUD()))
+		OutTDHUD = Cast<ATDHUD>(PlayerController->GetHUD());
+		if (IsValid(OutTDHUD))
 		{
-			ATDPlayerState* PS = PlayerController->GetPlayerState<ATDPlayerState>();
-			UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
-			UAttributeSet* AS = PS->GetAttributeSet();
-			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
+			ATDPlayerState* TDPlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
+			UAbilitySystemComponent* ASC = TDPlayerState->GetAbilitySystemComponent();
+			UAttributeSet* AttributeSet = TDPlayerState->GetAttributeSet();
 
-			return tdHUD->GetWidgetControllerOverlay(WidgetControllerParams);
+			// °ª ³Ö±â
+			ResultWCParams.AttributeSet = AttributeSet;
+			ResultWCParams.AbilitySystemComponent = ASC;
+			ResultWCParams.PlayerState = TDPlayerState;
+			ResultWCParams.PlayerController = PlayerController;
+
+			return true;
 		}
 	}
+
+	return false;
+}
+
+UTDWidgetControllerOverlay* UTDAbilitySystemBPLibrary::GetTDWidgetControllerOverlay(const UObject* WorldContextObject)
+{
+	FWidgetControllerParams WCParams;
+	ATDHUD* TDHUD = nullptr;
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, TDHUD))
+	{
+		return TDHUD->GetTDWidgetControllerOverlay(WCParams);
+	}
+
 	return nullptr;
 }
 
-UTDWidgetControllerAttributeMenu* UTDAbilitySystemBPLibrary::GetAttributeMenuWidgetController(
-	const UObject* WorldContextObject)
+UTDWidgetControllerAttributeMenu* UTDAbilitySystemBPLibrary::GetTDWidgetControllerAttributeMenu(const UObject* WorldContextObject)
 {
-	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	FWidgetControllerParams WCParams;
+	ATDHUD* TDHUD = nullptr;
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, TDHUD))
 	{
-		if (ATDHUD* tdHUD = Cast<ATDHUD>(PlayerController->GetHUD()))
-		{
-			ATDPlayerState* PS = PlayerController->GetPlayerState<ATDPlayerState>();
-			UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
-			UAttributeSet* AS = PS->GetAttributeSet();
-			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
-
-			return tdHUD->GetWidgetControllerAttributeMenu(WidgetControllerParams);
-		}
+		return TDHUD->GetTDWidgetControllerAttributeMenu(WCParams);
 	}
+
+	return nullptr;
+}
+
+UTDWidgetControllerSkillMenu* UTDAbilitySystemBPLibrary::GetTDWidgetControllerSKillMenu(const UObject* WorldContextObject)
+{
+	FWidgetControllerParams WCParams;
+	ATDHUD* TDHUD = nullptr;
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, TDHUD))
+	{
+		return TDHUD->GetTDWidgetControllerSkillMenu(WCParams);
+	}
+
 	return nullptr;
 }
 

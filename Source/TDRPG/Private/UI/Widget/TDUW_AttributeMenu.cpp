@@ -20,7 +20,7 @@ void UTDUW_AttributeMenu::NativeConstruct()
 			UAttributeSet* AS = PS->GetAttributeSet();
 			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
 
-			WidgetControllerAttributeMenu = tdHUD->GetWidgetControllerAttributeMenu(WidgetControllerParams);
+			WidgetControllerAttributeMenu = tdHUD->GetTDWidgetControllerAttributeMenu(WidgetControllerParams);
 		}
 	}
 	SetWidgetController(WidgetControllerAttributeMenu);

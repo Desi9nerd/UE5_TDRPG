@@ -2,37 +2,49 @@
 #include "UI/Widget/TDUW.h"
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
+#include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
 
-UTDWidgetControllerOverlay* ATDHUD::GetWidgetControllerOverlay(const FWidgetControllerParams& WCParams)
+TObjectPtr<UTDWidgetControllerOverlay> ATDHUD::GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams)
 {
-	if (false == IsValid(OverlayWidgetController)) // OverlayWidgetController이 없다면 설정
+	if (false == IsValid(TDWidgetController_Overlay)) // OverlayWidgetController이 없다면 설정
 	{
-		OverlayWidgetController = NewObject<UTDWidgetControllerOverlay>(this, OverlayWidgetControllerClass);
-		OverlayWidgetController->SetWidgetControllerParams(WCParams);
-		OverlayWidgetController->BindCallbacksToDependencies(); // 콜백함수 바인딩
+		TDWidgetController_Overlay = NewObject<UTDWidgetControllerOverlay>(this, TDWidgetController_OverlayClass);
+		TDWidgetController_Overlay->SetWidgetControllerParams(WCParams);
+		TDWidgetController_Overlay->BindCallbacksToDependencies(); // 콜백함수 바인딩
 	}
 
-	return OverlayWidgetController;
+	return TDWidgetController_Overlay;
 }
 
-UTDWidgetControllerAttributeMenu* ATDHUD::GetWidgetControllerAttributeMenu(const FWidgetControllerParams& WCParams)
+TObjectPtr<UTDWidgetControllerAttributeMenu> ATDHUD::GetTDWidgetControllerAttributeMenu(const FWidgetControllerParams& WCParams)
 {
-
-	if (false == IsValid(AttributeMenuWidgetController))
+	if (false == IsValid(TDWidgetController_AttributeMenu))
 	{
-		AttributeMenuWidgetController = NewObject<UTDWidgetControllerAttributeMenu>(this, AttributeMenuWidgetControllerClass);
-		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
-		AttributeMenuWidgetController->BindCallbacksToDependencies();
+		TDWidgetController_AttributeMenu = NewObject<UTDWidgetControllerAttributeMenu>(this, TDWidgetController_AttributeMenuClass);
+		TDWidgetController_AttributeMenu->SetWidgetControllerParams(WCParams);
+		TDWidgetController_AttributeMenu->BindCallbacksToDependencies();
 	}
 
-	return AttributeMenuWidgetController;
+	return TDWidgetController_AttributeMenu;
+}
+
+TObjectPtr<UTDWidgetControllerSkillMenu> ATDHUD::GetTDWidgetControllerSkillMenu(const FWidgetControllerParams& WCParams)
+{
+	if (false == IsValid(TDWidgetController_SkillMenu))
+	{
+		TDWidgetController_SkillMenu = NewObject<UTDWidgetControllerSkillMenu>(this, TDWidgetController_SkillMenuClass);
+		TDWidgetController_SkillMenu->SetWidgetControllerParams(WCParams);
+		TDWidgetController_SkillMenu->BindCallbacksToDependencies();
+	}
+
+	return TDWidgetController_SkillMenu;
 }
 
 void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	//** checkf는 데이터 null체크 후 crash가 나면 작성한 TEXT를 출력한다.
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
-	checkf(OverlayWidgetControllerClass, TEXT("Overlay Widget Controller Class가 초기화되지 않았습니다. BP_TDHUD에 데이터를 넣어주세요."));
+	checkf(TDWidgetController_OverlayClass, TEXT("Overlay Widget Controller Class가 초기화되지 않았습니다. BP_TDHUD에 데이터를 넣어주세요."));
 
 	//** TDUserWidget
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
@@ -40,29 +52,10 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	//** TDOverlayWidgetController
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	UTDWidgetControllerOverlay* WidgetController = GetWidgetControllerOverlay(WidgetControllerParams);
+	UTDWidgetControllerOverlay* WidgetController = GetTDWidgetControllerOverlay(WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(WidgetController); // TDUserWidget에 TDOverlayWidgetController를 묶는다
 
 	WidgetController->BroadcastInitialValues(); // TDOverlayWidgetController에 Dynamic Broadcast된 데이터를 불러옴
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
 }
-
-//void ATDHUD::InitAttributeMenu(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
-//{
-//	checkf(AttributeMenuWidgetClass, TEXT("AttributeMenuWidgetClass가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
-//	checkf(AttributeMenuWidgetControllerClass, TEXT("AttributeMenuWidgetControllerClass가 초기화되지 않았습니다. BP_TDHUD에 데이터를 넣어주세요."));
-//
-//	//** TDUserWidget
-//	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
-//	AttributeMenuWidget = Cast<UTDUserWidget>(Widget);
-//
-//	//** TDWidgetControllerAttributeMenu
-//	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-//	UTDWidgetControllerAttributeMenu* WidgetController = GetWidgetControllerAttributeMenu(WidgetControllerParams);
-//
-//	AttributeMenuWidget->SetWidgetController(WidgetController); 
-//
-//	WidgetController->BroadcastInitialValues(); 
-//	Widget->AddToViewport();
-//}
