@@ -12,6 +12,7 @@ class UTDWidgetControllerSkillMenu;
 class UTDItemStaticData;
 struct FWidgetControllerParams;
 class ATDHUD;
+class UTDDA_Ability;
 
 /**
  * 
@@ -43,6 +44,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
 	static UTDDA_CharacterClass* GetTDDA_CharacterClass(const UObject* WorldContextObject); // TDGameMode의 UTDDACharacterClass를 가져오는 함수
+
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|Ability")
+	static UTDDA_Ability* GetTDDA_Ability(const UObject* WorldContextObject);
 
 	//********************************************************
 	//** Block Hit, Critical Hit

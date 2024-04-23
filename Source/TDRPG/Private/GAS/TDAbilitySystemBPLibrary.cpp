@@ -117,11 +117,21 @@ void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContext
 
 UTDDA_CharacterClass* UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(const UObject* WorldContextObject)
 {
-	TObjectPtr<ATDGameModeBase> TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (false == IsValid(TDGameMode)) return nullptr;
+	checkf(TDGameMode->TDDACharacterClass, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass"));
 
-	check(TDGameMode->TDDACharacterClass);
 	return TDGameMode->TDDACharacterClass;
+}
+
+UTDDA_Ability* UTDAbilitySystemBPLibrary::GetTDDA_Ability(const UObject* WorldContextObject)
+{
+	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	//if (false == IsValid(TDGameMode)) return nullptr;
+	checkf(TDGameMode, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
+	checkf(TDGameMode->TDDAAbility, TEXT("No TDAbility. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
+
+	return TDGameMode->TDDAAbility;
 }
 
 bool UTDAbilitySystemBPLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)

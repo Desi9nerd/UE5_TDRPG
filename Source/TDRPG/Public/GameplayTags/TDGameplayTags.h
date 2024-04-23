@@ -53,6 +53,7 @@ public:
 
 
 	FGameplayTag Abilities_Skill_Fireball;
+	FGameplayTag Abilities_Skill_Meteor;
 
 	// Cooldown
 	FGameplayTag Cooldown_Skill_Fireball;

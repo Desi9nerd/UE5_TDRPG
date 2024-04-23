@@ -4,6 +4,7 @@
 #include "TDGameModeBase.generated.h"
 
 class UTDDA_CharacterClass;
+class UTDDA_Ability;
 
 /**
  * 
@@ -14,6 +15,9 @@ class TDRPG_API ATDGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
+	TObjectPtr<UTDDA_Ability> TDDAAbility;
 };

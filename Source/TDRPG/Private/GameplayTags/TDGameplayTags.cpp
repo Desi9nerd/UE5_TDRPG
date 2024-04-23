@@ -38,6 +38,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Status.Equipped"), FString("Abilities 상태: 장착됨"));
 
 	GameplayTags.Abilities_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fireball"), FString("Abilities: 파이어볼"));
+	GameplayTags.Abilities_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Meteor"), FString("Abilities: 메테오"));
 
 	// Cooldown
 	GameplayTags.Cooldown_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Fireball"), FString("Cooldown: 파이어볼"));

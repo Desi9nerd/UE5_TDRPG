@@ -4,6 +4,8 @@
 #include "GameplayTagContainer.h"
 #include "TDDA_Ability.generated.h"
 
+class UGameplayAbility;
+
 /**
  *
  */
@@ -30,6 +32,12 @@ struct FDA_Ability
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UMaterialInterface> BackgroundMaterial = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 LevelRequirement = 1;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayAbility> Ability;
 };
 
 UCLASS()
