@@ -77,12 +77,19 @@ public:
 	FGameplayTag Montage_ATK_4;
 
 	// Enhanced Input
-	FGameplayTag InputTag_LMB;
-	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_Q;
 	FGameplayTag InputTag_W;
 	FGameplayTag InputTag_E;
 	FGameplayTag InputTag_R;
+	FGameplayTag InputTag_A;
+	FGameplayTag InputTag_S;
+	FGameplayTag InputTag_D;
+	FGameplayTag InputTag_F;
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_Spacebar;
+	FGameplayTag InputTag_Passive_1;
+	FGameplayTag InputTag_Passive_2;
 	//********************************************************
 
 	// Gameplay Cues
