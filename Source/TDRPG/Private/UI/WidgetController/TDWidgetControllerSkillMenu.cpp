@@ -2,14 +2,10 @@
 
 void UTDWidgetControllerSkillMenu::BroadcastInitialValues()
 {
-	Super::BroadcastInitialValues();
-
-
+	BroadcastDA_AbilityInfo();
 }
 
 void UTDWidgetControllerSkillMenu::BindCallbacksToDependencies()
 {
-	Super::BindCallbacksToDependencies();
-
 
 }
