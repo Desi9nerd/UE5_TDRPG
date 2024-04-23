@@ -21,7 +21,8 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 		const TObjectPtr<UTDGA> TDAbility = Cast<UTDGA>(AbilitySpec.Ability);
 		if (IsValid(TDAbility))
 		{
-			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag);
+			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag); // InputTag 등록
+			AbilitySpec.DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped); // Abilities_Status_Eligible 태그 등록
 			GiveAbility(AbilitySpec);
 		}
 	}
@@ -144,6 +145,18 @@ FGameplayTag UTDAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbili
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
 		{
 			return Tag;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UTDAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag StatusTag : AbilitySpec.DynamicAbilityTags)
+	{
+		if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
+		{
+			return StatusTag;
 		}
 	}
 	return FGameplayTag();

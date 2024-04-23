@@ -67,6 +67,9 @@ protected:
 	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	TObjectPtr<UAttributeSet> GetAttributeSet();
 	TObjectPtr<UTDAttributeSet> GetTDAttributeSet();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UTDDA_Ability> TDDA_Ability;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
@@ -87,8 +90,4 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UTDAttributeSet> TDAttributeSet;
-
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UTDDA_Ability> TDDA_Ability;
 };
