@@ -208,7 +208,7 @@ FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGa
 
 void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 {
-	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }
 
 // 상위 클래스인 AbilitySystemComponent에 ActivateAbilities 값이 변경될 때마다 호출되는 OnRep_ActivateAbilities 함수를 재정의하여 사용.
@@ -234,5 +234,5 @@ void UTDAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySyste
 	FGameplayTagContainer TagContainer;
 	EffectSpec.GetAllAssetTags(TagContainer);
 
-	EffectAssetTags.Broadcast(TagContainer);
+	EffectAssetTagsDelegate.Broadcast(TagContainer);
 }

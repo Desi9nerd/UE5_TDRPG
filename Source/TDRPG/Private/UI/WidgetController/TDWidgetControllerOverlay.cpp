@@ -53,7 +53,7 @@ void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet
 			GetTDASC()->GivenASCDelegate.AddUObject(this, &UTDWidgetControllerOverlay::BroadcastDA_AbilityInfo);
 		}
 
-		GetTDASC()->EffectAssetTags.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
+		GetTDASC()->EffectAssetTagsDelegate.AddUObject(this, &UTDWidgetControllerOverlay::ReadDataTableRowByTag);
 	}
 
 	

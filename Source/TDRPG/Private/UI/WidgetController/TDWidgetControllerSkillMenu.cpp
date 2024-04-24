@@ -10,7 +10,7 @@ void UTDWidgetControllerSkillMenu::BroadcastInitialValues()
 
 void UTDWidgetControllerSkillMenu::BindCallbacksToDependencies()
 {
-	GetTDASC()->AbilityStatusChanged.AddUObject(this, &ThisClass::AbilityChanged);
+	GetTDASC()->AbilityStatusChangedDelegate.AddUObject(this, &ThisClass::AbilityChanged);
 }
 
 void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)

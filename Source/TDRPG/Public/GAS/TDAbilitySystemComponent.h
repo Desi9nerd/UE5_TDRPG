@@ -7,8 +7,8 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
-DECLARE_MULTICAST_DELEGATE(FGivenASC);
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer& /*AssetTags*/);
+DECLARE_MULTICAST_DELEGATE(FGivenASCSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/) // FDA_AbilityÀÇ AbilityTag, StatusTag »ç¿ë.
 
@@ -35,9 +35,9 @@ public:
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 
-	FEffectAssetTags EffectAssetTags;
-	FGivenASC GivenASCDelegate;
-	FAbilityStatusChangedSignature AbilityStatusChanged;
+	FEffectAssetTagsSignature EffectAssetTagsDelegate;
+	FGivenASCSignature GivenASCDelegate;
+	FAbilityStatusChangedSignature AbilityStatusChangedDelegate;
 
 	bool bStartGivenASC = false;
 
