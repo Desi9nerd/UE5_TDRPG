@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "TDAbilitySystemComponent.generated.h"
@@ -10,7 +10,7 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer& /*AssetTags*/);
 DECLARE_MULTICAST_DELEGATE(FGivenASCSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/) // FDA_Ability¿« AbilityTag, StatusTag ªÁøÎ.
+DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/) // FDA_AbilityÏùò AbilityTag, StatusTag ÏÇ¨Ïö©.
 
 UCLASS()
 class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent

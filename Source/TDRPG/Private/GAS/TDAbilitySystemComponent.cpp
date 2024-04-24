@@ -1,5 +1,4 @@
-#include "GAS/TDAbilitySystemComponent.h"
-
+ï»¿#include "GAS/TDAbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/GameplayAbility/TDGA.h"
 #include "GameplayTags/TDGameplayTags.h"
@@ -9,22 +8,22 @@
 
 void UTDAbilitySystemComponent::AbilityActorInfoSet()
 {
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UTDAbilitySystemComponent::ClientEffectApplied); // Delegate¿¡ ¹ÙÀÎµù. Delegate°¡ ¼­¹ö¿¡¼­ broadcastµÇ¸é ¼­¹ö¿¡¼­ Äİ µÇ¾î Å¬¶óÀÌ¾ğÆ®¿¡¼­ ½ÇÇàµÈ´Ù.
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UTDAbilitySystemComponent::ClientEffectApplied); // Delegateì— ë°”ì¸ë”©. Delegateê°€ ì„œë²„ì—ì„œ broadcastë˜ë©´ ì„œë²„ì—ì„œ ì½œ ë˜ì–´ í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì‹¤í–‰ëœë‹¤.
 }
 
-// AddCharacterAbilities()ÇÔ¼ö´Â ¼­¹ö¿¡¼­¸¸ ºÒ·ÁÁø´Ù.
-// GivenASCDelegateÀ» Å¬¶óÀÌ¾ğÆ®µé¿¡°Ôµµ BroadcastÇÏ±â À§ÇØ¼­ ¾Æ·¡ÀÇ OnRep_ActivateAbilities()ÇÔ¼ö¸¦ »ç¿ëÇÏ¿´´Ù.
+// AddCharacterAbilities()í•¨ìˆ˜ëŠ” ì„œë²„ì—ì„œë§Œ ë¶ˆë ¤ì§„ë‹¤.
+// GivenASCDelegateì„ í´ë¼ì´ì–¸íŠ¸ë“¤ì—ê²Œë„ Broadcastí•˜ê¸° ìœ„í•´ì„œ ì•„ë˜ì˜ OnRep_ActivateAbilities()í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì˜€ë‹¤.
 void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
-	// ¿¡µğÅÍ¿¡¼­ ÇÒ´çÇÑ GameplayAbility¸¦ ¸ğµÎ µî·Ï
+	// ì—ë””í„°ì—ì„œ í• ë‹¹í•œ GameplayAbilityë¥¼ ëª¨ë‘ ë“±ë¡
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		const TObjectPtr<UTDGA> TDAbility = Cast<UTDGA>(AbilitySpec.Ability);
 		if (IsValid(TDAbility))
 		{
-			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag); // InputTag µî·Ï
-			AbilitySpec.DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped); // Abilities_Status_Eligible ÅÂ±× µî·Ï
+			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag); // InputTag ë“±ë¡
+			AbilitySpec.DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped); // Abilities_Status_Eligible íƒœê·¸ ë“±ë¡
 			GiveAbility(AbilitySpec);
 			//MarkAbilitySpecDirty(AbilitySpec);
 		}
@@ -36,7 +35,7 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 
 void UTDAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities)
 {
-	// ¿¡µğÅÍ¿¡¼­ ÇÒ´çÇÑ GameplayAbility¸¦ ¸ğµÎ µî·Ï
+	// ì—ë””í„°ì—ì„œ í• ë‹¹í•œ GameplayAbilityë¥¼ ëª¨ë‘ ë“±ë¡
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
@@ -78,7 +77,7 @@ void UTDAbilitySystemComponent::InputTagHeld(const FGameplayTag& InputTag)
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
-			AbilitySpecInputPressed(AbilitySpec); // ³»ÀåÇÔ¼ö.
+			AbilitySpecInputPressed(AbilitySpec); // ë‚´ì¥í•¨ìˆ˜.
 			if (false == AbilitySpec.IsActive())
 			{
 				TryActivateAbility(AbilitySpec.Handle);
@@ -106,7 +105,7 @@ void UTDAbilitySystemComponent::EnhanceAttribute(const FGameplayTag& AttributeTa
 	{
 		if (PlayerInterface->GetAttributePoints() > 0)
 		{
-			ServerEnhanceAttribute(AttributeTag); // Server¿¡ ¾Ë·ÁÁÜ.
+			ServerEnhanceAttribute(AttributeTag); // Serverì— ì•Œë ¤ì¤Œ.
 		}
 	}
 }
@@ -126,20 +125,20 @@ void UTDAbilitySystemComponent::ServerEnhanceAttribute_Implementation(const FGam
 	}
 }
 
-// ¾îºô¸®Æ¼ ¾÷µ¥ÀÌÆ®. »õ·Î¿î ¾îºô¸®Æ¼ Ãß°¡ÇÒ°Ô ÀÖ´ÂÁö È®ÀÎÇÏ°í Ãß°¡ÇÏ±â.
+// ì–´ë¹Œë¦¬í‹° ì—…ë°ì´íŠ¸. ìƒˆë¡œìš´ ì–´ë¹Œë¦¬í‹° ì¶”ê°€í• ê²Œ ìˆëŠ”ì§€ í™•ì¸í•˜ê³  ì¶”ê°€í•˜ê¸°.
 void UTDAbilitySystemComponent::UpdateAbilityStatuses(int32 PlayerLevel)
 {
 	UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(GetAvatarActor());
 	for (const FDA_Ability& DA_Ability_Iter : TDDA_Ability->DA_AbilityInfo)
 	{
-		if (false == DA_Ability_Iter.AbilityTag.IsValid()) continue; // AbilityTag°¡ ¾ø´Ù¸é continue.
-		if (PlayerLevel < DA_Ability_Iter.LevelRequirement) continue; // PlayerLevelÀÌ ·¹º§Á¶°Ç º¸´Ù ³·´Ù¸é continue.
+		if (false == DA_Ability_Iter.AbilityTag.IsValid()) continue; // AbilityTagê°€ ì—†ë‹¤ë©´ continue.
+		if (PlayerLevel < DA_Ability_Iter.LevelRequirement) continue; // PlayerLevelì´ ë ˆë²¨ì¡°ê±´ ë³´ë‹¤ ë‚®ë‹¤ë©´ continue.
 
 		if (GetSpecFromAbilityTag(DA_Ability_Iter.AbilityTag) == nullptr)
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(DA_Ability_Iter.Ability, 1);
-			AbilitySpec.DynamicAbilityTags.AddTag((FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible)); // ·±Å¸ÀÓ¿¡ ÅÂ±× Ãß°¡.
-			GiveAbility(AbilitySpec); // ¾îºô¸®Æ¼ ºÎ¿©.
+			AbilitySpec.DynamicAbilityTags.AddTag((FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible)); // ëŸ°íƒ€ì„ì— íƒœê·¸ ì¶”ê°€.
+			GiveAbility(AbilitySpec); // ì–´ë¹Œë¦¬í‹° ë¶€ì—¬.
 			MarkAbilitySpecDirty(AbilitySpec);
 			ClientUpdateAbilityStatus(DA_Ability_Iter.AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible);
 		}
@@ -152,7 +151,7 @@ FGameplayTag UTDAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbi
 	{
 		for (FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags)
 		{
-			if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities")))) // "Abilities"¶ó´Â ÀÌ¸§ÀÌ ÀÖ´Ù¸é
+			if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities")))) // "Abilities"ë¼ëŠ” ì´ë¦„ì´ ìˆë‹¤ë©´
 			{
 				return Tag;
 			}
@@ -196,7 +195,7 @@ FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGa
 		{
 			if (TagIter.MatchesTag(AbilityTag))
 			{
-				// ActivatableAbilities Áß AbilityTag¿Í ÀÏÄ¡ÇÏ´Â ÅÂ±×¸¦ °¡Áö°í ÀÖ´Â°Ô ÀÖ´Ù¸é AbilitySpec¸¦ ¸®ÅÏ.
+				// ActivatableAbilities ì¤‘ AbilityTagì™€ ì¼ì¹˜í•˜ëŠ” íƒœê·¸ë¥¼ ê°€ì§€ê³  ìˆëŠ”ê²Œ ìˆë‹¤ë©´ AbilitySpecë¥¼ ë¦¬í„´.
 				return &AbilitySpecIter;
 			}
 		}
@@ -211,8 +210,8 @@ void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const F
 	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }
 
-// »óÀ§ Å¬·¡½ºÀÎ AbilitySystemComponent¿¡ ActivateAbilities °ªÀÌ º¯°æµÉ ¶§¸¶´Ù È£ÃâµÇ´Â OnRep_ActivateAbilities ÇÔ¼ö¸¦ ÀçÁ¤ÀÇÇÏ¿© »ç¿ë.
-// GivenASCDelegateÀ» Å¬¶óÀÌ¾ğÆ®µé¿¡°Ôµµ BroadcastÇÑ´Ù.
+// ìƒìœ„ í´ë˜ìŠ¤ì¸ AbilitySystemComponentì— ActivateAbilities ê°’ì´ ë³€ê²½ë  ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” OnRep_ActivateAbilities í•¨ìˆ˜ë¥¼ ì¬ì •ì˜í•˜ì—¬ ì‚¬ìš©.
+// GivenASCDelegateì„ í´ë¼ì´ì–¸íŠ¸ë“¤ì—ê²Œë„ Broadcastí•œë‹¤.
 void UTDAbilitySystemComponent::OnRep_ActivateAbilities()
 {
 	Super::OnRep_ActivateAbilities();
@@ -224,10 +223,10 @@ void UTDAbilitySystemComponent::OnRep_ActivateAbilities()
 	}
 }
 
-// AbilitySystemComponent.h 107ÁÙ
-// DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnGameplayEffectAppliedDelegate, UAbilitySystemComponent*, const FGameplayEffectSpec&, FActiveGameplayEffectHandle);¿¡ »ç¿ëÇÏ±â À§ÇØ 3°³ÀÇ ¸Å°³º¯¼ö »ç¿ë
+// AbilitySystemComponent.h 107ì¤„
+// DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnGameplayEffectAppliedDelegate, UAbilitySystemComponent*, const FGameplayEffectSpec&, FActiveGameplayEffectHandle);ì— ì‚¬ìš©í•˜ê¸° ìœ„í•´ 3ê°œì˜ ë§¤ê°œë³€ìˆ˜ ì‚¬ìš©
 // FOnGameplayEffectAppliedDelegate OnGameplayEffectAppliedDelegateToSelf;
-// Á¤¸®ÇÏ¸é, ÀÌ ASC¿¡ GameplayEffect°¡ Àû¿ëµÇ¸é ¾Æ·¡ÀÇ ÇÔ¼ö°¡ Äİ¹éµÇ¾î ½ÇÇàµÈ´Ù.
+// ì •ë¦¬í•˜ë©´, ì´ ASCì— GameplayEffectê°€ ì ìš©ë˜ë©´ ì•„ë˜ì˜ í•¨ìˆ˜ê°€ ì½œë°±ë˜ì–´ ì‹¤í–‰ëœë‹¤.
 void UTDAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
 	const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
