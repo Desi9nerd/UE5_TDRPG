@@ -1,4 +1,4 @@
-#include "GAS/GameplayAbility/TDGA_DamageProjectile.h"
+ï»¿#include "GAS/GameplayAbility/TDGA_DamageProjectile.h"
 #include "Actor/TDProjectile.h"
 #include "Interface/ICombat.h"
 #include "AbilitySystemComponent.h"
@@ -20,15 +20,15 @@ void UTDGA_DamageProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 
 void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride)
 {
-	// Projectile Actor¸¦ ¼­¹ö¿¡¸¸ ½ºÆù½ÃÅ²´Ù.
-	// ¼­¹ö°¡ ½ºÆù½ÃÅ² Projectile Actor´Â replicated actor°¡ µÇ¾î Å¬¶óÀÌ¾ğÆ®´Â replicatedµÈ ¹öÁ¯À» º¸°Ô µÈ´Ù.
-	if (false == GetAvatarActorFromActorInfo()->HasAuthority()) return; // ¼­¹ö°¡ ¾Æ´Ñ °æ¿ì ¿¹¿ÜÃ³¸®
+	// Projectile Actorë¥¼ ì„œë²„ì—ë§Œ ìŠ¤í°ì‹œí‚¨ë‹¤.
+	// ì„œë²„ê°€ ìŠ¤í°ì‹œí‚¨ Projectile ActorëŠ” replicated actorê°€ ë˜ì–´ í´ë¼ì´ì–¸íŠ¸ëŠ” replicatedëœ ë²„ì ¼ì„ ë³´ê²Œ ëœë‹¤.
+	if (false == GetAvatarActorFromActorInfo()->HasAuthority()) return; // ì„œë²„ê°€ ì•„ë‹Œ ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
 
 	//IICombat* CombatInterface = Cast<IICombat>(GetAvatarActorFromActorInfo());
 	//if (CombatInterface)
 	{
 		const FVector SocketLocation = IICombat::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
-			SocketTag); // Weapon, LeftHand, RightHand Socket Áß ¸Â´Â°ÍÀ» °¡Á®¿Í¼­ »ç¿ë.
+			SocketTag); // Weapon, LeftHand, RightHand Socket ì¤‘ ë§ëŠ”ê²ƒì„ ê°€ì ¸ì™€ì„œ ì‚¬ìš©.
 		//const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
@@ -43,10 +43,10 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 
 		ATDProjectile* Projectile = GetWorld()->SpawnActorDeferred<ATDProjectile>(ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-		// Gameplay Effect SpecÀ¸·Î µ¥¹ÌÁö Ã³¸®.
+		// Gameplay Effect Specìœ¼ë¡œ ë°ë¯¸ì§€ ì²˜ë¦¬.
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-		EffectContextHandle.SetAbility(this); // AbilityInstanceNotReplicated/CDO/Level ¼¼ÆÃ
+		EffectContextHandle.SetAbility(this); // AbilityInstanceNotReplicated/CDO/Level ì„¸íŒ…
 		EffectContextHandle.AddSourceObject(Projectile);
 		TArray<TWeakObjectPtr<AActor>> Actors;
 		Actors.Add(Projectile);
@@ -63,7 +63,7 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		for (auto& Pair : DamageTypes)
 		{
 			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);// GameplayEffect¿¡¼­ Set by Caller·Î »ç¿ëÇÒ ¶§ Àû¿ëµÇ´Â key, value. FTDGameplayTags±¸Á¶Ã¼ ³»ÀÇ DamageÅ¸ÀÔÀÇ GameplayTag¸¦ key·Î, ScaledDamageÀ» value·Î »ç¿ë.
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);// GameplayEffectì—ì„œ Set by Callerë¡œ ì‚¬ìš©í•  ë•Œ ì ìš©ë˜ëŠ” key, value. FTDGameplayTagsêµ¬ì¡°ì²´ ë‚´ì˜ Damageíƒ€ì…ì˜ GameplayTagë¥¼ keyë¡œ, ScaledDamageì„ valueë¡œ ì‚¬ìš©.
 		}
 
 		Projectile->DamageEffectSpecHandle = SpecHandle;
@@ -72,20 +72,20 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 	}
 }
 
-FString UTDGA_DamageProjectile::GetDescription(int32 Level)
+FString UTDGA_DamageProjectile::GetDescription(int32 AbilityLevel)
 {
-	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(Level);
-	if (Level == 1)
+	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(AbilityLevel);
+	if (AbilityLevel == 1)
 	{
-		return FString::Printf(TEXT("<Title>ÆÄÀÌ¾îº¼</>\n\n<Default> ÆÄÀÌ¾îº¼À» ³¯·Á Àû¿¡°Ô ÇÇÇØ¸¦ ÀÔÈü´Ï´Ù. µ¥¹ÌÁö ÇÇÇØ: </><Damage>%d</><Default> ÀÛ¿­ °¡´É¼º</>\n\n<Small>Level: </><Level>%d</>"), Damage, Level);
+		return FString::Printf(TEXT("<Title>íŒŒì´ì–´ë³¼</>\n\n<Default> íŒŒì´ì–´ë³¼ì„ ë‚ ë ¤ ì ì—ê²Œ í”¼í•´ë¥¼ ì…í™ë‹ˆë‹¤. ë°ë¯¸ì§€ í”¼í•´: </><Damage>%d</>\n\n<Small>Level: </><Level>%d</>"), Damage, AbilityLevel);
 	}
 
-	return FString::Printf(TEXT("<Title>ÆÄÀÌ¾îº¼</>\n\n<Default> %d °³ÀÇ ÆÄÀÌ¾îº¼À» ³¯·Á Àû¿¡°Ô ÇÇÇØ¸¦ ÀÔÈü´Ï´Ù. µ¥¹ÌÁö ÇÇÇØ: </><Damage>%d</><Default> ÀÛ¿­ °¡´É¼º</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), Damage, Level);
+	return FString::Printf(TEXT("<Title>íŒŒì´ì–´ë³¼</>\n\n<Default> %d ê°œì˜ íŒŒì´ì–´ë³¼ì„ ë‚ ë ¤ ì ì—ê²Œ í”¼í•´ë¥¼ ì…í™ë‹ˆë‹¤. \n ë°ë¯¸ì§€ í”¼í•´: </><Damage>%d</>\n\n<Small>ìŠ¤í‚¬ë ˆë²¨: </><Level>%d</>"), FMath::Min(AbilityLevel, NumProjectiles), Damage, AbilityLevel);
 }
 
-FString UTDGA_DamageProjectile::GetNextLevelDescription(int32 Level)
+FString UTDGA_DamageProjectile::GetNextAbilityLevelDescription(int32 AbilityLevel)
 {
-	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(Level);
+	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(AbilityLevel);
 
-	return FString::Printf(TEXT("<Title>½ºÅ³ ´ÙÀ½·¹º§: </>\n\n<Default> %d °³ÀÇ ÆÄÀÌ¾îº¼À» ³¯·Á Àû¿¡°Ô ÇÇÇØ¸¦ ÀÔÈü´Ï´Ù. µ¥¹ÌÁö ÇÇÇØ: </><Damage>%d</><Default> fire damage with a chance to burn</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), Damage, Level);
+	return FString::Printf(TEXT("<Title>ë‹¤ìŒ ìŠ¤í‚¬ë ˆë²¨: </>\n\n<Default> %d ê°œì˜ íŒŒì´ì–´ë³¼ì„ ë‚ ë ¤ ì ì—ê²Œ í”¼í•´ë¥¼ ì…í™ë‹ˆë‹¤. \n ë°ë¯¸ì§€ í”¼í•´: </><Damage>%d</>\n\n<Small>ìŠ¤í‚¬ë ˆë²¨: </><Level>%d</>"), FMath::Min(AbilityLevel, NumProjectiles), Damage, AbilityLevel);
 }

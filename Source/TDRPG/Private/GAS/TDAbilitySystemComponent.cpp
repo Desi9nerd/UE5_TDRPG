@@ -155,7 +155,7 @@ bool UTDAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& 
 		if (UTDGA* TDGA = Cast<UTDGA>(AbilitySpec->Ability))
 		{
 			OutDescription = TDGA->GetDescription(AbilitySpec->Level);
-			OutNextLevelDescription = TDGA->GetNextLevelDescription(AbilitySpec->Level + 1);
+			OutNextLevelDescription = TDGA->GetNextAbilityLevelDescription(AbilitySpec->Level + 1);
 			return true;
 		}
 	}
