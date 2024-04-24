@@ -15,6 +15,11 @@ public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerStatChangedSignature SkillPointsChangedDelegate;
+
 private:
 	void AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+	void SkillPointsChanged(int32 SkillPoints);
+
 };
