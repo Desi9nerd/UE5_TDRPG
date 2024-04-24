@@ -17,6 +17,8 @@ public:
 	void CauseDamage(AActor* TargetActor);
 
 protected:
+	float GetDamageByDamageType(float InAbilityLevel, const FGameplayTag& DamageType);
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffectDamageClass;
 

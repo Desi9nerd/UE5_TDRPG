@@ -1,4 +1,5 @@
 ﻿#include "GAS/GameplayAbility/TDGA.h"
+#include "GAS/TDAttributeSet.h"
 
 FString UTDGA::GetDescription(int32 AbilityLevel)
 {
@@ -13,4 +14,33 @@ FString UTDGA::GetNextAbilityLevelDescription(int32 AbilityLevel)
 FString UTDGA::GetLockedDescription(int32 AbilityLevel)
 {
 	return FString::Printf(TEXT("<Default> %d 레벨에 도달하면 스킬이 해금됩니다. </>"), AbilityLevel);
+}
+
+float UTDGA::GetManaCost(float InAbilityLevel) const
+{
+	float ManaCost = 0.f;
+	if (const UGameplayEffect* CostEffect = GetCostGameplayEffect())
+	{
+		for (FGameplayModifierInfo ModifierInfoIter : CostEffect->Modifiers)
+		{
+			if (ModifierInfoIter.Attribute == UTDAttributeSet::GetManaAttribute())
+			{
+				ModifierInfoIter.ModifierMagnitude.GetStaticMagnitudeIfPossible(InAbilityLevel, ManaCost);
+				break;
+			}
+		}
+	}
+
+	return ManaCost;
+}
+
+float UTDGA::GetCooldown(float InAbilityLevel) const
+{
+	float Cooldown = 0.f;
+	if (const UGameplayEffect* CooldownEffect = GetCooldownGameplayEffect())
+	{
+		CooldownEffect->DurationMagnitude.GetStaticMagnitudeIfPossible(InAbilityLevel, Cooldown);
+	}
+
+	return Cooldown;
 }

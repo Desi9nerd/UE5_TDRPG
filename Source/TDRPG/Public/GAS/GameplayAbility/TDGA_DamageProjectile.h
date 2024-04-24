@@ -16,10 +16,6 @@ class TDRPG_API UTDGA_DamageProjectile : public UTDGA_Damage
 {
 	GENERATED_BODY()
 
-public:
-	virtual FString GetDescription(int32 AbilityLevel) override;
-	virtual FString GetNextAbilityLevelDescription(int32 AbilityLevel) override;
-
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	//virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;

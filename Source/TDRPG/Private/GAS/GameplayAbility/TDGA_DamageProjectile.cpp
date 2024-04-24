@@ -71,21 +71,3 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }
-
-FString UTDGA_DamageProjectile::GetDescription(int32 AbilityLevel)
-{
-	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(AbilityLevel);
-	if (AbilityLevel == 1)
-	{
-		return FString::Printf(TEXT("<Title>파이어볼</>\n\n<Default> 파이어볼을 날려 적에게 피해를 입힙니다. 데미지 피해: </><Damage>%d</>\n\n<Small>Level: </><Level>%d</>"), Damage, AbilityLevel);
-	}
-
-	return FString::Printf(TEXT("<Title>파이어볼</>\n\n<Default> %d 개의 파이어볼을 날려 적에게 피해를 입힙니다. \n 데미지 피해: </><Damage>%d</>\n\n<Small>스킬레벨: </><Level>%d</>"), FMath::Min(AbilityLevel, NumProjectiles), Damage, AbilityLevel);
-}
-
-FString UTDGA_DamageProjectile::GetNextAbilityLevelDescription(int32 AbilityLevel)
-{
-	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(AbilityLevel);
-
-	return FString::Printf(TEXT("<Title>다음 스킬레벨: </>\n\n<Default> %d 개의 파이어볼을 날려 적에게 피해를 입힙니다. \n 데미지 피해: </><Damage>%d</>\n\n<Small>스킬레벨: </><Level>%d</>"), FMath::Min(AbilityLevel, NumProjectiles), Damage, AbilityLevel);
-}
