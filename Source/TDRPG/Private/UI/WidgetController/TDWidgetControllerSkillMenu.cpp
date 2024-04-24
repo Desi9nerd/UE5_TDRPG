@@ -52,6 +52,14 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton);
 }
 
+void UTDWidgetControllerSkillMenu::SkillPointButtonPressed()
+{
+	if (GetTDASC())
+	{
+		GetTDASC()->ServerSpendSkillPoint(SelectedSkillInSkillMenu.Ability); // Server RPC
+	}
+}
+
 // 스킬트리 위젯 내의 스킬획득 버튼, 장착 버튼
 void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton)
 {
@@ -85,7 +93,7 @@ void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayT
 	/* 위의 조건들에 해당하지 않는다면 TDGameplayTags.Abilities_Status_Locked 상태. 스킬획득 버튼, 장착 버튼 모두 비활성화 */
 }
 
-void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 InAbilityLevel)
 {
 	//** 위젯
 	//   스킬의 StatusTag를 Braodcast로 알린다.

@@ -140,8 +140,43 @@ void UTDAbilitySystemComponent::UpdateAbilityStatuses(int32 PlayerLevel)
 			AbilitySpec.DynamicAbilityTags.AddTag((FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible)); // 런타임에 태그 추가.
 			GiveAbility(AbilitySpec); // 어빌리티 부여.
 			MarkAbilitySpecDirty(AbilitySpec);
-			ClientUpdateAbilityStatus(DA_Ability_Iter.AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible);
+
+			ClientUpdateAbilityStatus(DA_Ability_Iter.AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible, 1);
 		}
+	}
+}
+
+// SkillPoint를 소모하여 스킬획득.
+// Server RPC로 클라이언트들에서 호출된 후 정보 수정 후 Client RPC로 서버에 알린다.
+void UTDAbilitySystemComponent::ServerSpendSkillPoint_Implementation(const FGameplayTag& AbilityTag)
+{
+	FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+	if (AbilitySpec)
+	{
+		//* SkillPoint 소모.
+		IIPlayer* PlayerInterface = Cast<IIPlayer>(GetAvatarActor());
+		if (PlayerInterface)
+		{
+			PlayerInterface->AddToSkillPoints(-1); // SkillPoint 1 소모.
+		}
+
+		//* AbilitySpec 정보 수정(StatusTag를 업데이트 또는 Ability->Level 업데이트). 
+		const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
+		FGameplayTag StatusTag = GetStatusFromSpec(*AbilitySpec);
+		if (StatusTag.MatchesTagExact(TDGameplayTags.Abilities_Status_Eligible))
+		{
+			// Status를 Unlock으로 변경.
+			AbilitySpec->DynamicAbilityTags.RemoveTag(TDGameplayTags.Abilities_Status_Eligible);
+			AbilitySpec->DynamicAbilityTags.AddTag(TDGameplayTags.Abilities_Status_Unlocked);
+			StatusTag = TDGameplayTags.Abilities_Status_Unlocked;
+		}
+		else if (StatusTag.MatchesTagExact(TDGameplayTags.Abilities_Status_Equipped) || StatusTag.MatchesTagExact(TDGameplayTags.Abilities_Status_Unlocked)) // 장착중 또는 해금된 상태
+		{
+			AbilitySpec->Level += 1; // 주의: PlayerLevel 아님.
+		}
+
+		ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level); // Client RPC. 변경된 사항을 서버에 알린다.
+		MarkAbilitySpecDirty(*AbilitySpec);
 	}
 }
 
@@ -205,9 +240,9 @@ FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGa
 }
 
 
-void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
 {
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
 // 상위 클래스인 AbilitySystemComponent에 ActivateAbilities 값이 변경될 때마다 호출되는 OnRep_ActivateAbilities 함수를 재정의하여 사용.

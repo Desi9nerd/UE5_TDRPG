@@ -28,6 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SkillIconSelected(const FGameplayTag& AbilityTag);
 
+	UFUNCTION(BlueprintCallable)
+	void SkillPointButtonPressed();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerStatChangedSignature SkillPointsChangedDelegate;
@@ -35,10 +37,11 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FSkillIconSelectedSignature SkillIconSelectedDelegate;
 
+
 private:
 	static void UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton);
 
-	void AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+	void AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 InAbilityLevel);
 	void SkillPointsChanged(int32 SkillPoints);
 
 	FSelectedSkillInSkillMenu SelectedSkillInSkillMenu = { FTDGameplayTags::GetTDGameplayTags().Abilities_None,  FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked };

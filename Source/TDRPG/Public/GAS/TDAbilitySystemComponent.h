@@ -10,7 +10,7 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer& /*AssetTags*/);
 DECLARE_MULTICAST_DELEGATE(FGivenASCSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/) // FDA_Ability의 AbilityTag, StatusTag 사용.
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, int32 /*AbilityLevel*/) // FDA_Ability의 AbilityTag, StatusTag, 그리고 AbilityLevel 사용(주의: PlayerLevel아님).
 
 UCLASS()
 class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
@@ -30,6 +30,9 @@ public:
 	void ServerEnhanceAttribute(const FGameplayTag& AttributeTag);
 	void UpdateAbilityStatuses(int32 PlayerLevel);
 
+	UFUNCTION(Server, Reliable)
+	void ServerSpendSkillPoint(const FGameplayTag& AbilityTag);
+
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
@@ -46,7 +49,7 @@ protected:
 	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 
 	UFUNCTION(Client, Reliable) 
-	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 
 	virtual void OnRep_ActivateAbilities() override;
 };
