@@ -1,4 +1,4 @@
-#include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
+ï»¿#include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "GAS/Data/TDDA_Ability.h"
 #include "Player/TDPlayerState.h"
@@ -22,7 +22,7 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 	const int32 SkillPoints = GetTDPlayerState()->GetSkillPoints();
 
 
-	//** GameplayTag ¼³Á¤ÇÏ±â
+	//** GameplayTag ì„¤ì •í•˜ê¸°
 	const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
 
 	FGameplayTag AbilityStatusTag;
@@ -39,20 +39,20 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 	}
 
 
-	//** ½ºÅ³Æ®¸® ³» ½ºÅ³Æ÷ÀÎÆ® ¹öÆ°°ú ÀåÂø ¹öÆ° È°¼ºÈ­ ¿©ºÎ ¼³Á¤ÇÏ±â
+	//** ìŠ¤í‚¬íŠ¸ë¦¬ ë‚´ ìŠ¤í‚¬í¬ì¸íŠ¸ ë²„íŠ¼ê³¼ ìž¥ì°© ë²„íŠ¼ í™œì„±í™” ì—¬ë¶€ ì„¤ì •í•˜ê¸°
 	SelectedSkillInSkillMenu.Ability = AbilityTag;
 	SelectedSkillInSkillMenu.Status = AbilityStatusTag;
 	bool bEnableSkillPointsButton = false;
 	bool bEnableEquipButton = false;
 
-	// boolº¯¼ö bEnableSkillPoints, bEnableEquip¸¦ ·¹ÆÝ·±½º(&)·Î ³Ñ°Ü ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
+	// boolë³€ìˆ˜ bEnableSkillPoints, bEnableEquipë¥¼ ë ˆíŽ€ëŸ°ìŠ¤(&)ë¡œ ë„˜ê²¨ ì—…ë°ì´íŠ¸í•œë‹¤.
 	UpdateButtons_bEnableToClick(AbilityStatusTag, SkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
 
-	// ¾÷µ¥ÀÌÆ®µÈ bEnableSkillPoints, bEnableEquip¸¦ BroadcastÇØ¼­ ¾Ë¸°´Ù.
+	// ì—…ë°ì´íŠ¸ëœ bEnableSkillPoints, bEnableEquipë¥¼ Broadcastí•´ì„œ ì•Œë¦°ë‹¤.
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton);
 }
 
-// ½ºÅ³Æ®¸® À§Á¬ ³»ÀÇ ½ºÅ³È¹µæ ¹öÆ°, ÀåÂø ¹öÆ°
+// ìŠ¤í‚¬íŠ¸ë¦¬ ìœ„ì ¯ ë‚´ì˜ ìŠ¤í‚¬íšë“ ë²„íŠ¼, ìž¥ì°© ë²„íŠ¼
 void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton)
 {
 	const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
@@ -82,13 +82,13 @@ void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayT
 			bEnableSkillPointsButton = true;
 		}
 	}
-	/* À§ÀÇ Á¶°Çµé¿¡ ÇØ´çÇÏÁö ¾Ê´Â´Ù¸é TDGameplayTags.Abilities_Status_Locked »óÅÂ. ½ºÅ³È¹µæ ¹öÆ°, ÀåÂø ¹öÆ° ¸ðµÎ ºñÈ°¼ºÈ­ */
+	/* ìœ„ì˜ ì¡°ê±´ë“¤ì— í•´ë‹¹í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ TDGameplayTags.Abilities_Status_Locked ìƒíƒœ. ìŠ¤í‚¬íšë“ ë²„íŠ¼, ìž¥ì°© ë²„íŠ¼ ëª¨ë‘ ë¹„í™œì„±í™” */
 }
 
 void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 {
-	//** À§Á¬
-	//   ½ºÅ³ÀÇ StatusTag¸¦ Braodcast·Î ¾Ë¸°´Ù.
+	//** ìœ„ì ¯
+	//   ìŠ¤í‚¬ì˜ StatusTagë¥¼ Braodcastë¡œ ì•Œë¦°ë‹¤.
 	if (SelectedSkillInSkillMenu.Ability.MatchesTagExact(AbilityTag))
 	{
 		SelectedSkillInSkillMenu.Status = StatusTag;
@@ -100,7 +100,7 @@ void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag
 	}
 
 	//** Data Asset
-	//   ½ºÅ³ÀÇ StatusTag¸¦ Braodcast·Î ¾Ë¸°´Ù.
+	//   ìŠ¤í‚¬ì˜ StatusTagë¥¼ Braodcastë¡œ ì•Œë¦°ë‹¤.
 	if (TDDA_Ability)
 	{
 		FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
