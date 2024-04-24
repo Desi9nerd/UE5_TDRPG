@@ -8,13 +8,17 @@ class UGameplayEffect;
 struct FGameplayTag;
 
 /** TDProjectile 액터를 날리는 GameAbility
- * 
+ *  Fireball 스킬
  */
 
 UCLASS()
 class TDRPG_API UTDGA_DamageProjectile : public UTDGA_Damage
 {
 	GENERATED_BODY()
+
+public:
+	virtual FString GetDescription(int32 Level) override;
+	virtual FString GetNextLevelDescription(int32 Level) override;
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
@@ -26,6 +30,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ATDProjectile> ProjectileClass; // Projectile Actor
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FGameplayTag EventTag;
+	UPROPERTY(EditDefaultsOnly)
+	int32 NumProjectiles = 5;
 };

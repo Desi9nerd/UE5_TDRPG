@@ -71,3 +71,21 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }
+
+FString UTDGA_DamageProjectile::GetDescription(int32 Level)
+{
+	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(Level);
+	if (Level == 1)
+	{
+		return FString::Printf(TEXT("<Title>파이어볼</>\n\n<Default> 파이어볼을 날려 적에게 피해를 입힙니다. 데미지 피해: </><Damage>%d</><Default> 작열 가능성</>\n\n<Small>Level: </><Level>%d</>"), Damage, Level);
+	}
+
+	return FString::Printf(TEXT("<Title>파이어볼</>\n\n<Default> %d 개의 파이어볼을 날려 적에게 피해를 입힙니다. 데미지 피해: </><Damage>%d</><Default> 작열 가능성</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), Damage, Level);
+}
+
+FString UTDGA_DamageProjectile::GetNextLevelDescription(int32 Level)
+{
+	const int32 Damage = DamageTypes[FTDGameplayTags::GetTDGameplayTags().Damage_Fireball].GetValueAtLevel(Level);
+
+	return FString::Printf(TEXT("<Title>스킬 다음레벨: </>\n\n<Default> %d 개의 파이어볼을 날려 적에게 피해를 입힙니다. 데미지 피해: </><Damage>%d</><Default> fire damage with a chance to burn</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), Damage, Level);
+}
