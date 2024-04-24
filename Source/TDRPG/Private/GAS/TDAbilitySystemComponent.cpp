@@ -146,6 +146,28 @@ void UTDAbilitySystemComponent::UpdateAbilityStatuses(int32 PlayerLevel)
 	}
 }
 
+bool UTDAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription)
+{
+	//** Activatable Abilities에서 Ability를 찾는 경우
+	const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+	if (AbilitySpec)
+	{
+		if (UTDGA* TDGA = Cast<UTDGA>(AbilitySpec->Ability))
+		{
+			OutDescription = TDGA->GetDescription(AbilitySpec->Level);
+			OutNextLevelDescription = TDGA->GetNextLevelDescription(AbilitySpec->Level + 1);
+			return true;
+		}
+	}
+
+	//** Activatable Abilities에서 Ability를 찾지 못한 경우
+	const UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(GetAvatarActor());
+	OutDescription = UTDGA::GetLockedDescription(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).LevelRequirement);
+	OutNextLevelDescription = FString();
+
+	return false;
+}
+
 // SkillPoint를 소모하여 스킬획득.
 // Server RPC로 클라이언트들에서 호출된 후 정보 수정 후 Client RPC로 서버에 알린다.
 void UTDAbilitySystemComponent::ServerSpendSkillPoint_Implementation(const FGameplayTag& AbilityTag)

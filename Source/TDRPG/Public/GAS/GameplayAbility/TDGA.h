@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
 #include "TDGA.generated.h"
@@ -12,7 +12,11 @@ class TDRPG_API UTDGA : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
-	// InputTag´Â °ÔÀÓ Áß ·±Å¸ÀÓ¿¡ º¯°æµÉ ¼öµµ ÀÖ´Ù
+	virtual FString GetDescription(int32 Level);
+	virtual FString GetNextLevelDescription(int32 Level);
+	static FString GetLockedDescription(int32 Level);
+
+	// InputTagëŠ” ê²Œì„ ì¤‘ ëŸ°íƒ€ì„ì— ë³€ê²½ë  ìˆ˜ë„ ìˆë‹¤
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	FGameplayTag StartupInputTag; // °ÔÀÓ½ÃÀÛ ½Ã InputTag
+	FGameplayTag StartupInputTag; // ê²Œì„ì‹œì‘ ì‹œ InputTag
 };
