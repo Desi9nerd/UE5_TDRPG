@@ -60,7 +60,7 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
 	int32 AttributePoints = 0;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SkillPoints)
-	int32 SkillPoints = 1;
+	int32 SkillPoints = 0;
 
 	UFUNCTION()
 	void OnRep_PlayerLevel();
