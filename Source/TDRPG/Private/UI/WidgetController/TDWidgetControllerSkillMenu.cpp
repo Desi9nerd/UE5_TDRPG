@@ -25,28 +25,28 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 	//** GameplayTag 설정하기
 	const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
 
-	FGameplayTag AbilityStatusGameplayTag;
+	FGameplayTag AbilityStatusTag;
 	const FGameplayAbilitySpec* TempAbilitySpec = GetTDASC()->GetSpecFromAbilityTag(AbilityTag);
 
 	if (false == AbilityTag.IsValid() || AbilityTag.MatchesTag(TDGameplayTags.Abilities_None) || 
 		nullptr == TempAbilitySpec)
 	{
-		AbilityStatusGameplayTag = TDGameplayTags.Abilities_Status_Locked;
+		AbilityStatusTag = TDGameplayTags.Abilities_Status_Locked;
 	}
 	else
 	{
-		AbilityStatusGameplayTag = GetTDASC()->GetStatusFromSpec(*TempAbilitySpec);
+		AbilityStatusTag = GetTDASC()->GetStatusFromSpec(*TempAbilitySpec);
 	}
 
 
 	//** 스킬트리 내 스킬포인트 버튼과 장착 버튼 활성화 여부 설정하기
 	SelectedSkillInSkillMenu.Ability = AbilityTag;
-	SelectedSkillInSkillMenu.Status = AbilityStatusGameplayTag;
+	SelectedSkillInSkillMenu.Status = AbilityStatusTag;
 	bool bEnableSkillPointsButton = false;
 	bool bEnableEquipButton = false;
 
 	// bool변수 bEnableSkillPoints, bEnableEquip를 레펀런스(&)로 넘겨 업데이트한다.
-	UpdateButtons_bEnableToClick(AbilityStatusGameplayTag, SkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
+	UpdateButtons_bEnableToClick(AbilityStatusTag, SkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
 
 	// 업데이트된 bEnableSkillPoints, bEnableEquip를 Broadcast해서 알린다.
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton);
