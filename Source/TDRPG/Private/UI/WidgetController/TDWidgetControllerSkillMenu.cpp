@@ -40,6 +40,8 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 
 
 	//** 스킬트리 내 스킬포인트 버튼과 장착 버튼 활성화 여부 설정하기
+	SelectedSkillInSkillMenu.Ability = AbilityTag;
+	SelectedSkillInSkillMenu.Status = AbilityStatusGameplayTag;
 	bool bEnableSkillPointsButton = false;
 	bool bEnableEquipButton = false;
 
@@ -85,6 +87,20 @@ void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayT
 
 void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 {
+	//** 위젯
+	//   스킬의 StatusTag를 Braodcast로 알린다.
+	if (SelectedSkillInSkillMenu.Ability.MatchesTagExact(AbilityTag))
+	{
+		SelectedSkillInSkillMenu.Status = StatusTag;
+		bool bEnableSpendPoints = false;
+		bool bEnableEquip = false;
+
+		UpdateButtons_bEnableToClick(StatusTag, CurrentSkillPoints, bEnableSpendPoints, bEnableEquip);
+		SkillIconSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
+	}
+
+	//** Data Asset
+	//   스킬의 StatusTag를 Braodcast로 알린다.
 	if (TDDA_Ability)
 	{
 		FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
@@ -97,4 +113,13 @@ void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag
 void UTDWidgetControllerSkillMenu::SkillPointsChanged(int32 SkillPoints)
 {
 	SkillPointsChangedDelegate.Broadcast(SkillPoints);
+
+
+	CurrentSkillPoints = SkillPoints;
+
+	bool bEnableSpendPoints = false;
+	bool bEnableEquip = false;
+
+	UpdateButtons_bEnableToClick(SelectedSkillInSkillMenu.Status, CurrentSkillPoints, bEnableSpendPoints, bEnableEquip);
+	SkillIconSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
 }
