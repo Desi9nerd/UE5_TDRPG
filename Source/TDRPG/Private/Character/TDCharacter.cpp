@@ -95,12 +95,22 @@ void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevel()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+
+	if (UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(GetAbilitySystemComponent()))
+	{
+		TDASC->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+	}
 }
 
 void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevelBP_Implementation()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+
+	if (UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(GetAbilitySystemComponent()))
+	{
+		TDASC->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+	}
 }
 
 void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
@@ -215,7 +225,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 	{
 		TDPlayerState = GetPlayerState<ATDPlayerState>();
 	}
-	check(TDPlayerState); // 예외처리. PlayerState 없을시 종료
+	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::InitAbilityActorInfo()")); // PlayerState 없을시 종료
 
 	TDPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(TDPlayerState, this);
 	Cast<UTDAbilitySystemComponent>(TDPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet(); // AbilityActorInfo 설정하기

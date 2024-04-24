@@ -3,6 +3,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/GameplayAbility/TDGA.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
+#include "GAS/Data/TDDA_Ability.h"
 #include "Interface/IPlayer.h"
 
 void UTDAbilitySystemComponent::AbilityActorInfoSet()
@@ -24,6 +26,7 @@ void UTDAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 			AbilitySpec.DynamicAbilityTags.AddTag(TDAbility->StartupInputTag); // InputTag 등록
 			AbilitySpec.DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped); // Abilities_Status_Eligible 태그 등록
 			GiveAbility(AbilitySpec);
+			//MarkAbilitySpecDirty(AbilitySpec);
 		}
 	}
 
@@ -123,6 +126,26 @@ void UTDAbilitySystemComponent::ServerEnhanceAttribute_Implementation(const FGam
 	}
 }
 
+// 어빌리티 업데이트. 새로운 어빌리티 추가할게 있는지 확인하고 추가하기.
+void UTDAbilitySystemComponent::UpdateAbilityStatuses(int32 PlayerLevel)
+{
+	UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(GetAvatarActor());
+	for (const FDA_Ability& DA_Ability_Iter : TDDA_Ability->DA_AbilityInfo)
+	{
+		if (false == DA_Ability_Iter.AbilityTag.IsValid()) continue; // AbilityTag가 없다면 continue.
+		if (PlayerLevel < DA_Ability_Iter.LevelRequirement) continue; // PlayerLevel이 레벨조건 보다 낮다면 continue.
+
+		if (GetSpecFromAbilityTag(DA_Ability_Iter.AbilityTag) == nullptr)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(DA_Ability_Iter.Ability, 1);
+			AbilitySpec.DynamicAbilityTags.AddTag((FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible)); // 런타임에 태그 추가.
+			GiveAbility(AbilitySpec); // 어빌리티 부여.
+			MarkAbilitySpecDirty(AbilitySpec);
+			ClientUpdateAbilityStatus(DA_Ability_Iter.AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Eligible);
+		}
+	}
+}
+
 FGameplayTag UTDAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	if (AbilitySpec.Ability)
@@ -160,6 +183,32 @@ FGameplayTag UTDAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbility
 		}
 	}
 	return FGameplayTag();
+}
+
+FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	/** Used to stop us from removing abilities from an ability system component while we're iterating through the abilities */
+	FScopedAbilityListLock ActiveScopeLoc(*this);
+
+	for (FGameplayAbilitySpec& AbilitySpecIter : GetActivatableAbilities())
+	{
+		for (FGameplayTag TagIter : AbilitySpecIter.Ability.Get()->AbilityTags)
+		{
+			if (TagIter.MatchesTag(AbilityTag))
+			{
+				// ActivatableAbilities 중 AbilityTag와 일치하는 태그를 가지고 있는게 있다면 AbilitySpec를 리턴.
+				return &AbilitySpecIter;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+
+void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+{
+	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
 }
 
 // 상위 클래스인 AbilitySystemComponent에 ActivateAbilities 값이 변경될 때마다 호출되는 OnRep_ActivateAbilities 함수를 재정의하여 사용.

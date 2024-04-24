@@ -75,6 +75,7 @@ DerivedDataCache/*
 
 # Packaged files
 Packaged/*
+Package/*
 
 # Assets
 Content/ABP/*

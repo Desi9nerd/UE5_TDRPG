@@ -59,6 +59,9 @@ public:
 	FDA_AbilitySignature DA_AbilityInfoDelegate;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UTDDA_Ability> TDDA_Ability;
+
 	TObjectPtr<APlayerController> GetPlayerController();
 	TObjectPtr<ATDPlayerController> GetTDPlayerController();
 	TObjectPtr<APlayerState> GetPlayerState();
@@ -68,9 +71,6 @@ protected:
 	TObjectPtr<UAttributeSet> GetAttributeSet();
 	TObjectPtr<UTDAttributeSet> GetTDAttributeSet();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UTDDA_Ability> TDDA_Ability;
-	
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")

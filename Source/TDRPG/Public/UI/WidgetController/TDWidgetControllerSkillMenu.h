@@ -15,5 +15,6 @@ public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 
-
+private:
+	void AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 };
