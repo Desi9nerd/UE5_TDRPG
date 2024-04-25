@@ -162,7 +162,14 @@ bool UTDAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& 
 
 	//** Activatable Abilities에서 Ability를 찾지 못한 경우
 	const UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(GetAvatarActor());
-	OutDescription = UTDGA::GetLockedDescription(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).LevelRequirement);
+	if (false == AbilityTag.IsValid() || AbilityTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_None))
+	{
+		OutDescription = FString();
+	}
+	else
+	{
+		OutDescription = UTDGA::GetLockedDescription(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).LevelRequirement);
+	}
 	OutNextLevelDescription = FString();
 
 	return false;
