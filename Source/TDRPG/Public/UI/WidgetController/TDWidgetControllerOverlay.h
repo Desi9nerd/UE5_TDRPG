@@ -70,6 +70,8 @@ protected:
 	void SoulChanged(const FOnAttributeChangeData& Data) const;
 	void OnExpChanged(int32 InNewExp);
 	void OnPlayerLevelChanged(int32 InNewPlayerLevel) const;
+	void OnEquippedAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag) const;
+
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);
 
 	template<typename T> // DataTable ÀÐ±â¿ë
