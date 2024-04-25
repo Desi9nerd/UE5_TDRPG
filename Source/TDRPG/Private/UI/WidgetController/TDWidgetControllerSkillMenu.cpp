@@ -65,6 +65,16 @@ void UTDWidgetControllerSkillMenu::SkillPointButtonPressed()
 	}
 }
 
+void UTDWidgetControllerSkillMenu::DeselectSkillIcon()
+{
+	// 선택 해제한 스킬아이콘의 GameplayTag - Ability, Status 변경. 
+	SelectedSkillInSkillMenu.Ability = FTDGameplayTags::GetTDGameplayTags().Abilities_None;
+	SelectedSkillInSkillMenu.Status = FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked;
+
+	// 4개 Broadcast - 버튼 2개가 안 눌리도록, 스킬 설명이 빈 텍스트로 나오도록 알림.
+	SkillIconSelectedDelegate.Broadcast(false, false, FString(), FString());
+}
+
 // 스킬트리 위젯 내의 스킬획득 버튼, 장착 버튼
 void UTDWidgetControllerSkillMenu::UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton)
 {

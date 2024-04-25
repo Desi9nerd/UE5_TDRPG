@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SkillPointButtonPressed();
 
+	UFUNCTION(BlueprintCallable)
+	void DeselectSkillIcon();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerStatChangedSignature SkillPointsChangedDelegate;
 
