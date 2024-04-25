@@ -119,7 +119,7 @@ UTDDA_CharacterClass* UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(const UO
 {
 	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (false == IsValid(TDGameMode)) return nullptr;
-	checkf(TDGameMode->TDDACharacterClass, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass"));
+	//checkf(TDGameMode->TDDACharacterClass, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass"));
 
 	return TDGameMode->TDDACharacterClass;
 }
@@ -127,9 +127,9 @@ UTDDA_CharacterClass* UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(const UO
 UTDDA_Ability* UTDAbilitySystemBPLibrary::GetTDDA_Ability(const UObject* WorldContextObject)
 {
 	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	//if (false == IsValid(TDGameMode)) return nullptr;
-	checkf(TDGameMode, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
-	checkf(TDGameMode->TDDAAbility, TEXT("No TDAbility. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
+	if (false == IsValid(TDGameMode)) return nullptr;
+	//checkf(TDGameMode, TEXT("No TDGameMode. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
+	//checkf(TDGameMode->TDDAAbility, TEXT("No TDAbility. Check: UTDAbilitySystemBPLibrary::GetTDDA_Ability"));
 
 	return TDGameMode->TDDAAbility;
 }

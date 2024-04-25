@@ -5,6 +5,7 @@
 #include "TDWidgetControllerSkillMenu.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FSkillIconSelectedSignature, bool, bSkillPointsButtonEnabled, bool, bEquipButtonEnabled, FString, DescriptionString, FString, NextLevelDescriptionString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitingForEquipSelectionSignature, const FGameplayTag&, AbilityType);
 
 /**
  * 
@@ -34,12 +35,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DeselectSkillIcon();
 
+	UFUNCTION(BlueprintCallable)
+	void EquipButtonPressed();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerStatChangedSignature SkillPointsChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FSkillIconSelectedSignature SkillIconSelectedDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FWaitingForEquipSelectionSignature WaitingForEquipDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FWaitingForEquipSelectionSignature StopWaitingForEquipDelegate;
 
 private:
 	static void UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton);
@@ -49,4 +58,5 @@ private:
 
 	FSelectedSkillInSkillMenu SelectedSkillInSkillMenu = { FTDGameplayTags::GetTDGameplayTags().Abilities_None,  FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked };
 	int32 CurrentSkillPoints = 0;
+	bool bWaitingForEquipSelection = false;
 };

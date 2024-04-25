@@ -18,9 +18,16 @@ void UTDWidgetControllerSkillMenu::BindCallbacksToDependencies()
 
 void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& AbilityTag)
 {
+	if (bWaitingForEquipSelection)
+	{
+		const FGameplayTag SelectedAbilityType = TDDA_Ability->FindDA_AbilityForTag(AbilityTag).AbilityType;
+		StopWaitingForEquipDelegate.Broadcast(SelectedAbilityType);
+		bWaitingForEquipSelection = false;
+	}
+
+
 	//** SkillPoints
 	const int32 SkillPoints = GetTDPlayerState()->GetSkillPoints();
-
 
 	//** GameplayTag 설정하기
 	const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
@@ -67,12 +74,28 @@ void UTDWidgetControllerSkillMenu::SkillPointButtonPressed()
 
 void UTDWidgetControllerSkillMenu::DeselectSkillIcon()
 {
+	if (bWaitingForEquipSelection)
+	{
+		const FGameplayTag SelectedAbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedSkillInSkillMenu.Ability).AbilityType;
+		StopWaitingForEquipDelegate.Broadcast(SelectedAbilityType);
+		bWaitingForEquipSelection = false;
+	}
+
 	// 선택 해제한 스킬아이콘의 GameplayTag - Ability, Status 변경. 
 	SelectedSkillInSkillMenu.Ability = FTDGameplayTags::GetTDGameplayTags().Abilities_None;
 	SelectedSkillInSkillMenu.Status = FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked;
 
 	// 4개 Broadcast - 버튼 2개가 안 눌리도록, 스킬 설명이 빈 텍스트로 나오도록 알림.
 	SkillIconSelectedDelegate.Broadcast(false, false, FString(), FString());
+}
+
+// AbilityType을 Broadcast함.
+void UTDWidgetControllerSkillMenu::EquipButtonPressed()
+{
+	const FGameplayTag AbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedSkillInSkillMenu.Ability).AbilityType;
+
+	WaitingForEquipDelegate.Broadcast(AbilityType);
+	bWaitingForEquipSelection = true;
 }
 
 // 스킬트리 위젯 내의 스킬획득 버튼, 장착 버튼
