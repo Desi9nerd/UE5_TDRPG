@@ -16,7 +16,7 @@ void UTDWidgetControllerSkillMenu::BindCallbacksToDependencies()
 	GetTDPlayerState()->OnSkillPointsChangedDelegate.AddUObject(this, &ThisClass::SkillPointsChanged);
 }
 
-void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& AbilityTag)
+void UTDWidgetControllerSkillMenu::SelectSkillIcon(const FGameplayTag& AbilityTag)
 {
 	if (bWaitingForEquipSelection)
 	{
@@ -47,8 +47,8 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 
 
 	//** 스킬트리 내 스킬포인트 버튼과 장착 버튼 활성화 여부 설정하기
-	SelectedSkillInSkillMenu.Ability = AbilityTag;
-	SelectedSkillInSkillMenu.Status = AbilityStatusTag;
+	SelectedAbilityInSkillMenu.Ability = AbilityTag;
+	SelectedAbilityInSkillMenu.Status = AbilityStatusTag;
 	bool bEnableSkillPointsButton = false;
 	bool bEnableEquipButton = false;
 
@@ -58,7 +58,7 @@ void UTDWidgetControllerSkillMenu::SkillIconSelected(const FGameplayTag& Ability
 	// Description, NextLevelDescription를 레펀런스(&)로 넘겨 업데이트한다.
 	FString Description;
 	FString NextLevelDescription;
-	GetTDASC()->GetDescriptionsByAbilityTag(SelectedSkillInSkillMenu.Ability, Description, NextLevelDescription);
+	GetTDASC()->GetDescriptionsByAbilityTag(SelectedAbilityInSkillMenu.Ability, Description, NextLevelDescription);
 
 	// 4개 Broadcast ( bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription )
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription);
@@ -68,7 +68,7 @@ void UTDWidgetControllerSkillMenu::SkillPointButtonPressed()
 {
 	if (GetTDASC())
 	{
-		GetTDASC()->ServerSpendSkillPoint(SelectedSkillInSkillMenu.Ability); // Server RPC
+		GetTDASC()->ServerSpendSkillPoint(SelectedAbilityInSkillMenu.Ability); // Server RPC
 	}
 }
 
@@ -76,14 +76,14 @@ void UTDWidgetControllerSkillMenu::DeselectSkillIcon()
 {
 	if (bWaitingForEquipSelection)
 	{
-		const FGameplayTag SelectedAbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedSkillInSkillMenu.Ability).AbilityType;
+		const FGameplayTag SelectedAbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedAbilityInSkillMenu.Ability).AbilityType;
 		StopWaitingForEquipDelegate.Broadcast(SelectedAbilityType);
 		bWaitingForEquipSelection = false;
 	}
 
 	// 선택 해제한 스킬아이콘의 GameplayTag - Ability, Status 변경. 
-	SelectedSkillInSkillMenu.Ability = FTDGameplayTags::GetTDGameplayTags().Abilities_None;
-	SelectedSkillInSkillMenu.Status = FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked;
+	SelectedAbilityInSkillMenu.Ability = FTDGameplayTags::GetTDGameplayTags().Abilities_None;
+	SelectedAbilityInSkillMenu.Status = FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked;
 
 	// 4개 Broadcast - 버튼 2개가 안 눌리도록, 스킬 설명이 빈 텍스트로 나오도록 알림.
 	SkillIconSelectedDelegate.Broadcast(false, false, FString(), FString());
@@ -92,7 +92,7 @@ void UTDWidgetControllerSkillMenu::DeselectSkillIcon()
 // AbilityType을 Broadcast함.
 void UTDWidgetControllerSkillMenu::EquipButtonPressed()
 {
-	const FGameplayTag AbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedSkillInSkillMenu.Ability).AbilityType;
+	const FGameplayTag AbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedAbilityInSkillMenu.Ability).AbilityType;
 
 	WaitingForEquipDelegate.Broadcast(AbilityType);
 	bWaitingForEquipSelection = true;
@@ -135,10 +135,10 @@ void UTDWidgetControllerSkillMenu::AbilityChanged(const FGameplayTag& AbilityTag
 {
 	//** 위젯
 	//   스킬의 StatusTag를 Braodcast로 알린다.
-	if (SelectedSkillInSkillMenu.Ability.MatchesTagExact(AbilityTag))
+	if (SelectedAbilityInSkillMenu.Ability.MatchesTagExact(AbilityTag))
 	{
 		// bEnableSkillPointsButton, bEnableEquipButton 업데이트
-		SelectedSkillInSkillMenu.Status = StatusTag;
+		SelectedAbilityInSkillMenu.Status = StatusTag;
 		bool bEnableSkillPointsButton = false;
 		bool bEnableEquipButton = false;
 		UpdateButtons_bEnableToClick(StatusTag, CurrentSkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
@@ -172,12 +172,12 @@ void UTDWidgetControllerSkillMenu::SkillPointsChanged(int32 SkillPoints)
 	CurrentSkillPoints = SkillPoints;
 	bool bEnableSkillPointsButton = false;
 	bool bEnableEquipButton = false;
-	UpdateButtons_bEnableToClick(SelectedSkillInSkillMenu.Status, CurrentSkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
+	UpdateButtons_bEnableToClick(SelectedAbilityInSkillMenu.Status, CurrentSkillPoints, bEnableSkillPointsButton, bEnableEquipButton);
 
 	// Description, NextLevelDescription 업데이트
 	FString Description;
 	FString NextLevelDescription;
-	GetTDASC()->GetDescriptionsByAbilityTag(SelectedSkillInSkillMenu.Ability, Description, NextLevelDescription);
+	GetTDASC()->GetDescriptionsByAbilityTag(SelectedAbilityInSkillMenu.Ability, Description, NextLevelDescription);
 
 	// 4개 Broadcast ( bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription )
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription);

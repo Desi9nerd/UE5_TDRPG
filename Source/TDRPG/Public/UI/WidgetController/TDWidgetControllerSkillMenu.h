@@ -27,7 +27,7 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 	UFUNCTION(BlueprintCallable)
-	void SkillIconSelected(const FGameplayTag& AbilityTag);
+	void SelectSkillIcon(const FGameplayTag& AbilityTag);
 
 	UFUNCTION(BlueprintCallable)
 	void SkillPointButtonPressed();
@@ -56,7 +56,9 @@ private:
 	void AbilityChanged(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 InAbilityLevel);
 	void SkillPointsChanged(int32 SkillPoints);
 
-	FSelectedSkillInSkillMenu SelectedSkillInSkillMenu = { FTDGameplayTags::GetTDGameplayTags().Abilities_None,  FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked };
+	FSelectedSkillInSkillMenu SelectedAbilityInSkillMenu = { FTDGameplayTags::GetTDGameplayTags().Abilities_None,  FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked };
 	int32 CurrentSkillPoints = 0;
 	bool bWaitingForEquipSelection = false;
+
+	FGameplayTag SelectedSlot;
 };
