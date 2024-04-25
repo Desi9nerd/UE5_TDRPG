@@ -1,27 +1,27 @@
-#include "GAS/GameplayAbility/TDGA_Summon.h"
+ï»¿#include "GAS/GameplayAbility/TDGA_Summon.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-TArray<FVector> UTDGA_Summon::GetSpawnLocations() // ¸í·ÉÇÑ Ä³¸¯ÅÍ ÁÖº¯À¸·Î ¹Ì´Ï¾ğµéÀÌ ½ºÆùµÇ´Â À§Ä¡µé
+TArray<FVector> UTDGA_Summon::GetSpawnLocations() // ëª…ë ¹í•œ ìºë¦­í„° ì£¼ë³€ìœ¼ë¡œ ë¯¸ë‹ˆì–¸ë“¤ì´ ìŠ¤í°ë˜ëŠ” ìœ„ì¹˜ë“¤
 {
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
 	const float DeltaSpread = SpawnSpread / NumMinions;
 
 
-	const FVector LeftOfSpread = Forward.RotateAngleAxis(-SpawnSpread / 2.f, FVector::UpVector); // Z-axis ±âÁØÀ¸·Î È¸Àü
-	TArray<FVector> SpawnLocations; // ¹Ì´Ï¾ğµé ½ºÆù À§Ä¡µé
+	const FVector LeftOfSpread = Forward.RotateAngleAxis(-SpawnSpread / 2.f, FVector::UpVector); // Z-axis ê¸°ì¤€ìœ¼ë¡œ íšŒì „
+	TArray<FVector> SpawnLocations; // ë¯¸ë‹ˆì–¸ë“¤ ìŠ¤í° ìœ„ì¹˜ë“¤
 
 	for (int32 i = 0; i < NumMinions; i++)
 	{
-		FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector); // DeltaSpread¸¸Å­ È¸Àü
-		FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistance, MaxSpawnDistance); // ¾ÕµÚ ¹üÀ§ ³» ·£´ıÁöÁ¡
+		FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector); // DeltaSpreadë§Œí¼ íšŒì „
+		FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistance, MaxSpawnDistance); // ì•ë’¤ ë²”ìœ„ ë‚´ ëœë¤ì§€ì 
 
 		//DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 18.f, 12, FColor::Cyan, false, 3.f);
 		//UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + Direction * MaxSpawnDistance, 4.f, FLinearColor::Green, 3.f);
 		//DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 5.f, 12, FColor::Red, false, 3.f);
 		//DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 5.f, 12, FColor::Red, false, 3.f);
 
-		//** ¹Ù´Ú¿¡¼­ ½ºÆùµÇ°Ô ÇÏ±â********************
+		//** ë°”ë‹¥ì—ì„œ ìŠ¤í°ë˜ê²Œ í•˜ê¸°********************
 		FHitResult Hit;
 		GetWorld()->LineTraceSingleByChannel(Hit, ChosenSpawnLocation + FVector(0.f, 0.f, 400.f), ChosenSpawnLocation - FVector(0.f, 0.f, 400.f), ECC_Visibility);
 		if (Hit.bBlockingHit)
@@ -36,7 +36,7 @@ TArray<FVector> UTDGA_Summon::GetSpawnLocations() // ¸í·ÉÇÑ Ä³¸¯ÅÍ ÁÖº¯À¸·Î ¹Ì´Ï
 	return SpawnLocations;
 }
 
-TSubclassOf<APawn> UTDGA_Summon::GetRandomMinionClass() // MinionClasses¿¡ ´ã±ä ¹Ì´Ï¾ğ Á¾·ù Áß ·£´ıÀ¸·Î ÇÏ³ª ¼±ÅÃ
+TSubclassOf<APawn> UTDGA_Summon::GetRandomMinionClass() // MinionClassesì— ë‹´ê¸´ ë¯¸ë‹ˆì–¸ ì¢…ë¥˜ ì¤‘ ëœë¤ìœ¼ë¡œ í•˜ë‚˜ ì„ íƒ
 {
 	const int32 Selection = FMath::RandRange(0, MinionClasses.Num() - 1);
 

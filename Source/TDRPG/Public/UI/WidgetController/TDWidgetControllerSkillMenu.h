@@ -59,6 +59,5 @@ private:
 	FSelectedSkillInSkillMenu SelectedAbilityInSkillMenu = { FTDGameplayTags::GetTDGameplayTags().Abilities_None,  FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Locked };
 	int32 CurrentSkillPoints = 0;
 	bool bWaitingForEquipSelection = false;
-
-	FGameplayTag SelectedSlot;
+	
 };

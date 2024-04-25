@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "GAS/GameplayAbility/TDGA.h"
 #include "TDGA_HitReact.generated.h"
 
-/** Ä³¸¯ÅÍ°¡ ÇÇ°İµÇ¾úÀ»¶§ ¸ùÅ¸ÁÖ¸¦ ÇÃ·¹ÀÌ ÇÏ´Â GameplayAbility
+/** ìºë¦­í„°ê°€ í”¼ê²©ë˜ì—ˆì„ë•Œ ëª½íƒ€ì£¼ë¥¼ í”Œë ˆì´ í•˜ëŠ” GameplayAbility
  *
  */
 UCLASS()
