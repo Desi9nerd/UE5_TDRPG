@@ -225,6 +225,8 @@ void UTDWidgetControllerSkillMenu::OnEquippedAbility(const FGameplayTag& Ability
 	DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo);
 	//****************************************************************************
 
-	// Animation을 멈추도록 Broadcast.
-	StopWaitingForEquipDelegate.Broadcast(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).AbilityType);
+	
+	StopWaitingForEquipDelegate.Broadcast(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).AbilityType); // Animation을 멈추도록 Broadcast.
+	SkillIconReassignedDelegate.Broadcast(AbilityTag); // 현재 BP 위젯에서 호출되면 함수실행. 추후에 코드로 수정예정.
+	DeselectSkillIcon(); // 버튼이 안 눌리도록 만듬.
 }

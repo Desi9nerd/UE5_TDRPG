@@ -6,6 +6,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FSkillIconSelectedSignature, bool, bSkillPointsButtonEnabled, bool, bEquipButtonEnabled, FString, DescriptionString, FString, NextLevelDescriptionString);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitingForEquipSelectionSignature, const FGameplayTag&, AbilityType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSkillIconReassignedSignature, const FGameplayTag&, AbilityTag);
 
 /** SkillMenu
  * 
@@ -55,6 +56,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FWaitingForEquipSelectionSignature StopWaitingForEquipDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FSkillIconReassignedSignature SkillIconReassignedDelegate;
 
 private:
 	static void UpdateButtons_bEnableToClick(const FGameplayTag& AbilityStatus, int32 SkillPoints, bool& bEnableSkillPointsButton, bool& bEnableEquipButton);
