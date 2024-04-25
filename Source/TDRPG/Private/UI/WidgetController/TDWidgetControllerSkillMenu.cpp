@@ -13,6 +13,7 @@ void UTDWidgetControllerSkillMenu::BroadcastInitialValues()
 void UTDWidgetControllerSkillMenu::BindCallbacksToDependencies()
 {
 	GetTDASC()->AbilityStatusChangedDelegate.AddUObject(this, &ThisClass::AbilityChanged);
+	GetTDASC()->EquippedAbilityDelegate.AddUObject(this, &ThisClass::OnEquippedAbility);
 	GetTDPlayerState()->OnSkillPointsChangedDelegate.AddUObject(this, &ThisClass::SkillPointsChanged);
 }
 
@@ -42,7 +43,7 @@ void UTDWidgetControllerSkillMenu::SelectSkillIcon(const FGameplayTag& AbilityTa
 	}
 	else
 	{
-		AbilityStatusTag = GetTDASC()->GetStatusFromSpec(*TempAbilitySpec);
+		AbilityStatusTag = GetTDASC()->GetStatusTagFromSpec(*TempAbilitySpec);
 	}
 
 
@@ -89,13 +90,31 @@ void UTDWidgetControllerSkillMenu::DeselectSkillIcon()
 	SkillIconSelectedDelegate.Broadcast(false, false, FString(), FString());
 }
 
-// AbilityType을 Broadcast함.
+// 장착버튼 누름. 
 void UTDWidgetControllerSkillMenu::EquipButtonPressed()
 {
+	//** AbilityType을 Broadcast함.
 	const FGameplayTag AbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedAbilityInSkillMenu.Ability).AbilityType;
 
 	WaitingForEquipDelegate.Broadcast(AbilityType);
 	bWaitingForEquipSelection = true;
+
+	//** SelectedSlot에 InputTag를 담아준다.
+	const FGameplayTag SelectedStatus = GetTDASC()->GetStatusTagFromAbilityTag(SelectedAbilityInSkillMenu.Ability);
+	if (SelectedStatus.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped))
+	{
+		SelectedSlot = GetTDASC()->GetInputTagFromAbilityTag(SelectedAbilityInSkillMenu.Ability);
+	}
+}
+
+void UTDWidgetControllerSkillMenu::SkillRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType)
+{
+	if (false == bWaitingForEquipSelection) return; // 예외처리1.
+	// 예외처리2. Active / Passive Skill 간 호환이 안 되도록 AbilityType이 다르면 리턴.
+	const FGameplayTag& SelectedAbilityType = TDDA_Ability->FindDA_AbilityForTag(SelectedAbilityInSkillMenu.Ability).AbilityType;
+	if (false == SelectedAbilityType.MatchesTagExact(AbilityType)) return;
+
+	GetTDASC()->ServerEquipAbility(SelectedAbilityInSkillMenu.Ability, SlotTag); // Server RPC.
 }
 
 // 스킬트리 위젯 내의 스킬획득 버튼, 장착 버튼
@@ -181,4 +200,31 @@ void UTDWidgetControllerSkillMenu::SkillPointsChanged(int32 SkillPoints)
 
 	// 4개 Broadcast ( bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription )
 	SkillIconSelectedDelegate.Broadcast(bEnableSkillPointsButton, bEnableEquipButton, Description, NextLevelDescription);
+}
+
+void UTDWidgetControllerSkillMenu::OnEquippedAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag)
+{
+	bWaitingForEquipSelection = false;
+
+	//****************************************************************************
+	//** Old Slot
+	FDA_Ability DA_AbilityInfo_LastSlot;
+	DA_AbilityInfo_LastSlot.StatusTag = FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked;
+	DA_AbilityInfo_LastSlot.InputTag = PreviousSlotTag;
+	DA_AbilityInfo_LastSlot.AbilityTag = FTDGameplayTags::GetTDGameplayTags().Abilities_None;
+	
+	DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo_LastSlot);
+	//****************************************************************************
+
+	//****************************************************************************
+	//** New Slot
+	FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
+	DA_AbilityInfo.StatusTag = StatusTag;
+	DA_AbilityInfo.InputTag = SlotTag;
+
+	DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo);
+	//****************************************************************************
+
+	// Animation을 멈추도록 Broadcast.
+	StopWaitingForEquipDelegate.Broadcast(TDDA_Ability->FindDA_AbilityForTag(AbilityTag).AbilityType);
 }

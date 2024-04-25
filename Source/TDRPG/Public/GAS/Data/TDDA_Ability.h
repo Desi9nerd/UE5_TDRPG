@@ -28,7 +28,7 @@ struct FDA_Ability
 	FGameplayTag CooldownTag = FGameplayTag();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag AbilityType = FGameplayTag();
+	FGameplayTag AbilityType = FGameplayTag(); // Active / Passive Skill
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UTexture2D> Icon = nullptr;

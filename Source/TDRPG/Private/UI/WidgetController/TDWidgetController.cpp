@@ -33,7 +33,7 @@ void UTDWidgetController::BroadcastDA_AbilityInfo()
 		{
 			FDA_Ability DA_AbilityInfo = TDDA_Ability->FindDA_AbilityForTag(GetTDASC()->GetAbilityTagFromSpec(AbilitySpec));
 			DA_AbilityInfo.InputTag = GetTDASC()->GetInputTagFromSpec(AbilitySpec); // 어떤 InputTag와 어떤 AbilitySpec이 매칭되는지 알기위해
-			DA_AbilityInfo.StatusTag = GetTDASC()->GetStatusFromSpec(AbilitySpec);
+			DA_AbilityInfo.StatusTag = GetTDASC()->GetStatusTagFromSpec(AbilitySpec);
 			DA_AbilityInfoDelegate.Broadcast(DA_AbilityInfo);
 		});
 

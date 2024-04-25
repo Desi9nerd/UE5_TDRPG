@@ -11,6 +11,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTa
 DECLARE_MULTICAST_DELEGATE(FGivenASCSignature);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, int32 /*AbilityLevel*/) // FDA_Ability의 AbilityTag, StatusTag, 그리고 AbilityLevel 사용(주의: PlayerLevel아님).
+DECLARE_MULTICAST_DELEGATE_FourParams(FEquippedAbilitySignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, const FGameplayTag& /*SlotTag*/, const FGameplayTag& /*PrevSlotTag*/);
 
 UCLASS()
 class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
@@ -30,18 +31,28 @@ public:
 	void ServerEnhanceAttribute(const FGameplayTag& AttributeTag);
 	void UpdateAbilityStatuses(int32 PlayerLevel);
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
+	static bool SkillMenuAbilityHasSlot(FGameplayAbilitySpec* Spec, const FGameplayTag& SlotTag);
+	void SkillMenuClearSlot(FGameplayAbilitySpec* Spec);
+	void SkillMenuClearAbilitiesOfSlot(const FGameplayTag& SlotTag);
 
 	UFUNCTION(Server, Reliable)
 	void ServerSpendSkillPoint(const FGameplayTag& AbilityTag);
 
+	UFUNCTION(Server, Reliable)
+	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag);
+	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag);
+
+	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	FGameplayTag GetStatusTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
 
 	FEffectAssetTagsSignature EffectAssetTagsDelegate;
 	FGivenASCSignature GivenASCDelegate;
 	FAbilityStatusChangedSignature AbilityStatusChangedDelegate;
+	FEquippedAbilitySignature EquippedAbilityDelegate;
 
 	bool bStartGivenASC = false;
 

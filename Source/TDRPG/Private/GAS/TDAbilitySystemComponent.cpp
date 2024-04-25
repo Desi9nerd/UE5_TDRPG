@@ -175,6 +175,37 @@ bool UTDAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& 
 	return false;
 }
 
+bool UTDAbilitySystemComponent::SkillMenuAbilityHasSlot(FGameplayAbilitySpec* Spec, const FGameplayTag& SlotTag)
+{
+	for (FGameplayTag TagIter : Spec->DynamicAbilityTags) // DynamicAbilityTags들 중에
+	{
+		if (TagIter.MatchesTag(SlotTag)) return true; // SlotTag가 있으면 true 리턴.
+	}
+	return false;
+}
+
+// 매개변수로 들어온 Spec의 Ability가 가지고 있는 SlotInputTag 없애기. 
+void UTDAbilitySystemComponent::SkillMenuClearSlot(FGameplayAbilitySpec* Spec)
+{
+	const FGameplayTag SlotInputTag = GetInputTagFromSpec(*Spec);
+	Spec->DynamicAbilityTags.RemoveTag(SlotInputTag);
+	MarkAbilitySpecDirty(*Spec);
+}
+
+// ActivatableAbilities를 모두 검사하여 DynamicAbilityTags들 중 SlotTag 모두 없애기.
+void UTDAbilitySystemComponent::SkillMenuClearAbilitiesOfSlot(const FGameplayTag& SlotTag)
+{
+	FScopedAbilityListLock ActiveScopedLock(*this);
+
+	for (FGameplayAbilitySpec& SpecIter : GetActivatableAbilities()) // ActivatableAbilities들 중
+	{
+		if (SkillMenuAbilityHasSlot(&SpecIter, SlotTag)) // DynamicAbilityTags들 중 SlotTag가 있으면
+		{
+			SkillMenuClearSlot(&SpecIter); // 해당 Slot(Input)Tag 없애기.
+		}
+	}
+}
+
 // SkillPoint를 소모하여 스킬획득.
 // Server RPC로 클라이언트들에서 호출된 후 정보 수정 후 Client RPC로 서버에 알린다.
 void UTDAbilitySystemComponent::ServerSpendSkillPoint_Implementation(const FGameplayTag& AbilityTag)
@@ -191,7 +222,7 @@ void UTDAbilitySystemComponent::ServerSpendSkillPoint_Implementation(const FGame
 
 		//* AbilitySpec 정보 수정(StatusTag를 업데이트 또는 Ability->Level 업데이트). 
 		const FTDGameplayTags TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
-		FGameplayTag StatusTag = GetStatusFromSpec(*AbilitySpec);
+		FGameplayTag StatusTag = GetStatusTagFromSpec(*AbilitySpec);
 		if (StatusTag.MatchesTagExact(TDGameplayTags.Abilities_Status_Eligible))
 		{
 			// Status를 Unlock으로 변경.
@@ -236,7 +267,7 @@ FGameplayTag UTDAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbili
 	return FGameplayTag();
 }
 
-FGameplayTag UTDAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+FGameplayTag UTDAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	for (FGameplayTag StatusTag : AbilitySpec.DynamicAbilityTags)
 	{
@@ -246,6 +277,42 @@ FGameplayTag UTDAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbility
 		}
 	}
 	return FGameplayTag();
+}
+
+// Server RPC
+void UTDAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		const FGameplayTag& PrevSlotTag = GetInputTagFromSpec(*AbilitySpec);
+		const FGameplayTag& StatusTag = GetStatusTagFromSpec(*AbilitySpec);
+
+		// Status가 Equipped 또는 Unlocked 상태라면
+		if (StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped ||
+			StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked)
+		{
+			SkillMenuClearAbilitiesOfSlot(SlotTag); // SlotTag 모두 없애기
+			SkillMenuClearSlot(AbilitySpec);		// 
+			AbilitySpec->DynamicAbilityTags.AddTag(SlotTag); // 해당 SlotTag를 담기.
+
+			// Status:  Unlock -> Equipped 변경.
+			if (StatusTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked))
+			{
+				AbilitySpec->DynamicAbilityTags.RemoveTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked);
+				AbilitySpec->DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped);
+			}
+			MarkAbilitySpecDirty(*AbilitySpec);
+		}
+
+		// Client들에게도 실행.
+		EquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
+	}
+}
+
+// Client들에서 실행. Equipped Ability가 변경되었음을 Broadcast로 알려줌.
+void UTDAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag)
+{
+	EquippedAbilityDelegate.Broadcast(AbilityTag, StatusTag, SlotTag, PreviousSlotTag);
 }
 
 FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
@@ -268,6 +335,23 @@ FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecFromAbilityTag(const FGa
 	return nullptr;
 }
 
+FGameplayTag UTDAbilitySystemComponent::GetStatusTagFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		return GetStatusTagFromSpec(*Spec);
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UTDAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		return GetInputTagFromSpec(*Spec);
+	}
+	return FGameplayTag();
+}
 
 void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
 {
