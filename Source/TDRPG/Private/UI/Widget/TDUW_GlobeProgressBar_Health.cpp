@@ -6,11 +6,11 @@ void UTDUW_GlobeProgressBar_Health::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TDWidgetControllerOverlay = GetWidgetControllerOverlay(GetWorld());
-	check(TDWidgetControllerOverlay);
+	//TDWidgetControllerOverlay = GetWidgetControllerOverlay(GetWorld());
+	//check(TDWidgetControllerOverlay);
 
-	TDWidgetControllerOverlay->OnHealthChanged.AddDynamic(this, &ThisClass::OnHealthChanged_Event);
-	TDWidgetControllerOverlay->OnMaxHealthChanged.AddDynamic(this, &ThisClass::OnMaxHealthChanged_Event);
+	GetWidgetControllerOverlay(GetWorld())->OnHealthChanged.AddDynamic(this, &ThisClass::OnHealthChanged_Event);
+	GetWidgetControllerOverlay(GetWorld())->OnMaxHealthChanged.AddDynamic(this, &ThisClass::OnMaxHealthChanged_Event);
 
 }
 

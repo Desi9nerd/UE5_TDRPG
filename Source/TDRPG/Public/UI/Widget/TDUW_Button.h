@@ -30,17 +30,10 @@ public:
 protected:
 	virtual void NativePreConstruct() override;
 
-private:
-	void SetAttributeSet();
-	void UpdateBoxSize();
-	void UpdateBorderBrush();
-	void UpdateButtonBrushes();
-	void UpdateText();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Button Properties")
-	float BoxWidth;
+	float BoxWidth = 40.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Button Properties")
-	float BoxHeight;
+	float BoxHeight = 40.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Button Properties")
 	FSlateBrush BorderBrush;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Button Properties")
@@ -62,5 +55,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Button Properties")
 	int LetterSpacing;
 
-
+private:
+	void SetAttributeSet();
+	void UpdateBoxSize();
+	void UpdateBorderBrush();
+	void UpdateButtonBrushes();
+	void UpdateText();
 };

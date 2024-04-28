@@ -55,13 +55,6 @@ public:
 	virtual void BindCallbacksToDependencies();
 	void BroadcastDA_AbilityInfo();
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
-	FDA_AbilitySignature DA_AbilityInfoDelegate;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UTDDA_Ability> TDDA_Ability;
-
 	TObjectPtr<APlayerController> GetPlayerController();
 	TObjectPtr<ATDPlayerController> GetTDPlayerController();
 	TObjectPtr<APlayerState> GetPlayerState();
@@ -70,6 +63,14 @@ protected:
 	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	TObjectPtr<UAttributeSet> GetAttributeSet();
 	TObjectPtr<UTDAttributeSet> GetTDAttributeSet();
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
+	FDA_AbilitySignature DA_AbilityInfoDelegate;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UTDDA_Ability> TDDA_Ability;
+
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
