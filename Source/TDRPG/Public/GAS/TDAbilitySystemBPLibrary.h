@@ -4,6 +4,7 @@
 #include "Data/TDDA_CharacterClass.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
 
+struct FInventoryCategory;
 struct FItem;
 struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
@@ -77,5 +78,7 @@ public:
 	//** 테스트용. 아래의 BP 버젼은 추후에 삭제할 예정.
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	static bool GetItemInfo(const FString& InItemName, FItem& OutItemInfo);
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	static bool GetInventoryCategoryInfo(const FString& InItemCategoryName, FInventoryCategory& OutCategoryInfo);
 	//********************************************************
 };

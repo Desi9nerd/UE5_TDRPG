@@ -225,7 +225,7 @@ int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* Wor
 
 bool UTDAbilitySystemBPLibrary::GetItemInfo(const FString& InItemName, FItem& OutItemInfo)
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_InventoryData.DT_InventoryData'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_ItemInfo.DT_ItemInfo'"));
 
 	if (const UDataTable* ItemDataTable = DataTableRef.Object)
 	{
@@ -233,6 +233,23 @@ bool UTDAbilitySystemBPLibrary::GetItemInfo(const FString& InItemName, FItem& Ou
 		if (ItemInfo != nullptr)
 		{
 			OutItemInfo = *ItemInfo;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UTDAbilitySystemBPLibrary::GetInventoryCategoryInfo(const FString& InItemCategoryName, FInventoryCategory& OutCategoryInfo)
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_InventoryCategory.DT_InventoryCategory'"));
+
+	if (const UDataTable* InventoryCategoryDataTable = DataTableRef.Object)
+	{
+		FInventoryCategory* InventoryCategoryInfo = InventoryCategoryDataTable->FindRow<FInventoryCategory>(FName(*InItemCategoryName), FString("No DataTable. Check UTDAbilitySystemBPLibrary::GetItemInfo"));
+		if (InventoryCategoryInfo != nullptr)
+		{
+			OutCategoryInfo = *InventoryCategoryInfo;
 			return true;
 		}
 	}

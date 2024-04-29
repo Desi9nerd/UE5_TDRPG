@@ -47,3 +47,33 @@ struct FItem : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly)
 	int32 MaxStackSize = 0;
 };
+
+USTRUCT(BlueprintType)
+struct FInventorySlot
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	FItem Item = FItem();
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 ItemQuantity = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> InventorySlot = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 SlotIndex = -1;
+};
+
+USTRUCT(BlueprintType)
+struct FInventoryCategory : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	EItemCategory ItemCategory = EItemCategory::None;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UTexture2D> CategoryIcon = nullptr;
+};

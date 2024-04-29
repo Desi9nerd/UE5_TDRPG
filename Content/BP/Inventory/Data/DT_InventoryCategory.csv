@@ -1,0 +1,5 @@
+ID,Category,CategoryIcon
+Weapon,Weapon,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/UI_Icons/T_repair_icon.T_repair_icon'
+Armor,Armor,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Player_States/T_shield_icon.T_shield_icon'
+Potion,Potion,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Player_States/T_Magica_icon.T_Magica_icon'
+Food,Food,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Player_States/T_food_icon.T_food_icon'
