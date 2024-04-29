@@ -14,7 +14,10 @@ class ATDItemActor;
 UENUM(BlueprintType) // InfiniteGameplayEffect 해제 종류
 enum class EItemCategory
 {
-	Inventory,
+	Weapon,
+	Armor,
+	Food,
+	Potion,
 	None
 };
 

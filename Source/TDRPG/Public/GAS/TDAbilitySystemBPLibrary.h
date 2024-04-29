@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "Actor/TDItemActor.h" // 추후에 삭제.
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/TDDA_CharacterClass.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
@@ -69,4 +70,12 @@ public:
 
 
 	static int32 GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel);
+
+
+
+	//********************************************************
+	//** 테스트용. 아래의 BP 버젼은 추후에 삭제할 예정.
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	static bool GetItemInfo(const FString& InItemName, FItem& OutItemInfo);
+	//********************************************************
 };

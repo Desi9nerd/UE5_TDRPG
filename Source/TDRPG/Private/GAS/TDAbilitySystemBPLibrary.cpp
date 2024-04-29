@@ -221,3 +221,20 @@ int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* Wor
 
 	return static_cast<int32>(ExpReward);
 }
+
+bool UTDAbilitySystemBPLibrary::GetItemInfo(const FString& InItemName, FItem& OutItemInfo)
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_InventoryData.DT_InventoryData'"));
+
+	if (const UDataTable* ItemDataTable = DataTableRef.Object)
+	{
+		FItem* ItemInfo = ItemDataTable->FindRow<FItem>(FName(*InItemName), FString("No DataTable. Check UTDAbilitySystemBPLibrary::GetItemInfo"));
+		if (ItemInfo != nullptr)
+		{
+			OutItemInfo = *ItemInfo;
+			return true;
+		}
+	}
+
+	return false;
+}
