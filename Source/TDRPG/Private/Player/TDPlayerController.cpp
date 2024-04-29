@@ -1,4 +1,4 @@
-#include "Player/TDPlayerController.h"
+ï»¿#include "Player/TDPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInput/TDEnhancedInputComponent.h"
 #include "Interface/IEnemy.h"
@@ -32,26 +32,26 @@ void ATDPlayerController::ShowDamageNumber_Implementation(float DamageAmount, AC
 {
 	check(DamageTextComponentClass);
 
-	if (IsLocalController()) // ClientÀÎ °æ¿ì µ¥¹ÌÁö ÅØ½ºÆ® O. ServerÀÎ °æ¿ì X
+	if (IsLocalController()) // Clientì¸ ê²½ìš° ë°ë¯¸ì§€ í…ìŠ¤íŠ¸ O. Serverì¸ ê²½ìš° X
 	{
 		if (IsValid(TargetCharacter) && DamageTextComponentClass)
 		{
-			//** TDWidgetComponent µ¿Àû »ı¼º. TargetCharacter¿¡¼­ DamageText»ı¼º
+			//** TDWidgetComponent ë™ì  ìƒì„±. TargetCharacterì—ì„œ DamageTextìƒì„±
 			UTDWidgetComponent* DamageText = NewObject<UTDWidgetComponent>(TargetCharacter, DamageTextComponentClass);
-			DamageText->RegisterComponent(); // »ı¼ºÀÚ°¡ ¾Æ´Ñ°÷¿¡¼­ µ¿Àû »ı¼ºÇÏ±â ¶§¹®¿¡ ÇÊ¿ä. 
-			DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // Ä³¸¯ÅÍ À§Ä¡¿¡ ºÎÂø
-			DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // Ä³¸¯ÅÍ¿¡ ¶¼¾î¼­ DamageText ¾Ö´Ï¸ŞÀÌ¼Ç È¿°ú°¡ ¿øÇÏ´Âµ¥·Î º¸ÀÌµµ·Ï Àû¿ë
+			DamageText->RegisterComponent(); // ìƒì„±ìê°€ ì•„ë‹Œê³³ì—ì„œ ë™ì  ìƒì„±í•˜ê¸° ë•Œë¬¸ì— í•„ìš”. 
+			DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // ìºë¦­í„° ìœ„ì¹˜ì— ë¶€ì°©
+			DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // ìºë¦­í„°ì— ë–¼ì–´ì„œ DamageText ì• ë‹ˆë©”ì´ì…˜ íš¨ê³¼ê°€ ì›í•˜ëŠ”ë°ë¡œ ë³´ì´ë„ë¡ ì ìš©
 			DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 		}
 	}
 }
 
-void ATDPlayerController::CursorTrace() // ¸¶¿ì½º Ä¿¼­ Trace
+void ATDPlayerController::CursorTrace() // ë§ˆìš°ìŠ¤ ì»¤ì„œ Trace
 {
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (false == CursorHit.bBlockingHit) return;
 
-	// ¸¶¿ì½º·Î °¡¸®Å² Enemy ¿Ü°û¼± È¿°ú
+	// ë§ˆìš°ìŠ¤ë¡œ ê°€ë¦¬í‚¨ Enemy ì™¸ê³½ì„  íš¨ê³¼
 	LastActor = ThisActor;
 	ThisActor = Cast<IIEnemy>(CursorHit.GetActor());
 
@@ -66,7 +66,7 @@ void ATDPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerControlledPawn = GetPawn(); // ¿©±â¼­ ÆùÀº ÇÃ·¹ÀÌ¾î
+	PlayerControlledPawn = GetPawn(); // ì—¬ê¸°ì„œ í°ì€ í”Œë ˆì´ì–´
 
 	check(RPGContext);
 
@@ -81,13 +81,13 @@ void ATDPlayerController::BeginPlay()
 	DefaultMouseCursor = EMouseCursor::Default;
 
 	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Viewport¿¡ ¸¶¿ì½º ¶ôX
-	InputModeData.SetHideCursorDuringCapture(false); // Cursor ¼û±âÁö ¾Ê±â
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Viewportì— ë§ˆìš°ìŠ¤ ë½X
+	InputModeData.SetHideCursorDuringCapture(false); // Cursor ìˆ¨ê¸°ì§€ ì•Šê¸°
 	SetInputMode(InputModeData);
 
 
 	//****************************************************************************
-	Client_InitializeWidget();		// ÀÎº¥Åä¸® »ı¼º.
+	Client_InitializeWidget();		// ì¸ë²¤í† ë¦¬ ìƒì„±.
 }
 
 void ATDPlayerController::SetupInputComponent()
@@ -109,7 +109,7 @@ void ATDPlayerController::SetupInputComponent()
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	if (InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB)) // ¸¶¿ì½º ¿ìÅ¬¸¯
+	if (InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB)) // ë§ˆìš°ìŠ¤ ìš°í´ë¦­
 	{
 		bTargeting = ThisActor ? true : false;
 		bAutoRunning = false;
@@ -127,14 +127,14 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting) // Å¸°ÙÆÃ O
+	if (bTargeting) // íƒ€ê²ŸíŒ… O
 	{
 		if (GetASC())
 		{
 			GetASC()->InputTagReleased(InputTag);
 		}
 	}
-	else // Å¸°ÙÆÃ X
+	else // íƒ€ê²ŸíŒ… X
 	{
 		if (FollowTime <= ShortPressThreshold && IsValid(PlayerControlledPawn))
 		{
@@ -144,14 +144,14 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				Spline->ClearSplinePoints();
 				for (const FVector& NavPointLocation : NavPath->PathPoints) 
 				{
-					// NavPathÀÇ Æ÷ÀÎÆ®µéÀ» SplineÀÇ Æ÷ÀÎÆ®·Î Ãß°¡
+					// NavPathì˜ í¬ì¸íŠ¸ë“¤ì„ Splineì˜ í¬ì¸íŠ¸ë¡œ ì¶”ê°€
 					Spline->AddSplinePoint(NavPointLocation, ESplineCoordinateSpace::World);
 					DrawDebugSphere(GetWorld(), NavPointLocation, 10.f, 8, FColor::Green, false, 5.f);
 				}
 
 				if (NavPath->PathPoints.Num() > 0)
 				{
-					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1]; // CachedDestination¸¦ ¸¶Áö¸· PathPoints·Î ¼³Á¤. ÀÌ·¸°ÔÇÏ¸é AutoRunning¶§ Ç×»ó µµ´Ş°¡´ÉÇÑ µµÂøÁöÁ¡ÀÌ µÈ´Ù.
+					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1]; // CachedDestinationë¥¼ ë§ˆì§€ë§‰ PathPointsë¡œ ì„¤ì •. ì´ë ‡ê²Œí•˜ë©´ AutoRunningë•Œ í•­ìƒ ë„ë‹¬ê°€ëŠ¥í•œ ë„ì°©ì§€ì ì´ ëœë‹¤.
 					bAutoRunning = true;					
 				}
 			}
@@ -172,27 +172,27 @@ void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting) // Å¸°ÙÆÃ O
+	if (bTargeting) // íƒ€ê²ŸíŒ… O
 	{
 		if (IsValid(GetASC()))
 		{
 			GetASC()->InputTagHeld(InputTag);
 		}
 	}
-	else // Å¸°ÙÆÃ X
+	else // íƒ€ê²ŸíŒ… X
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
 		
-		if (CursorHit.bBlockingHit) // ¸¶¿ì½º Ä¿¼­°¡ ½ºÅ©¸°(=¿ùµå)¿¡ Ãæµ¹µÈ ÁöÁ¡ÀÌ ÀÖ´Ù¸é true
+		if (CursorHit.bBlockingHit) // ë§ˆìš°ìŠ¤ ì»¤ì„œê°€ ìŠ¤í¬ë¦°(=ì›”ë“œ)ì— ì¶©ëŒëœ ì§€ì ì´ ìˆë‹¤ë©´ true
 		{
-			CachedDestination = CursorHit.ImpactPoint; // HitµÈ À§Ä¡¸¦ µµÂøÁöÁ¡À¸·Î ¼³Á¤
+			CachedDestination = CursorHit.ImpactPoint; // Hitëœ ìœ„ì¹˜ë¥¼ ë„ì°©ì§€ì ìœ¼ë¡œ ì„¤ì •
 		}
 		
 		if (IsValid(PlayerControlledPawn))
 		{
-			// ¹æÇâ = (µµÂøÁöÁ¡ - PawnÀÇ À§Ä¡)¸¦ NormalizeÇÑ º¤ÅÍ
+			// ë°©í–¥ = (ë„ì°©ì§€ì  - Pawnì˜ ìœ„ì¹˜)ë¥¼ Normalizeí•œ ë²¡í„°
 			const FVector WorldDirection = (CachedDestination - PlayerControlledPawn->GetActorLocation()).GetSafeNormal();
-			PlayerControlledPawn->AddMovementInput(WorldDirection); // ÇØ´ç ¹æÇâÀ¸·Î ¿òÁ÷ÀÓ
+			PlayerControlledPawn->AddMovementInput(WorldDirection); // í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì›€ì§ì„
 		}
 	}
 }
@@ -213,13 +213,13 @@ void ATDPlayerController::AutoRun()
 	
 	if (IsValid(PlayerControlledPawn))
 	{
-		// PawnÀº Ç×»ó Spline ¹Ù·Î À§¿¡ ÀÖÁö ¾ÊÀ¸¹Ç·Î Pawn¿¡ °¡Àå °¡±î¿î Spline À§Ä¡¸¦ LocationOnSplineÀ¸·Î ¼³Á¤
+		// Pawnì€ í•­ìƒ Spline ë°”ë¡œ ìœ„ì— ìˆì§€ ì•Šìœ¼ë¯€ë¡œ Pawnì— ê°€ì¥ ê°€ê¹Œìš´ Spline ìœ„ì¹˜ë¥¼ LocationOnSplineìœ¼ë¡œ ì„¤ì •
 		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(PlayerControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
-		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World); // LocationOnSplineÀ§Ä¡¿¡¼­ÀÇ Spline ¹æÇâ
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World); // LocationOnSplineìœ„ì¹˜ì—ì„œì˜ Spline ë°©í–¥
 		PlayerControlledPawn->AddMovementInput(Direction);
 
-		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length(); // ÀÌµ¿ÇØ¾ßÇÒ °Å¸®
-		if (DistanceToDestination <= AutoRunAcceptanceRadius) // ÀÌµ¿ÇØ¾ßÇÒ °Å¸®°¡ ÀÚµ¿ÀÌµ¿ ¼³Á¤ ¹üÀ§º¸´Ù ÀÛ´Ù¸é
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length(); // ì´ë™í•´ì•¼í•  ê±°ë¦¬
+		if (DistanceToDestination <= AutoRunAcceptanceRadius) // ì´ë™í•´ì•¼í•  ê±°ë¦¬ê°€ ìë™ì´ë™ ì„¤ì • ë²”ìœ„ë³´ë‹¤ ì‘ë‹¤ë©´
 		{
 			bAutoRunning = false;
 		}
@@ -284,32 +284,32 @@ void ATDPlayerController::OnOpenInventoryPressed(const FInputActionValue& InputA
 	}
 }
 
-void ATDPlayerController::Client_InitializeWidget_Implementation() // ÀÎº¥Åä¸® À§Á¬ »ı¼º.
+void ATDPlayerController::Client_InitializeWidget_Implementation() // ì¸ë²¤í† ë¦¬ ìœ„ì ¯ ìƒì„±.
 {
 	TDMainWidget = CreateWidget<UUserWidget>(this, MainWidgetClass);
 	TDMainWidget->AddToViewport();
 	TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
 }
 
-void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // ÀÎº¥Åä¸® ¿­±â/´İ±â.
+void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // ì¸ë²¤í† ë¦¬ ì—´ê¸°/ë‹«ê¸°.
 {
 	Client_OpenCloseInventoryWidget(bOpen);
 }
 
 void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bOpen)
 {
-	if (bOpen) // ¿­±â
+	if (bOpen) // ì—´ê¸°
 	{
 		if (IsValid(InventoryWidgetClass))
 		{
 			TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
 			TDInventoryWidget->AddToViewport();
-			// TODO: À§¿¡Ã³·³ µ¿ÀûÀ¸·Î ÀÚÁÖ ¸¸µéÁö, ¾Æ·¡Ã³·³ º¯¼ö¿¡ Ä³½ÌÇÑ ÈÄ visibility¸¦ º¯°æ½ÃÅ³Áö ÃßÈÄ¿¡ °áÁ¤ÇÏ±â.
+			// TODO: ìœ„ì—ì²˜ëŸ¼ ë™ì ìœ¼ë¡œ ìì£¼ ë§Œë“¤ì§€, ì•„ë˜ì²˜ëŸ¼ ë³€ìˆ˜ì— ìºì‹±í•œ í›„ visibilityë¥¼ ë³€ê²½ì‹œí‚¬ì§€ ì¶”í›„ì— ê²°ì •í•˜ê¸°.
 			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
 			bInventoryIsOpen = true;
 		}
 	}
-	else // ´İ±â
+	else // ë‹«ê¸°
 	{
 		if (IsValid(TDInventoryWidget))
 		{

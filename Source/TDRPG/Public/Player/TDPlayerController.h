@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -64,13 +64,13 @@ private:
 	TObjectPtr<APawn> PlayerControlledPawn;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UTDWidgetComponent> DamageTextComponentClass; // µ¥¹ÌÁö À§Á¬
+	TSubclassOf<UTDWidgetComponent> DamageTextComponentClass; // ë°ë¯¸ì§€ ìœ„ì ¯
 
-	//** ÀÌµ¿
+	//** ì´ë™
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptanceRadius = 50.f;
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USplineComponent> Spline; // ÀÌµ¿°æ·Î Spline
+	TObjectPtr<USplineComponent> Spline; // ì´ë™ê²½ë¡œ Spline
 
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
@@ -78,8 +78,8 @@ private:
 	bool bAutoRunning = false;
 	bool bTargeting = false;
 	
-	void CursorTrace(); // ¸¶¿ì½º CursorTrace
-	FHitResult CursorHit; // ¸¶¿ì½º CursorHit
+	void CursorTrace(); // ë§ˆìš°ìŠ¤ CursorTrace
+	FHitResult CursorHit; // ë§ˆìš°ìŠ¤ CursorHit
 	IIEnemy* LastActor;
 	IIEnemy* ThisActor;
 
@@ -111,13 +111,13 @@ private:
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> MainWidgetClass; // ÀÎº¥Åä¸® À§Á¬
+	TSubclassOf<UUserWidget> MainWidgetClass; // ì¸ë²¤í† ë¦¬ ìœ„ì ¯
 	UPROPERTY()
-	TObjectPtr<UUserWidget> TDMainWidget; // »ç¿ëÇÒÁö Áö¿ïÁö °áÁ¤ÇÏ±â
+	TObjectPtr<UUserWidget> TDMainWidget; // ì‚¬ìš©í• ì§€ ì§€ìš¸ì§€ ê²°ì •í•˜ê¸°
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> InventoryWidgetClass; // ÀÎº¥Åä¸® À§Á¬
+	TSubclassOf<UUserWidget> InventoryWidgetClass; // ì¸ë²¤í† ë¦¬ ìœ„ì ¯
 	UPROPERTY()
-	TObjectPtr<UUserWidget> TDInventoryWidget; // »ç¿ëÇÒÁö Áö¿ïÁö °áÁ¤ÇÏ±â
+	TObjectPtr<UUserWidget> TDInventoryWidget; // ì‚¬ìš©í• ì§€ ì§€ìš¸ì§€ ê²°ì •í•˜ê¸°
 
 
 	bool bInventoryIsOpen;
