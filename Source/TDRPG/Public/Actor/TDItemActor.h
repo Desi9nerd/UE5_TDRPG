@@ -11,46 +11,6 @@ class ATDItemActor;
  *
  */
 
-UENUM(BlueprintType) // InfiniteGameplayEffect 해제 종류
-enum class EItemCategory
-{
-	Weapon,
-	Armor,
-	Food,
-	Potion,
-	None
-};
-
-USTRUCT(BlueprintType)
-struct FItem : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly)
-	FText Name;
-
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> Thumbnail;
-
-	UPROPERTY(EditDefaultsOnly)
-	FText Description;
-
-	UPROPERTY(EditDefaultsOnly)
-	EItemCategory ItemCategory;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ATDItemActor> ItemClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	bool bConsumable;
-
-	UPROPERTY(EditDefaultsOnly)
-	bool bStackable;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 MaxStackSize;
-};
-
 UCLASS()
 class TDRPG_API ATDItemActor : public AActor
 {

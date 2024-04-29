@@ -1,10 +1,10 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "Actor/TDItemActor.h" // 추후에 삭제.
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/TDDA_CharacterClass.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
 
+struct FItem;
 struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;

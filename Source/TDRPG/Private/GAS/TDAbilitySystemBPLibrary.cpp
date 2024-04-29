@@ -6,6 +6,7 @@
 #include "GameMode/TDGameModeBase.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
+#include "Library/TDItemLibrary.h"
 
 bool UTDAbilitySystemBPLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& ResultWCParams, ATDHUD*& OutTDHUD)
 {
