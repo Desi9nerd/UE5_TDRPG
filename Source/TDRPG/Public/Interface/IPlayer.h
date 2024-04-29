@@ -60,4 +60,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void LevelUp();
 	virtual void LevelUpCPP();
+
+
+
+	//TDPlayerController* GetTDPlayerControllerRef(APlayerController* InPlayerController);
 };

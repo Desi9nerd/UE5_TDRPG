@@ -96,4 +96,29 @@ private:
 	//class UInputAction* EquipNextInputAction;
 	//UPROPERTY(EditDefaultsOnly)
 	//class UInputAction* UnequipInputAction;
+
+	void OnOpenInventoryPressed(const FInputActionValue& InputActionValue);
+
+	UFUNCTION(Client, Reliable) // Client RPC
+	void Client_InitializeWidget();
+
+	void OpenCloseInventoryWidget(bool bOpen);
+	UFUNCTION(Client, Reliable) // Client RPC
+	void Client_OpenCloseInventoryWidget(bool bOpen);
+
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> OpenInventoryInputAction;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> MainWidgetClass; // 인벤토리 위젯
+	UPROPERTY()
+	TObjectPtr<UUserWidget> TDMainWidget; // 사용할지 지울지 결정하기
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> InventoryWidgetClass; // 인벤토리 위젯
+	UPROPERTY()
+	TObjectPtr<UUserWidget> TDInventoryWidget; // 사용할지 지울지 결정하기
+
+
+	bool bInventoryIsOpen;
 };

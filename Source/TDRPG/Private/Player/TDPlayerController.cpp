@@ -84,6 +84,10 @@ void ATDPlayerController::BeginPlay()
 	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Viewport에 마우스 락X
 	InputModeData.SetHideCursorDuringCapture(false); // Cursor 숨기지 않기
 	SetInputMode(InputModeData);
+
+
+	//****************************************************************************
+	Client_InitializeWidget();		// 인벤토리 생성.
 }
 
 void ATDPlayerController::SetupInputComponent()
@@ -100,6 +104,7 @@ void ATDPlayerController::SetupInputComponent()
 	//TDEnhancedInputComponent->BindAction(DropItemInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnDropItemTriggered);
 	//TDEnhancedInputComponent->BindAction(EquipNextInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnEquipNextTriggered);
 	//TDEnhancedInputComponent->BindAction(UnequipInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnUnequipTriggered);
+	TDEnhancedInputComponent->BindAction(OpenInventoryInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnOpenInventoryPressed);
 }
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -264,3 +269,53 @@ void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 //
 //	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UTDInventoryComponent::UnequipItemTag, EventPayload);
 //}
+
+void ATDPlayerController::OnOpenInventoryPressed(const FInputActionValue& InputActionValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Open Inventory Button Pressed!!"));
+
+	if (bInventoryIsOpen)
+	{
+		OpenCloseInventoryWidget(false);
+	}
+	else
+	{
+		OpenCloseInventoryWidget(true);		
+	}
+}
+
+void ATDPlayerController::Client_InitializeWidget_Implementation() // 인벤토리 위젯 생성.
+{
+	TDMainWidget = CreateWidget<UUserWidget>(this, MainWidgetClass);
+	TDMainWidget->AddToViewport();
+	TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+}
+
+void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.
+{
+	Client_OpenCloseInventoryWidget(bOpen);
+}
+
+void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bOpen)
+{
+	if (bOpen) // 열기
+	{
+		if (IsValid(InventoryWidgetClass))
+		{
+			TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+			TDInventoryWidget->AddToViewport();
+			// TODO: 위에처럼 동적으로 자주 만들지, 아래처럼 변수에 캐싱한 후 visibility를 변경시킬지 추후에 결정하기.
+			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
+			bInventoryIsOpen = true;
+		}
+	}
+	else // 닫기
+	{
+		if (IsValid(TDInventoryWidget))
+		{
+			TDInventoryWidget->RemoveFromParent();
+			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
+			bInventoryIsOpen = false;
+		}
+	}
+}
