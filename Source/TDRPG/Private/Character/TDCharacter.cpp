@@ -10,6 +10,7 @@
 #include "MotionWarpingComponent.h"
 #include "GAS/Data/TDDA_LevelUp.h"
 #include "NiagaraComponent.h"
+#include "Component/TDInventoryComponent.h"
 #include "Net/UnrealNetwork.h"
 
 ATDCharacter::ATDCharacter()
@@ -40,7 +41,9 @@ ATDCharacter::ATDCharacter()
 	Niagara_LevelUp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LevelUpEffect"));
 	Niagara_LevelUp->SetupAttachment(RootComponent);
 	Niagara_LevelUp->bAutoActivate = false;
-	
+
+	// Inventory Component
+	TDInventoryComponent = CreateDefaultSubobject<UTDInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void ATDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

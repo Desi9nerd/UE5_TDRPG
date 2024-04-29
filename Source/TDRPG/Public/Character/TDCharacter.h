@@ -64,6 +64,9 @@ protected:
 	TObjectPtr<UCameraComponent> FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> Niagara_LevelUp;
 
 private:
