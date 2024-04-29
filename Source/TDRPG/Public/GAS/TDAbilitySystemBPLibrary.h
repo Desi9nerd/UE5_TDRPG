@@ -2,10 +2,9 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/TDDA_CharacterClass.h"
+#include "Library/TDItemLibrary.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
 
-struct FInventoryCategory;
-struct FItem;
 struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
