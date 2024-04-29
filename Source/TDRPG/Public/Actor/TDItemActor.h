@@ -18,8 +18,8 @@ enum class EItemCategory
 	None
 };
 
-USTRUCT()
-struct FItem
+USTRUCT(BlueprintType)
+struct FItem : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
@@ -36,7 +36,7 @@ public:
 	EItemCategory ItemCategory;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<ATDItemActor> ItemClass;
+	TSubclassOf<ATDItemActor> ItemClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bConsumable;

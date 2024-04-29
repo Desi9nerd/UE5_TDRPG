@@ -1,0 +1,7 @@
+ID,Name,Thumbnail,Description,ItemCategory,ItemClass,bConsumable,bStackable,MaxStackSize
+Apple,Apple,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_Apple.T_Icon_SM_Apple',»ç°ú,Food,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_AppleActor.BP_AppleActor',TRUE,TRUE,10
+Banana,Banana,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_Banana.T_Icon_SM_Banana',Banana Banana Banana,Food,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_Banana.BP_Banana',TRUE,TRUE,10
+LongSword,LongSword,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_LongSword_Iron.T_Icon_SM_LongSword_Iron',BlankBlankBlank,Weapon,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_SwordActor.BP_SwordActor',FALSE,FALSE,1
+Backpack,Backpack,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_Backpack.T_Icon_SM_Backpack',BlankBlankBlankBlank,Armor,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_Backpack.BP_Backpack',FALSE,FALSE,1
+Fish,ManaPotion,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_Vial_Blue.T_Icon_SM_Vial_Blue',BlankBlankBlankBlank,Potion,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_ManaPotion.BP_ManaPotion',TRUE,TRUE,20
+Meat,Meat,/Script/Engine.Texture2D'/Game/Assets/ResourcePack/Icons/Item_Icons/T_Icon_SM_Meat_Steak_Raw.T_Icon_SM_Meat_Steak_Raw',BlankBlankBlankBlank,Food,/Script/Engine.Blueprint'/Game/BP/Actor/Item/BP_Meat.BP_Meat',TRUE,TRUE,5
