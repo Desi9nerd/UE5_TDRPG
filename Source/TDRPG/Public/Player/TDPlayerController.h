@@ -13,6 +13,8 @@ class UTDDAInput;
 class UTDAbilitySystemComponent;
 class USplineComponent;
 class UTDWidgetComponent;
+class UTDUW_InventoryMenu;
+class UTDUW_InventoryCategory;
 
 /**
  * 
@@ -29,6 +31,10 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit); 
+
+	void CreateInventoryCategoryWidgets();
+	UFUNCTION(Client, Reliable) // Client RPC
+	void Client_CreateInventoryCategoryWidgets();
 
 protected:
 	virtual void BeginPlay() override;
@@ -99,12 +105,14 @@ private:
 
 	void OnOpenInventoryPressed(const FInputActionValue& InputActionValue);
 
+	void InitializeWidget();
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_InitializeWidget();
 
 	void OpenCloseInventoryWidget(bool bOpen);
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
+
 
 
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -115,10 +123,17 @@ private:
 	UPROPERTY()
 	TObjectPtr<UUserWidget> TDMainWidget; // 사용할지 지울지 결정하기
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> InventoryWidgetClass; // 인벤토리 위젯
+	TSubclassOf<UTDUW_InventoryMenu> InventoryWidgetClass; 
 	UPROPERTY()
-	TObjectPtr<UUserWidget> TDInventoryWidget; // 사용할지 지울지 결정하기
+	TObjectPtr<UTDUW_InventoryMenu> TDInventoryWidget;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UTDUW_InventoryCategory> InventoryCategoryWidgetClass;
+	UPROPERTY()
+	TObjectPtr<UTDUW_InventoryCategory> InventoryCategoryWidget;
 
 
 	bool bInventoryIsOpen;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UDataTable> InventoryCategoryDataTable;
 };

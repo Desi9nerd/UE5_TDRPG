@@ -8,10 +8,12 @@
 #include "Components/SplineComponent.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "Components/VerticalBox.h"
 #include "GameFramework/Character.h"
+#include "Library/TDItemLibrary.h"
+#include "UI/Widget/Inventory/TDUW_InventoryCategory.h"
 #include "UI/WidgetComponent/TDWidgetComponent.h"
-
-//#include "Inventory/TDInventoryComponent.h"
+#include "UI/Widget/Inventory/TDUW_InventoryMenu.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -87,7 +89,8 @@ void ATDPlayerController::BeginPlay()
 
 
 	//****************************************************************************
-	Client_InitializeWidget();		// 인벤토리 생성.
+	//Client_InitializeWidget_Implementation();		// 인벤토리 생성.
+	InitializeWidget();
 }
 
 void ATDPlayerController::SetupInputComponent()
@@ -284,16 +287,30 @@ void ATDPlayerController::OnOpenInventoryPressed(const FInputActionValue& InputA
 	}
 }
 
+void ATDPlayerController::InitializeWidget()
+{
+	if (IsLocalController())
+	{
+		Client_InitializeWidget();		
+	}
+}
+
 void ATDPlayerController::Client_InitializeWidget_Implementation() // 인벤토리 위젯 생성.
 {
 	TDMainWidget = CreateWidget<UUserWidget>(this, MainWidgetClass);
 	TDMainWidget->AddToViewport();
-	TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+	checkf(TDMainWidget, TEXT("No TDMainWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
+
+	TDInventoryWidget = CreateWidget<UTDUW_InventoryMenu>(this, InventoryWidgetClass);
+	checkf(TDInventoryWidget, TEXT("No TDInventoryWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
 }
 
 void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.
 {
-	Client_OpenCloseInventoryWidget(bOpen);
+	if (IsLocalController())
+	{
+		Client_OpenCloseInventoryWidget(bOpen);		
+	}
 }
 
 void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bOpen)
@@ -302,7 +319,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 	{
 		if (IsValid(InventoryWidgetClass))
 		{
-			TDInventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+			TDInventoryWidget = CreateWidget<UTDUW_InventoryMenu>(this, InventoryWidgetClass);
 			TDInventoryWidget->AddToViewport();
 			// TODO: 위에처럼 동적으로 자주 만들지, 아래처럼 변수에 캐싱한 후 visibility를 변경시킬지 추후에 결정하기.
 			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
@@ -318,4 +335,45 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 			bInventoryIsOpen = false;
 		}
 	}
+}
+
+void ATDPlayerController::CreateInventoryCategoryWidgets()
+{
+	if (IsLocalController())
+	{
+		Client_CreateInventoryCategoryWidgets();
+	}
+}
+
+void ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()
+{
+	if (false == IsValid(TDInventoryWidget)) return;
+	
+
+	TDInventoryWidget->VB_Categories->ClearChildren(); // 다시 그리기 전에 다 지워주기.
+
+	//static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_InventoryCategory.DT_InventoryCategory"));
+	//const UDataTable* InventoryCategoryDataTable = DataTableRef.Object;
+	checkf(InventoryCategoryDataTable, TEXT("No DataTable. Check ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()"));
+
+	TArray<FName> RowNames = InventoryCategoryDataTable->GetRowNames();
+
+	for (const FName& RowName : RowNames)
+	{
+		FInventoryCategory* InventoryCategoryInfo = InventoryCategoryDataTable->FindRow<FInventoryCategory>(RowName, TEXT(""));
+
+		if (InventoryCategoryInfo)
+		{
+			UTDUW_InventoryCategory* Temp = CreateWidget<UTDUW_InventoryCategory>(this, InventoryCategoryWidgetClass);
+
+			// 인벤토리 카테고리 위젯에 정보 설정
+			Temp->Category = InventoryCategoryInfo->ItemCategory;
+			Temp->CategoryIcon = InventoryCategoryInfo->CategoryIcon;
+
+			// TDInventoryWidget에 위젯 추가
+			TDInventoryWidget->VB_Categories->AddChildToVerticalBox(Temp);
+		}
+	}
+
+	TDInventoryWidget->RebuildWidget(); // 위젯을 다시 그림
 }

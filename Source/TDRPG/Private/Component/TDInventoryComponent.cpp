@@ -1,5 +1,9 @@
 ﻿#include "Component/TDInventoryComponent.h"
 
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/TDPlayerController.h"
+
 UTDInventoryComponent::UTDInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -10,12 +14,20 @@ void UTDInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	TDPlayerController = Cast<ATDPlayerController>(GetWorld()->GetFirstPlayerController());
+	//ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0)); // 정적이라 쓰면 안됨.
+	check(TDPlayerController);
+
 	InitializeInventory();
+	TDPlayerController->CreateInventoryCategoryWidgets();
 }
 
 void UTDInventoryComponent::InitializeInventory()
 {
-	Client_InitializeInventory();
+	if (TDPlayerController->IsLocalController())
+	{
+		Client_InitializeInventory();
+	}
 }
 
 void UTDInventoryComponent::Client_InitializeInventory_Implementation()

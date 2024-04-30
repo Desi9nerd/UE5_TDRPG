@@ -4,6 +4,8 @@
 #include "Library/TDItemLibrary.h"
 #include "TDInventoryComponent.generated.h"
 
+class ATDPlayerController;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TDRPG_API UTDInventoryComponent : public UActorComponent
 {
@@ -20,6 +22,9 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_InitializeInventory();
 
+
+	UPROPERTY()
+	TObjectPtr<ATDPlayerController> TDPlayerController;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	int32 AmountOfSlots;
