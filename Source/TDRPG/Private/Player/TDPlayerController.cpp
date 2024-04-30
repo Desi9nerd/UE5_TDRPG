@@ -321,8 +321,6 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 		{
 			TDInventoryWidget = CreateWidget<UTDUW_InventoryMenu>(this, InventoryWidgetClass);
 			TDInventoryWidget->AddToViewport();
-			// TODO: 위에처럼 동적으로 자주 만들지, 아래처럼 변수에 캐싱한 후 visibility를 변경시킬지 추후에 결정하기.
-			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
 			bInventoryIsOpen = true;
 		}
 	}
@@ -331,7 +329,6 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 		if (IsValid(TDInventoryWidget))
 		{
 			TDInventoryWidget->RemoveFromParent();
-			//TDInventoryWidget->SetVisibility(ESlateVisibility::Visible);
 			bInventoryIsOpen = false;
 		}
 	}
@@ -351,12 +348,10 @@ void ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()
 	
 
 	TDInventoryWidget->VB_Categories->ClearChildren(); // 다시 그리기 전에 다 지워주기.
+	
+	checkf(InventoryCategoryDataTable, TEXT("No DataTable. Check ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()")); // DataTable 유무 검사.
 
-	//static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_InventoryCategory.DT_InventoryCategory"));
-	//const UDataTable* InventoryCategoryDataTable = DataTableRef.Object;
-	checkf(InventoryCategoryDataTable, TEXT("No DataTable. Check ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()"));
-
-	TArray<FName> RowNames = InventoryCategoryDataTable->GetRowNames();
+	TArray<FName> RowNames = InventoryCategoryDataTable->GetRowNames(); // DataTable의 RowName 읽기
 
 	for (const FName& RowName : RowNames)
 	{

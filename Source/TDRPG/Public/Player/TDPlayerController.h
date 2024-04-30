@@ -119,9 +119,9 @@ private:
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> MainWidgetClass; // 인벤토리 위젯
+	TSubclassOf<UUserWidget> MainWidgetClass; 
 	UPROPERTY()
-	TObjectPtr<UUserWidget> TDMainWidget; // 사용할지 지울지 결정하기
+	TObjectPtr<UUserWidget> TDMainWidget;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UTDUW_InventoryMenu> InventoryWidgetClass; 
 	UPROPERTY()

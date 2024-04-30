@@ -15,7 +15,6 @@ void UTDInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	TDPlayerController = Cast<ATDPlayerController>(GetWorld()->GetFirstPlayerController());
-	//ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0)); // 정적이라 쓰면 안됨.
 	check(TDPlayerController);
 
 	InitializeInventory();
