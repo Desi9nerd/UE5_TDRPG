@@ -34,9 +34,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit); 
 
-	void CreateInventoryCategoryWidgets();
-	UFUNCTION(Client, Reliable) // Client RPC
-	void Client_CreateInventoryCategoryWidgets();
+	//void CreateInventoryCategoryWidgets();
+	//UFUNCTION(Client, Reliable) // Client RPC
+	//void Client_CreateInventoryCategoryWidgets();
 
 
 protected:
@@ -127,10 +127,10 @@ private:
 	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass; 
 	UPROPERTY()
 	TObjectPtr<UTDUW_Inventory> TDInventoryWidget;
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UTDUW_InventoryCategory> InventoryCategoryWidgetClass;
-	UPROPERTY()
-	TObjectPtr<UTDUW_InventoryCategory> InventoryCategoryWidget;
+	//UPROPERTY(EditDefaultsOnly)
+	//TSubclassOf<UTDUW_InventoryCategory> /InventoryCategoryWidgetClass;
+	//UPROPERTY()
+	//TObjectPtr<UTDUW_InventoryCategory> InventoryCategoryWidget;
 	
 
 

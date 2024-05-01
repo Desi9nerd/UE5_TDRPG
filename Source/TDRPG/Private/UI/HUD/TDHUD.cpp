@@ -9,7 +9,7 @@ void ATDHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitInventory();
+	//InitInventory();
 }
 
 TObjectPtr<UTDWidgetControllerOverlay> ATDHUD::GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams)
@@ -68,15 +68,15 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
 }
 
-void ATDHUD::InitInventory()
-{
-	checkf(InventoryWidgetClass, TEXT("InventoryWidgetClass가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
-	
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
-	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
-	InventoryWidget->AddToViewport();
-	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
-}
+//void ATDHUD::InitInventory()
+//{
+//	checkf(InventoryWidgetClass, TEXT("InventoryWidgetClass가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
+//	
+//	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+//	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
+//	InventoryWidget->AddToViewport();
+//	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+//}
 
 TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
 {

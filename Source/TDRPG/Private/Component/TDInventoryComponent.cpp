@@ -20,7 +20,7 @@ void UTDInventoryComponent::BeginPlay()
 	check(TDPlayerController);
 
 	InitializeInventory();
-	TDPlayerController->CreateInventoryCategoryWidgets();
+	//TDPlayerController->CreateInventoryCategoryWidgets();
 }
 
 void UTDInventoryComponent::InitializeInventory()

@@ -310,8 +310,8 @@ void ATDPlayerController::Client_InitializeWidget_Implementation() // 인벤토�
 	TDMainWidget->AddToViewport();
 	checkf(TDMainWidget, TEXT("No TDMainWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
 
-	TDInventoryWidget = CreateWidget<UTDUW_Inventory>(this, InventoryWidgetClass);
-	checkf(TDInventoryWidget, TEXT("No TDInventoryWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
+	//TDInventoryWidget = CreateWidget<UTDUW_Inventory>(this, InventoryWidgetClass);
+	//checkf(TDInventoryWidget, TEXT("No TDInventoryWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
 }
 
 void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.
@@ -326,7 +326,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 {
 	if (bOpen) // 열기
 	{
-		if (IsValid(InventoryWidgetClass))
+		if (IsValid(GetTDHUD()->GetInventoryWidget()))
 		{
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
 			bInventoryIsOpen = true;
@@ -334,7 +334,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 	}
 	else // 닫기
 	{
-		if (IsValid(TDInventoryWidget))
+		if (IsValid(GetTDHUD()->GetInventoryWidget()))
 		{
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
 			bInventoryIsOpen = false;
@@ -342,40 +342,40 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 	}
 }
 
-void ATDPlayerController::CreateInventoryCategoryWidgets()
-{
-	if (IsLocalController())
-	{
-		Client_CreateInventoryCategoryWidgets();
-	}
-}
-
-void ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()
-{
-	if (false == IsValid(TDInventoryWidget)) return;
-
-	//TDInventoryWidget->VB_Categories->ClearChildren(); // 다시 그리기 전에 다 지워주기.
-	//
-	//checkf(InventoryCategoryDataTable, TEXT("No DataTable. Check ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation/()")); /// DataTable 유무 검사.
-	//
-	//TArray<FName> RowNames = InventoryCategoryDataTable->GetRowNames(); // DataTable의 RowName 읽기
-	//
-	//for (const FName& RowName : RowNames)
-	//{
-	//	FInventoryCategory* InventoryCategoryInfo = InventoryCategoryDataTable->FindRow<FInventoryCategory>(RowName, TEXT(""));
-	//
-	//	if (InventoryCategoryInfo)
-	//	{
-	//		UTDUW_InventoryCategory* Temp = CreateWidget<UTDUW_InventoryCategory>(this, InventoryCategoryWidgetClass);
-	//
-	//		// TDUW_InventoryCategory 위젯에 정보 설정
-	//		Temp->Category = InventoryCategoryInfo->ItemCategory;
-	//		Temp->CategoryIcon = InventoryCategoryInfo->CategoryIcon;
-	//
-	//		// TDInventoryWidget에 위젯 추가
-	//		TDInventoryWidget->VB_Categories->AddChildToVerticalBox(Temp);
-	//	}
-	//}
-	//
-	//TDInventoryWidget->RebuildWidget(); // 위젯을 다시 그림
-}
+//void ATDPlayerController::CreateInventoryCategoryWidgets()
+//{
+//	if (IsLocalController())
+//	{
+//		Client_CreateInventoryCategoryWidgets();
+//	}
+//}
+//
+//void ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation()
+//{
+//	//if (false == IsValid(TDInventoryWidget)) return;
+//
+//	//TDInventoryWidget->VB_Categories->ClearChildren(); // 다시 그리기 전에 다 지워주기.
+//	//
+//	//checkf(InventoryCategoryDataTable, TEXT("No DataTable. Check ATDPlayerController::Client_CreateInventoryCategoryWidgets_Implementation/()")); /// DataTable 유무 검사.
+//	//
+//	//TArray<FName> RowNames = InventoryCategoryDataTable->GetRowNames(); // DataTable의 RowName 읽기
+//	//
+//	//for (const FName& RowName : RowNames)
+//	//{
+//	//	FInventoryCategory* InventoryCategoryInfo = InventoryCategoryDataTable->FindRow<FInventoryCategory>(RowName, TEXT(""));
+//	//
+//	//	if (InventoryCategoryInfo)
+//	//	{
+//	//		UTDUW_InventoryCategory* Temp = CreateWidget<UTDUW_InventoryCategory>(this, InventoryCategoryWidgetClass);
+//	//
+//	//		// TDUW_InventoryCategory 위젯에 정보 설정
+//	//		Temp->Category = InventoryCategoryInfo->ItemCategory;
+//	//		Temp->CategoryIcon = InventoryCategoryInfo->CategoryIcon;
+//	//
+//	//		// TDInventoryWidget에 위젯 추가
+//	//		TDInventoryWidget->VB_Categories->AddChildToVerticalBox(Temp);
+//	//	}
+//	//}
+//	//
+//	//TDInventoryWidget->RebuildWidget(); // 위젯을 다시 그림
+//}

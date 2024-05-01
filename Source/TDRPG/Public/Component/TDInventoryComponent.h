@@ -14,6 +14,8 @@ class TDRPG_API UTDInventoryComponent : public UActorComponent
 public:	
 	UTDInventoryComponent();
 	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
+	FORCEINLINE EItemCategory& GetSelectedInventoryCategory() { return SelectedInventoryCategory; }
+	FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
 
 	void SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 	UFUNCTION(Client, Reliable) // Client RPC

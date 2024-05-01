@@ -3,6 +3,8 @@
 #include "Component/TDInventoryComponent.h"
 #include "Components/Button.h"
 #include "Components/GridPanel.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "Player/TDPlayerController.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
@@ -52,13 +54,11 @@ void UTDUW_Inventory::NativeConstruct()
 		UE_LOG(LogTemp, Warning, TEXT("No Grid_Inventory. Check UTDUW_Inventory"));}
 
 	APlayerController* PlayerController = GetOwningPlayer();
-	if (PlayerController)
+	TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
+	if (TDCharacter)
 	{
-		TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
+		CreateInventorySlotWidgets();	
 	}
-
-	CreateInventorySlotWidgets();
-
 
 	if (Button_Category_Weapon)
 	{
@@ -79,6 +79,7 @@ void UTDUW_Inventory::NativeDestruct()
 void UTDUW_Inventory::CreateInventorySlotWidgets()
 {
 	//checkf(InventorySlotWidgetClass, TEXT("No InventorySlotWidgetClass. Check UTDUW_Inventory::CreateInventorySlotWidgets()"));
+	if (false == IsValid(InventorySlotWidgetClass)) return;
 
 	if (IsValid(Grid_Inventory))
 	{
@@ -86,14 +87,20 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	}
 
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
+	int32 Cnt = 0;
 
 	for (int i = 0; i < AmountOfSlots; i++)
 	{
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
 		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-		InventorySlotWidgets.Add(InventorySlotWidget);
+		//InventorySlotWidgets.Add(InventorySlotWidget);
+
+		//InventorySlotWidget->Image_Item->SetBrushFromTexture(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].Item.Thumbnail);
+		//InventorySlotWidget->Text_ItemQuantity->SetText(FText::AsNumber(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].ItemQuantity));
 
 		Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
+
+		InventorySlotWidget->UpdateInventorySlotUI(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].Item, TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].ItemQuantity);
 	}
 }
 
