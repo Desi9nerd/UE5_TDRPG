@@ -21,9 +21,7 @@ class TDRPG_API ATDHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	void BeginPlay() override;
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-	void InitInventory();
 
 	TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
 	TObjectPtr<UTDWidgetControllerOverlay> GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams);

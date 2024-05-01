@@ -93,10 +93,6 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	{
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
 		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-		//InventorySlotWidgets.Add(InventorySlotWidget);
-
-		//InventorySlotWidget->Image_Item->SetBrushFromTexture(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].Item.Thumbnail);
-		//InventorySlotWidget->Text_ItemQuantity->SetText(FText::AsNumber(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].ItemQuantity));
 
 		Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
 

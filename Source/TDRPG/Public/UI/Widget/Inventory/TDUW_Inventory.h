@@ -52,8 +52,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
 	TSubclassOf<UTDUW_InventorySlot> InventorySlotWidgetClass;
 
-	TArray<TObjectPtr<UTDUW_InventorySlot>> InventorySlotWidgets;
-
 	UPROPERTY()
 	TObjectPtr<ATDCharacter> TDCharacter;
 };
