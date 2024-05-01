@@ -3,6 +3,9 @@
 #include "UI/Widget/TDUW.h"
 #include "TDUW_Inventory.generated.h"
 
+class ATDCharacter;
+class UHorizontalBox;
+class UButton;
 class UListView;
 class UVerticalBox;
 class UGridPanel;
@@ -27,8 +30,18 @@ public:
 	void CreateInventorySlotWidgets();
 
 private:
+	UFUNCTION()
+	void OnWeaponButtonClicked();
+	UFUNCTION()
+	void OnArmorButtonClicked();
+
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
-	TObjectPtr<UVerticalBox> VB_Categories;
+	TObjectPtr<UHorizontalBox> HB_Categories;
+
+	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
+	TObjectPtr<UButton> Button_Category_Weapon;
+	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
+	TObjectPtr<UButton> Button_Category_Armor;
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UGridPanel> Grid_Inventory;
@@ -41,5 +54,6 @@ private:
 
 	TArray<TObjectPtr<UTDUW_InventorySlot>> InventorySlotWidgets;
 
-
+	UPROPERTY()
+	TObjectPtr<ATDCharacter> TDCharacter;
 };

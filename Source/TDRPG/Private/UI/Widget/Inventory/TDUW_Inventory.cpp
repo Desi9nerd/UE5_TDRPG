@@ -1,8 +1,7 @@
 ﻿#include "UI/Widget/Inventory/TDUW_Inventory.h"
-
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
-#include "GameFramework/PlayerController.h"
+#include "Components/Button.h"
 #include "Components/GridPanel.h"
 #include "Player/TDPlayerController.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
@@ -48,13 +47,28 @@ void UTDUW_Inventory::ReleaseSlateResources(bool bReleaseChildren)
 void UTDUW_Inventory::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if (false == IsValid(VB_Categories)){
-		UE_LOG(LogTemp, Warning, TEXT("No VB_Categories. Check UTDUW_Inventory"));}
+	
 	if (false == IsValid(Grid_Inventory)) {
 		UE_LOG(LogTemp, Warning, TEXT("No Grid_Inventory. Check UTDUW_Inventory"));}
 
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (PlayerController)
+	{
+		TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
+	}
+
 	CreateInventorySlotWidgets();
+
+
+	if (Button_Category_Weapon)
+	{
+		Button_Category_Weapon->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnWeaponButtonClicked);
+	}
+
+	if (Button_Category_Armor)
+	{
+		Button_Category_Armor->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnArmorButtonClicked);
+	}
 }
 
 void UTDUW_Inventory::NativeDestruct()
@@ -66,13 +80,11 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 {
 	//checkf(InventorySlotWidgetClass, TEXT("No InventorySlotWidgetClass. Check UTDUW_Inventory::CreateInventorySlotWidgets()"));
 
-	if(IsValid(Grid_Inventory))
+	if (IsValid(Grid_Inventory))
 	{
 		Grid_Inventory->ClearChildren();		
 	}
 
-
-	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwningPlayer());
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 
 	for (int i = 0; i < AmountOfSlots; i++)
@@ -83,4 +95,14 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 
 		Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
 	}
+}
+
+void UTDUW_Inventory::OnWeaponButtonClicked()
+{
+	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Weapon);
+}
+
+void UTDUW_Inventory::OnArmorButtonClicked()
+{
+	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Armor);
 }

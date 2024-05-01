@@ -31,10 +31,21 @@ void UTDInventoryComponent::InitializeInventory()
 	}
 }
 
+void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory)
+{
+	if (TDPlayerController->IsLocalController())
+	{
+		Client_SetSelectedInventoryCategory(InSelectedInventoryCategory);
+	}
+}
+
+void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(const EItemCategory& InSelectedInventoryCategory)
+{
+	SelectedInventoryCategory = InSelectedInventoryCategory;
+}
+
 void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 {
-	AmountOfSlots = 16;
-
 	// AmountOfSlots 만큼 슬롯을 만들기위해 TArray 사이즈를 맞춰줌. 
 	WeaponCategory.SetNum(AmountOfSlots);
 	ArmorCategory.SetNum(AmountOfSlots);
