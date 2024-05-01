@@ -13,6 +13,7 @@ class TDRPG_API UTDInventoryComponent : public UActorComponent
 
 public:	
 	UTDInventoryComponent();
+	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,10 +41,5 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
-
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> InventorySlotWidgetClass;
-	UPROPERTY()
-	TObjectPtr<UUserWidget> TDInventorySlotWidget;
+	
 };

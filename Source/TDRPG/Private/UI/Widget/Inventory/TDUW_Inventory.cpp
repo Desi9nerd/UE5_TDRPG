@@ -71,10 +71,9 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 		Grid_Inventory->ClearChildren();		
 	}
 
-	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(GetOwningPlayer());
-	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwningPlayer());
 
-	int32 AmountOfSlots = 16; // TDCharacter->GetInventoryComponent()->AmountOfSlots;
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwningPlayer());
+	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 
 	for (int i = 0; i < AmountOfSlots; i++)
 	{
