@@ -40,4 +40,10 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
+
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> InventorySlotWidgetClass;
+	UPROPERTY()
+	TObjectPtr<UUserWidget> TDInventorySlotWidget;
 };

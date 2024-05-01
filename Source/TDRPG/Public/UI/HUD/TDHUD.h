@@ -9,6 +9,7 @@ class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
 class UTDWidgetControllerSkillMenu;
 class UTDUW;
+class UTDUW_Inventory;
 struct FWidgetControllerParams;
 
 /**
@@ -20,7 +21,11 @@ class TDRPG_API ATDHUD : public AHUD
 	GENERATED_BODY()
 
 public:
+	void BeginPlay() override;
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void InitInventory();
+
+	TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
 	TObjectPtr<UTDWidgetControllerOverlay> GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams);
 	TObjectPtr<UTDWidgetControllerAttributeMenu> GetTDWidgetControllerAttributeMenu(const FWidgetControllerParams& WCParams);
 	TObjectPtr<UTDWidgetControllerSkillMenu> GetTDWidgetControllerSkillMenu(const FWidgetControllerParams& WCParams);
@@ -30,6 +35,11 @@ private:
 	TObjectPtr<UTDUW>  OverlayWidget;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UTDUW> OverlayWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UTDUW_Inventory>  InventoryWidget;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<UTDWidgetControllerOverlay> TDWidgetController_Overlay;

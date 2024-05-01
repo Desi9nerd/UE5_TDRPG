@@ -69,6 +69,12 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 	InitAbilityActorInfo(); 
 }
 
+TObjectPtr<UTDInventoryComponent> ATDCharacter::GetInventoryComponent()
+{
+	checkf(TDInventoryComponent, TEXT("No TDInventoryComponent. Check: ATDCharacter::GetInventoryComponent()"));
+	return TDInventoryComponent;
+}
+
 //int32 ATDCharacter::GetPlayerLevelBP_Implementation()
 //{
 //	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevelBP_Implementation()"));

@@ -24,6 +24,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
+	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
 
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;

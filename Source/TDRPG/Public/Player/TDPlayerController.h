@@ -5,6 +5,7 @@
 #include "GameplayTagContainer.h"
 #include "TDPlayerController.generated.h"
 
+class ATDHUD;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -13,7 +14,7 @@ class UTDDAInput;
 class UTDAbilitySystemComponent;
 class USplineComponent;
 class UTDWidgetComponent;
-class UTDUW_InventoryMenu;
+class UTDUW_Inventory;
 class UTDUW_InventoryCategory;
 
 /**
@@ -28,6 +29,7 @@ class TDRPG_API ATDPlayerController : public APlayerController
 public:
 	ATDPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
+	ATDHUD* GetTDHUD();
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit); 
@@ -35,6 +37,7 @@ public:
 	void CreateInventoryCategoryWidgets();
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_CreateInventoryCategoryWidgets();
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -113,8 +116,6 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
 
-
-
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
 
@@ -123,17 +124,21 @@ private:
 	UPROPERTY()
 	TObjectPtr<UUserWidget> TDMainWidget;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UTDUW_InventoryMenu> InventoryWidgetClass; 
+	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass; 
 	UPROPERTY()
-	TObjectPtr<UTDUW_InventoryMenu> TDInventoryWidget;
+	TObjectPtr<UTDUW_Inventory> TDInventoryWidget;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UTDUW_InventoryCategory> InventoryCategoryWidgetClass;
 	UPROPERTY()
 	TObjectPtr<UTDUW_InventoryCategory> InventoryCategoryWidget;
+	
 
 
 	bool bInventoryIsOpen;
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UDataTable> InventoryCategoryDataTable;
+
+	UPROPERTY()
+	TObjectPtr<ATDHUD> TDHUD;
 };

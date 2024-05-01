@@ -1,8 +1,16 @@
 ﻿#include "UI/HUD/TDHUD.h"
 #include "UI/Widget/TDUW.h"
+#include "UI/Widget/Inventory/TDUW_Inventory.h"
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
+
+void ATDHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitInventory();
+}
 
 TObjectPtr<UTDWidgetControllerOverlay> ATDHUD::GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams)
 {
@@ -58,4 +66,25 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	WidgetController->BroadcastInitialValues(); // TDOverlayWidgetController에 Dynamic Broadcast된 데이터를 불러옴
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
+}
+
+void ATDHUD::InitInventory()
+{
+	checkf(InventoryWidgetClass, TEXT("InventoryWidgetClass가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
+	
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
+	InventoryWidget->AddToViewport();
+	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+
+TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
+{
+	if (IsValid(InventoryWidget)) return InventoryWidget;
+
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
+	InventoryWidget->AddToViewport();
+
+	return InventoryWidget;
 }

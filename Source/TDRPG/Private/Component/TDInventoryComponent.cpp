@@ -1,8 +1,10 @@
 ﻿#include "Component/TDInventoryComponent.h"
 
+#include "Components/GridPanel.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
+#include "UI/Widget/Inventory/TDUW_Inventory.h"
 
 UTDInventoryComponent::UTDInventoryComponent()
 {
