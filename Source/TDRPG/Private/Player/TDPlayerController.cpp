@@ -116,7 +116,8 @@ void ATDPlayerController::SetupInputComponent()
 	//TDEnhancedInputComponent->BindAction(DropItemInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnDropItemTriggered);
 	//TDEnhancedInputComponent->BindAction(EquipNextInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnEquipNextTriggered);
 	//TDEnhancedInputComponent->BindAction(UnequipInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnUnequipTriggered);
-	TDEnhancedInputComponent->BindAction(OpenInventoryInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnOpenInventoryPressed);
+	TDEnhancedInputComponent->BindAction(OpenInventoryInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnOpenInventoryTriggered);
+	TDEnhancedInputComponent->BindAction(PickUpItemInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnPickupItemTriggered);
 }
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -282,7 +283,7 @@ void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 //	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UTDInventoryComponent::UnequipItemTag, EventPayload);
 //}
 
-void ATDPlayerController::OnOpenInventoryPressed(const FInputActionValue& InputActionValue)
+void ATDPlayerController::OnOpenInventoryTriggered(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Open Inventory Button Pressed!!"));
 
@@ -294,6 +295,12 @@ void ATDPlayerController::OnOpenInventoryPressed(const FInputActionValue& InputA
 	{
 		OpenCloseInventoryWidget(true);		
 	}
+}
+
+void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pickup Button Pressed!!"));
+	PickupItem();
 }
 
 void ATDPlayerController::InitializeWidget()
@@ -337,5 +344,21 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
 			bInventoryIsOpen = false;
 		}
+	}
+}
+
+void ATDPlayerController::PickupItem()
+{
+	Server_PickupItem();
+}
+
+void ATDPlayerController::Server_PickupItem_Implementation()
+{
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors, OverlappingItem);
+
+	if (OverlappingActors.Num() > 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
 	}
 }

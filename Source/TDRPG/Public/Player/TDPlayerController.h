@@ -1,10 +1,10 @@
 ﻿#pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "GameplayTagContainer.h"
 #include "TDPlayerController.generated.h"
 
+class ATDItemActor;
 class ATDHUD;
 class UInputMappingContext;
 class UInputAction;
@@ -101,7 +101,8 @@ private:
 	//UPROPERTY(EditDefaultsOnly)
 	//class UInputAction* UnequipInputAction;
 
-	void OnOpenInventoryPressed(const FInputActionValue& InputActionValue);
+	void OnOpenInventoryTriggered(const FInputActionValue& Value);
+	void OnPickupItemTriggered(const FInputActionValue& Value);
 
 	void InitializeWidget();
 	UFUNCTION(Client, Reliable) // Client RPC
@@ -111,8 +112,14 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
 
+	void PickupItem();
+	UFUNCTION(Server, Reliable)
+	void Server_PickupItem();
+
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> PickUpItemInputAction;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> MainWidgetClass; 
@@ -130,4 +137,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDHUD> TDHUD;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AActor> OverlappingItem;
 };
