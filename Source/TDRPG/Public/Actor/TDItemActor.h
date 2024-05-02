@@ -25,7 +25,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> SphereCollision;
 
 	UPROPERTY(EditDefaultsOnly)

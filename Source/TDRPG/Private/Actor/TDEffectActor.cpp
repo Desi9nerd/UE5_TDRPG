@@ -5,11 +5,7 @@
 ATDEffectActor::ATDEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	Mesh->SetupAttachment(GetRootComponent());
+	
 }
 
 void ATDEffectActor::BeginPlay()

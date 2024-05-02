@@ -1,7 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
+#include "TDItemActor.h"
 #include "TDEffectActor.generated.h"
 
 class UAbilitySystemComponent;
@@ -27,7 +27,7 @@ enum class EEffectRemovalPolicy
 };
 
 UCLASS()
-class TDRPG_API ATDEffectActor : public AActor
+class TDRPG_API ATDEffectActor : public ATDItemActor
 {
 	GENERATED_BODY()
 	
@@ -75,8 +75,5 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	float ActorLevel = 1.f; // CurveTable과 같이 사용할 때 적용 ActorLevel
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> Mesh;
+	
 };
