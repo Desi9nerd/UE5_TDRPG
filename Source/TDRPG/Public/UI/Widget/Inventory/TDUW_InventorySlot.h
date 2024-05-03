@@ -1,15 +1,16 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Library/TDItemLibrary.h"
-#include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/TDUW.h"
 #include "TDUW_InventorySlot.generated.h"
 
+class UImage;
 class UTextBlock;
 /**
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_InventorySlot : public UTDUW_Inventory
+class TDRPG_API UTDUW_InventorySlot : public UTDUW
 {
 	GENERATED_BODY()
 

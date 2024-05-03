@@ -53,22 +53,10 @@ void UTDUW_Inventory::NativeConstruct()
 	if (false == IsValid(Grid_Inventory)) {
 		UE_LOG(LogTemp, Warning, TEXT("No Grid_Inventory. Check UTDUW_Inventory"));}
 
-	APlayerController* PlayerController = GetOwningPlayer();
-	TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
-	if (TDCharacter)
-	{
-		CreateInventorySlotWidgets();	
-	}
-
-	if (Button_Category_Weapon)
-	{
-		Button_Category_Weapon->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnWeaponButtonClicked);
-	}
-
-	if (Button_Category_Armor)
-	{
-		Button_Category_Armor->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnArmorButtonClicked);
-	}
+	CreateInventorySlotWidgets();	
+	
+	Button_Category_Weapon->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnWeaponButtonClicked);
+	Button_Category_Armor->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnArmorButtonClicked);
 }
 
 void UTDUW_Inventory::NativeDestruct()
