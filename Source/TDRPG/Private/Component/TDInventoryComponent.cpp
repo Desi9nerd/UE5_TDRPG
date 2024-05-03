@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 UTDInventoryComponent::UTDInventoryComponent()
 {
@@ -83,16 +84,34 @@ void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 
 void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* InItem)
 {
-	FItem* ItemToAddInfo;
-
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_ItemInfo.DT_ItemInfo'"));
 
 	if (const UDataTable* ItemDataTable = DataTableRef.Object)
 	{
-		FItem* ItemInfo = ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString(""));
-		if (ItemInfo != nullptr)
+		FItem* ItemToAddInfo = ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString(""));
+
+		if (ItemToAddInfo->bStackable)
 		{
-			ItemToAddInfo = ItemInfo;
+			
+		}
+		else
+		{
+			
+		}
+	}
+}
+
+void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory)
+{
+	for (int i = 0; i < OutInventory.Num(); i++)
+	{
+		OutInventory[i].ItemQuantity = Quantity;
+		OutInventory[i].SlotIndex = SlotIdx;
+		OutInventory[i].Item = Item;
+
+		if (Item.ItemCategory == SelectedInventoryCategory)
+		{
+			InventorySlot->UpdateInventorySlotUI(Item, Quantity);
 		}
 	}
 }

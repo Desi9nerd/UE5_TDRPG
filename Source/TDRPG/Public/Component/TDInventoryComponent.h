@@ -4,6 +4,7 @@
 #include "Library/TDItemLibrary.h"
 #include "TDInventoryComponent.generated.h"
 
+class UTDUW_InventorySlot;
 class ATDPlayerController;
 class ATDItemAtctor;
 
@@ -37,6 +38,9 @@ private:
 	void AddtoInventory(ATDItemActor* InItem);
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_AddtoInventory(ATDItemActor* InItem);
+
+	void AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory);
+
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> TDPlayerController;
