@@ -5,6 +5,7 @@
 #include "TDInventoryComponent.generated.h"
 
 class ATDPlayerController;
+class ATDItemAtctor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TDRPG_API UTDInventoryComponent : public UActorComponent
@@ -33,9 +34,9 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_InitializeInventory();
 
-	void AddtoInventory(AActor* InItem);
+	void AddtoInventory(ATDItemActor* InItem);
 	UFUNCTION(Client, Reliable) // Client RPC
-	void Client_AddtoInventory(AActor* InItem);
+	void Client_AddtoInventory(ATDItemActor* InItem);
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> TDPlayerController;

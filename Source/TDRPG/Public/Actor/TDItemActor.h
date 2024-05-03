@@ -5,7 +5,6 @@
 
 class USphereComponent;
 class UTexture2D;
-class ATDItemActor;
 
 /** 포션, 크리스탈 등의 액터
  * 
@@ -19,6 +18,8 @@ class TDRPG_API ATDItemActor : public AActor
 public:	
 	ATDItemActor();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	FORCEINLINE const FString& GetItemName() const { return ItemName; }
+	FORCEINLINE int32 GetItemQuantity() const { return ItemQuantity; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -31,12 +32,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> SphereCollision;
 
-	UPROPERTY(EditDefaultsOnly)
-	FString ItemName;
-	UPROPERTY(EditDefaultsOnly)
-	int32 ItemQuantity;
-	UPROPERTY(ReplicatedUsing = OnRep_DestroyItem)
-	bool bDestroyItem;
 
 private:
 	void SetItemQuantity(int32 InItemQuantity);
@@ -44,4 +39,15 @@ private:
 
 	UFUNCTION()
 	void OnRep_DestroyItem();
+
+
+
+	UPROPERTY(EditDefaultsOnly)
+	FString ItemName;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 ItemQuantity;
+
+	UPROPERTY(ReplicatedUsing = OnRep_DestroyItem)
+	bool bDestroyItem;
 };

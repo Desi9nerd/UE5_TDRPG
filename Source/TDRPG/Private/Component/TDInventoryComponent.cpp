@@ -76,12 +76,23 @@ void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 	//UE_LOG(LogTemp, Warning, TEXT("WeaponCategory Size = %s"), *Temp);
 }
 
-void UTDInventoryComponent::AddtoInventory(AActor* InItem)
+void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 {
 	Client_AddtoInventory(InItem);
 }
 
-void UTDInventoryComponent::Client_AddtoInventory_Implementation(AActor* InItem)
+void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* InItem)
 {
+	FItem* ItemToAddInfo;
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Game/BP/Inventory/Data/DT_ItemInfo.DT_ItemInfo'"));
+
+	if (const UDataTable* ItemDataTable = DataTableRef.Object)
+	{
+		FItem* ItemInfo = ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString(""));
+		if (ItemInfo != nullptr)
+		{
+			ItemToAddInfo = ItemInfo;
+		}
+	}
 }
