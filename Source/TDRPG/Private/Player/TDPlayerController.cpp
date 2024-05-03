@@ -8,6 +8,8 @@
 #include "Components/SplineComponent.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "Character/TDCharacter.h"
+#include "Component/TDInventoryComponent.h"
 #include "Components/VerticalBox.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/HUD.h"
@@ -300,7 +302,9 @@ void ATDPlayerController::OnOpenInventoryTriggered(const FInputActionValue& Valu
 void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pickup Button Pressed!!"));
-	PickupItem();
+
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetCharacter());
+	TDCharacter->GetInventoryComponent()->PickupItem();
 }
 
 void ATDPlayerController::InitializeWidget()
@@ -344,21 +348,5 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
 			bInventoryIsOpen = false;
 		}
-	}
-}
-
-void ATDPlayerController::PickupItem()
-{
-	Server_PickupItem();
-}
-
-void ATDPlayerController::Server_PickupItem_Implementation()
-{
-	TArray<AActor*> OverlappingActors;
-	GetOverlappingActors(OverlappingActors, OverlappingItem);
-
-	if (OverlappingActors.Num() > 0)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
 	}
 }

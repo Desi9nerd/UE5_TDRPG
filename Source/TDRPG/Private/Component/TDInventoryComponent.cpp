@@ -1,6 +1,9 @@
 ﻿#include "Component/TDInventoryComponent.h"
 
+#include "Actor/TDItemActor.h"
+#include "Character/TDCharacter.h"
 #include "Components/GridPanel.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
@@ -39,6 +42,23 @@ void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& In
 	}
 }
 
+void UTDInventoryComponent::PickupItem()
+{
+	Server_PickupItem();
+}
+
+void UTDInventoryComponent::Server_PickupItem_Implementation()
+{
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
+	TArray<AActor*> OverlappingActors;
+	TDCharacter->SphereCollision->GetOverlappingActors(OverlappingActors, ATDItemActor::StaticClass());
+
+	if (OverlappingActors.Num() > 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
+	}
+}
+
 void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(const EItemCategory& InSelectedInventoryCategory)
 {
 	SelectedInventoryCategory = InSelectedInventoryCategory;
@@ -54,4 +74,14 @@ void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 
 	//FString Temp = FString::FromInt(WeaponCategory.Num());
 	//UE_LOG(LogTemp, Warning, TEXT("WeaponCategory Size = %s"), *Temp);
+}
+
+void UTDInventoryComponent::AddtoInventory(AActor* InItem)
+{
+	Client_AddtoInventory(InItem);
+}
+
+void UTDInventoryComponent::Client_AddtoInventory_Implementation(AActor* InItem)
+{
+
 }

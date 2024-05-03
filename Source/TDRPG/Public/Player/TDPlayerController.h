@@ -112,9 +112,6 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
 
-	void PickupItem();
-	UFUNCTION(Server, Reliable)
-	void Server_PickupItem();
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> OpenInventoryInputAction;

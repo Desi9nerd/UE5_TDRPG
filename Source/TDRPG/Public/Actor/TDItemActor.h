@@ -8,7 +8,7 @@ class UTexture2D;
 class ATDItemActor;
 
 /** 포션, 크리스탈 등의 액터
- *
+ * 
  */
 
 UCLASS()
@@ -22,6 +22,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	virtual void OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh;

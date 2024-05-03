@@ -36,6 +36,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	
+	void OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 	UFUNCTION(BlueprintCallable) // BP에서 호출가능
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
@@ -50,6 +52,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bApplyEffectsToEnemies = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	TSubclassOf<UGameplayEffect> TDGameplayEffectClass; // Instant, Duration, Infinite 모두 가능
 
 	//** Instant
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")

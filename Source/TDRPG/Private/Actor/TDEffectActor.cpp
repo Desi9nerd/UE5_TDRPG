@@ -1,17 +1,26 @@
 #include "Actor/TDEffectActor.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Components/SphereComponent.h"
 
 ATDEffectActor::ATDEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	
 }
 
 void ATDEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereComponentOverlap);
+}
+
+void ATDEffectActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::OnSphereComponentOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	UE_LOG(LogTemp, Warning, TEXT("Item Overlapped2222222222! "));
+	ApplyEffectToTarget(OtherActor, TDGameplayEffectClass);
 }
 
 void ATDEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)

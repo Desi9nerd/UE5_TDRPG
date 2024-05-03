@@ -11,6 +11,7 @@
 #include "GAS/Data/TDDA_LevelUp.h"
 #include "NiagaraComponent.h"
 #include "Component/TDInventoryComponent.h"
+#include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 
 ATDCharacter::ATDCharacter()
@@ -23,7 +24,11 @@ ATDCharacter::ATDCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-	
+
+	// Sphere Collision
+	SphereCollision = CreateDefaultSubobject<USphereComponent>("SphereCollision");
+	SphereCollision->SetupAttachment(RootComponent);
+
 	// Camera
 	CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	CameraSpringArm->SetupAttachment(RootComponent);

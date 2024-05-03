@@ -21,6 +21,10 @@ public:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 
+	void PickupItem();
+	UFUNCTION(Server, Reliable)
+	void Server_PickupItem();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,7 +33,9 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_InitializeInventory();
 
-
+	void AddtoInventory(AActor* InItem);
+	UFUNCTION(Client, Reliable) // Client RPC
+	void Client_AddtoInventory(AActor* InItem);
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> TDPlayerController;
@@ -48,5 +54,5 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
-	
+
 };

@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UNiagaraComponent;
 class UTDInventoryComponent;
+class USphereComponent;
 
 /**
  * 
@@ -57,6 +58,8 @@ public:
 	virtual int32 GetSkillPointsBP_Implementation() const override;
 	//********************************************************
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USphereComponent> SphereCollision;
 protected:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<USpringArmComponent> CameraSpringArm;
@@ -75,6 +78,7 @@ private:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_LevelUpParticleEffect() const;
+
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerState> TDPlayerState;
