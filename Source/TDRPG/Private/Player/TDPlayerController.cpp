@@ -304,6 +304,7 @@ void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("Pickup Button Pressed!!"));
 
 	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetCharacter());
+	checkf(TDCharacter, TEXT("No TDCharacter. Check  ATDPlayerController::OnPickupItemTriggered"));
 	TDCharacter->GetInventoryComponent()->PickupItem();
 }
 

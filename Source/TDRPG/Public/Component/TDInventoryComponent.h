@@ -70,8 +70,12 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
-	
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TObjectPtr<UDataTable> ItemDataTable;
+
 	TObjectPtr<ATDItemActor> ItemToAdd;
 	
 	bool HasToCreateStack;
+	bool bRelootItem = false;
 };
