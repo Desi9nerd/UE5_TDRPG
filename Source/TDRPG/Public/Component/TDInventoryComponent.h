@@ -6,7 +6,7 @@
 
 class UTDUW_InventorySlot;
 class ATDPlayerController;
-class ATDItemAtctor;
+class ATDItemActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TDRPG_API UTDInventoryComponent : public UActorComponent
@@ -41,6 +41,17 @@ private:
 
 	void AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory);
 
+	void FindPartialStack(FItem& ItemToAddInfo);
+	void CreateNewStack(FItem& ItemToAddInfo);
+
+	void SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);
+	UFUNCTION(Server, Reliable)
+	void Server_SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);
+
+	void DestroyPickupItem(ATDItemActor* InItem, bool InDestroyItem);
+	UFUNCTION(Server, Reliable)
+	void Server_DestroyPickupItem(ATDItemActor* InItem, bool InDestroyItem);
+
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> TDPlayerController;
@@ -59,5 +70,8 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
-
+	
+	TObjectPtr<ATDItemActor> ItemToAdd;
+	
+	bool HasToCreateStack;
 };

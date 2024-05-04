@@ -20,6 +20,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	FORCEINLINE const FString& GetItemName() const { return ItemName; }
 	FORCEINLINE int32 GetItemQuantity() const { return ItemQuantity; }
+	FORCEINLINE void SetItemQuantity(int32 InItemQuantity) { ItemQuantity = InItemQuantity; }
+	FORCEINLINE void DestroyPickupItem(bool DestroyItem) { bDestroyItem = DestroyItem; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,7 +36,6 @@ protected:
 
 
 private:
-	void SetItemQuantity(int32 InItemQuantity);
 	void OnDestroyRootItem(bool InbDestroyItem);
 
 	UFUNCTION()
@@ -45,7 +46,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	FString ItemName;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Replicated)
 	int32 ItemQuantity;
 
 	UPROPERTY(ReplicatedUsing = OnRep_DestroyItem)

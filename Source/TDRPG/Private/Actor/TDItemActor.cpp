@@ -19,6 +19,7 @@ void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME_CONDITION_NOTIFY(ATDItemActor, ItemQuantity, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ATDItemActor, bDestroyItem, COND_None, REPNOTIFY_Always);
 }
 
@@ -35,11 +36,6 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item Overlapped! "));
 	}
-}
-
-void ATDItemActor::SetItemQuantity(int32 InItemQuantity)
-{
-	ItemQuantity = InItemQuantity;
 }
 
 void ATDItemActor::OnDestroyRootItem(bool InbDestroyItem)
