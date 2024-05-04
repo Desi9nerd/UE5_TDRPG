@@ -53,6 +53,9 @@ void UTDUW_Inventory::NativeConstruct()
 	if (false == IsValid(Grid_Inventory)) {
 		UE_LOG(LogTemp, Warning, TEXT("No Grid_Inventory. Check UTDUW_Inventory"));}
 
+	TDCharacter = Cast<ATDCharacter>(GetOwningPlayer()->GetPawn());
+	checkf(TDCharacter, TEXT("No TDCharacter. Check  UTDUW_Inventory::CreateInventorySlotWidgets()"));
+
 	CreateInventorySlotWidgets();	
 	
 	Button_Category_Weapon->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnWeaponButtonClicked);
@@ -73,6 +76,8 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	{
 		Grid_Inventory->ClearChildren();		
 	}
+
+	checkf(TDCharacter, TEXT("No TDCharacter. Check  UTDUW_Inventory::CreateInventorySlotWidgets()"));
 
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 	int32 Cnt = 0;

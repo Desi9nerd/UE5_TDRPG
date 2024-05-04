@@ -49,6 +49,7 @@ ATDCharacter::ATDCharacter()
 
 	// Inventory Component
 	TDInventoryComponent = CreateDefaultSubobject<UTDInventoryComponent>(TEXT("InventoryComponent"));
+	TDInventoryComponent->SetIsReplicated(true);
 }
 
 void ATDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
