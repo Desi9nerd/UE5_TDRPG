@@ -27,6 +27,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void Server_PickupItem();
 
+	UFUNCTION(Server, Reliable)
+	void Server_RelootItem();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -77,5 +80,6 @@ private:
 	TObjectPtr<ATDItemActor> ItemToAdd;
 	
 	bool HasToCreateStack;
-	bool bRelootItem = false;
+	//bool bRelootItem = false;
+	bool bInventoryIsFull = false;
 };

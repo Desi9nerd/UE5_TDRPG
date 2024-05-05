@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "TDItemLibrary.generated.h"
 
+class UTDUW_InventorySlot;
 class ATDItemActor;
 
 /**
@@ -27,7 +28,7 @@ struct FItem : public FTableRowBase
 	FText Name = FText::FromString(TEXT("None"));
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> Thumbnail = nullptr;
+	UTexture2D* Thumbnail = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	FText Description = FText::FromString(TEXT("None"));
@@ -57,13 +58,13 @@ struct FInventorySlot
 	FItem Item = FItem();
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 ItemQuantity = 0;
+	int32 ItemQuantity = 1;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> InventorySlot = nullptr;
+	UTDUW_InventorySlot* InventorySlot = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 SlotIndex = -1;
+	int32 SlotIndex = 0;
 };
 
 USTRUCT(BlueprintType)

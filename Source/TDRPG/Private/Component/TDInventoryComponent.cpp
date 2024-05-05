@@ -64,6 +64,12 @@ void UTDInventoryComponent::Server_PickupItem_Implementation()
 	}
 }
 
+
+void UTDInventoryComponent::Server_RelootItem_Implementation()
+{
+
+}
+
 void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(const EItemCategory& InSelectedInventoryCategory)
 {
 	SelectedInventoryCategory = InSelectedInventoryCategory;
@@ -114,12 +120,14 @@ void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW
 	{
 		if (OutInventory[i].SlotIndex == SlotIdx)
 		{
-			OutInventory[i].ItemQuantity = Quantity; // 아이템 수량 갱신.
-			OutInventory[i].Item = Item; // 아이템 정보 갱신.
+			//OutInventory[i].ItemQuantity = Quantity; // 아이템 수량 갱신.
+			//OutInventory[i].Item = Item; // 아이템 정보 갱신.
+			//OutInventory[i].InventorySlot = InventorySlot;
 
 			if (Item.ItemCategory == SelectedInventoryCategory)
 			{
-				InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+				OutInventory[i].InventorySlot = InventorySlot;
+				OutInventory[i].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
 			}
 			break;
 		}
@@ -161,8 +169,8 @@ void UTDInventoryComponent::FindPartialStack(FItem& ItemToAddInfo)
 				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 				// 인벤토리에 아이템 추가
-				UTDUW_InventorySlot* Temp = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
-				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), Temp, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+				//UTDUW_InventorySlot* Temp = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
+				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 
 				if (RemainingQuantity == 0)
 					break;
@@ -198,13 +206,17 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 	default:
 		break;
 	}
-	
+
 	if (CategoryArray)
 	{
-		for (int i = 0; i < CategoryArray->Num(); i++)
+		bool bRelootItem = false;
+		int32 i = 0; // 루프 외부에서 i를 선언하여 사용합니다.
+		for (; i < CategoryArray->Num(); i++)
 		{
 			if ((*CategoryArray)[i].ItemQuantity == 0)
 			{
+				bInventoryIsFull = false;
+
 				if (ItemToAdd->GetItemQuantity() > ItemToAddInfo.MaxStackSize)
 				{
 					// 아이템 수량 갱신
@@ -212,8 +224,8 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 					// 인벤토리에 아이템 추가
-					UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
-					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, SlotWidget, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+					//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
+					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 					bRelootItem = true;
 
 					if (RemainingQuantity == 0)
@@ -221,21 +233,32 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 				}
 				else
 				{
-					break;
+					// 인벤토리에 아이템 추가
+					//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
+					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 				}
 			}
+		}
 
-			if (i >= AmountOfSlots)
+		if (i >= AmountOfSlots)
+		{
+			bInventoryIsFull = true;
+		}
+
+		if (bRelootItem)
+		{
+			bRelootItem = false;
+			Server_RelootItem();
+		}
+		else
+		{
+			if (bInventoryIsFull)
 			{
-				break;
+				// 인벤토리에 아이템 추가
+				//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
+				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 			}
 		}
-	}
-
-	if (bRelootItem)
-	{
-		bRelootItem = false;
-		Server_PickupItem();
 	}
 }
 
