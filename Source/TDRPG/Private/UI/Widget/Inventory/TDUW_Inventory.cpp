@@ -4,34 +4,12 @@
 #include "Components/Button.h"
 #include "Components/GridPanel.h"
 #include "Components/Image.h"
-#include "Components/TextBlock.h"
 #include "Player/TDPlayerController.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 TSharedRef<SWidget> UTDUW_Inventory::RebuildWidget()
 {
 	return Super::RebuildWidget();
-}
-
-void UTDUW_Inventory::Set(int32 ShowCategoryID)
-{
-	// Data Driven. 좋다. 하지만 성능은..
-	// DataTable 사용. 
-
-	//Row = Table->GetRow(ShowCategoryID);
-	//if (Row)
-	//{
-	//	TArray<int32> CategoryIDs = Row->YouhavetoMakeTheseCategories();
-	//	TArray<FListViewEntries> Entries;
-	//
-	//	for (auto CategoryID : CategoryIDs)
-	//	{
-	//		VerticalListView.
-	//		Add(createEntry(CategoryID));
-	//	}
-	//
-	//	VerticalListView.SetEntry(Entries);
-	//}
 }
 
 void UTDUW_Inventory::ReleaseSlateResources(bool bReleaseChildren)
@@ -69,19 +47,34 @@ void UTDUW_Inventory::NativeDestruct()
 
 void UTDUW_Inventory::CreateInventorySlotWidgets()
 {
-	//checkf(InventorySlotWidgetClass, TEXT("No InventorySlotWidgetClass. Check UTDUW_Inventory::CreateInventorySlotWidgets()"));
-	if (false == IsValid(InventorySlotWidgetClass)) return;
-
-	if (IsValid(Grid_Inventory))
-	{
-		Grid_Inventory->ClearChildren();		
-	}
-
+	checkf(InventorySlotWidgetClass, TEXT("No InventorySlotWidgetClass. Check UTDUW_Inventory::CreateInventorySlotWidgets()"));
 	checkf(TDCharacter, TEXT("No TDCharacter. Check  UTDUW_Inventory::CreateInventorySlotWidgets()"));
 
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
-	int32 Cnt = 0;
+	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
 
+	TArray<FInventorySlot> SelectedCategoryItems;
+
+	switch (SelectedCategory)
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
+		break;
+	}
+
+	
 	for (int i = 0; i < AmountOfSlots; i++)
 	{
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
@@ -89,7 +82,45 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 
 		Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
 
-		InventorySlotWidget->UpdateInventorySlotUI(TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].Item, TDCharacter->GetInventoryComponent()->GetWeaponCategory()[i].ItemQuantity);
+		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+		InventorySlotWidget->UpdateInventorySlotUI(SelectedCategoryItems[i].Item, SelectedCategoryItems[i].ItemQuantity);
+	}
+}
+
+void UTDUW_Inventory::DisplayInventorySlotWidgets()
+{
+	Grid_Inventory->ClearChildren();
+
+	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
+	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
+
+	TArray<FInventorySlot> SelectedCategoryItems;
+
+	switch (SelectedCategory)
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
+		break;
+	}
+	
+	for (int i = 0; i < AmountOfSlots; i++)
+	{
+		Grid_Inventory->AddChildToGrid(SelectedCategoryItems[i].InventorySlot, i / 4, i % 4);
+
+		// 선택된 카테고리 내의 InventorySlot의 'Item'와 'ItemQuantity'를 업데이트.
+		SelectedCategoryItems[i].InventorySlot->UpdateInventorySlotUI(SelectedCategoryItems[i].Item, SelectedCategoryItems[i].ItemQuantity);
 	}
 }
 

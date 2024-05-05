@@ -11,10 +11,6 @@ class UVerticalBox;
 class UGridPanel;
 class UTDUW_InventorySlot;
 
-/**
- * 
- */
-
 UCLASS()
 class TDRPG_API UTDUW_Inventory : public UTDUW
 {
@@ -22,12 +18,12 @@ class TDRPG_API UTDUW_Inventory : public UTDUW
 
 public:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
-	void Set(int32 ShowCategoryID);
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 	void CreateInventorySlotWidgets();
+	void DisplayInventorySlotWidgets();
 
 private:
 	UFUNCTION()

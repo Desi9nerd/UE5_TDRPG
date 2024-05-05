@@ -28,7 +28,7 @@ struct FItem : public FTableRowBase
 	FText Name = FText::FromString(TEXT("None"));
 
 	UPROPERTY(EditDefaultsOnly)
-	UTexture2D* Thumbnail = nullptr;
+	TObjectPtr<UTexture2D> Thumbnail = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	FText Description = FText::FromString(TEXT("None"));

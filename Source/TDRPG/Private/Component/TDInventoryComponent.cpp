@@ -89,7 +89,10 @@ void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 
 void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 {
-	Client_AddtoInventory(InItem);
+	if (TDPlayerController->IsLocalController())
+	{
+		Client_AddtoInventory(InItem);
+	}
 }
 
 void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* InItem)
@@ -159,7 +162,7 @@ void UTDInventoryComponent::FindPartialStack(FItem& ItemToAddInfo)
 
 	if (CategoryArray)
 	{
-		for (int i = 0; i < CategoryArray->Num(); i++)
+		for (int i = 0; i < CategoryArray->Num() - 1; i++)
 		{
 			if (UKismetTextLibrary::EqualEqual_TextText((*CategoryArray)[i].Item.Name, ItemToAddInfo.Name) &&
 				(*CategoryArray)[i].ItemQuantity < ItemToAddInfo.MaxStackSize)
@@ -211,7 +214,7 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 	{
 		bool bRelootItem = false;
 		int32 i = 0; // 루프 외부에서 i를 선언하여 사용합니다.
-		for (; i < CategoryArray->Num(); i++)
+		for (; i < CategoryArray->Num() - 1; i++)
 		{
 			if ((*CategoryArray)[i].ItemQuantity == 0)
 			{

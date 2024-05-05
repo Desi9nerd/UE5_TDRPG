@@ -18,6 +18,9 @@ public:
 	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
 	FORCEINLINE EItemCategory& GetSelectedInventoryCategory() { return SelectedInventoryCategory; }
 	FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
+	FORCEINLINE TArray<FInventorySlot>& GetArmorCategory() { return ArmorCategory; }
+	FORCEINLINE TArray<FInventorySlot>& GetPotionCategory() { return PotionCategory; }
+	FORCEINLINE TArray<FInventorySlot>& GetFoodCategory() { return FoodCategory; }
 
 	void SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 	UFUNCTION(Client, Reliable) // Client RPC
