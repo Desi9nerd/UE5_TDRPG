@@ -1,6 +1,4 @@
 #include "GAS/GameplayAbility/TDGA_Flash.h"
-
-#include "NiagaraComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameplayTags/TDGameplayTags.h"
@@ -22,6 +20,11 @@ void UTDGA_Flash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 	if (CombatInterface)
 	{
 		checkf(FlashMontageToPlay, TEXT("No FlashMontageToPlay. Check UTDGA_Flash::ActivateAbility"));
+
+		static UAbilityTask_WaitGameplayEvent* WaitTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, FTDGameplayTags::GetTDGameplayTags().Event_Montage_Flash);
+		WaitTask->EventReceived.AddUniqueDynamic(this, &UTDGA_Flash::OnFlashTeleport);
+		WaitTask->ReadyForActivation();
+
 		UAbilityTask_PlayMontageAndWait* PlayDashTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("TDGA_Flash"), FlashMontageToPlay, 1.0f);
 		PlayDashTask->OnCompleted.AddUniqueDynamic(this, &ThisClass::OnEndAbility);
 		PlayDashTask->OnInterrupted.AddUniqueDynamic(this, &ThisClass::OnEndAbility);
@@ -29,9 +32,6 @@ void UTDGA_Flash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 		PlayDashTask->ReadyForActivation();
 	}
 
-	UAbilityTask_WaitGameplayEvent* WaitTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, FTDGameplayTags::GetTDGameplayTags().Event_Montage_Flash);
-	WaitTask->EventReceived.AddUniqueDynamic(this, &UTDGA_Flash::OnFlashTeleport);
-	WaitTask->ReadyForActivation();
 }
 
 void UTDGA_Flash::OnFlashTeleport(FGameplayEventData Payload)
