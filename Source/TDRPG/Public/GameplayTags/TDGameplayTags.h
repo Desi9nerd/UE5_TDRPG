@@ -56,8 +56,14 @@ public:
 	FGameplayTag Abilities_Skill_Fireball;
 	FGameplayTag Abilities_Skill_Meteor;
 
+	FGameplayTag Abilities_Skill_Flash;
+	FGameplayTag Abilities_Skill_Dash;
+
 	// Cooldown
 	FGameplayTag Cooldown_Skill_Fireball;
+	FGameplayTag Cooldown_Skill_Meteor;
+	FGameplayTag Cooldown_Skill_Flash;
+	FGameplayTag Cooldown_Skill_Dash;
 
 	//** Meta ************************************************
 	// Damage Type
@@ -75,6 +81,9 @@ public:
 
 	// Event
 	FGameplayTag Event_Montage_Fireball;
+	FGameplayTag Event_Montage_Meteor;
+	FGameplayTag Event_Montage_Flash;
+	FGameplayTag Event_Montage_Dash;
 
 	// Socket
 	FGameplayTag Socket_Weapon;

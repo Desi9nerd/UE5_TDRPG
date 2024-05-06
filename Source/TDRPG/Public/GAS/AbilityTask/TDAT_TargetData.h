@@ -18,12 +18,15 @@ class TDRPG_API UTDAT_TargetData : public UAbilityTask
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (DisplayName = "TDAT_TargetDataUnderMouse", HidePin = "OwningAbility", DefaultToSelf = "OwningAbility"))
 	static UTDAT_TargetData* CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility);
+	virtual void Activate() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FMouseTargetDataSignature ValidData;
 
+	UPROPERTY()
+	FVector_NetQuantize MouseCursorLocation;
+
 private:
-	virtual void Activate() override;
 	void SendMouseCursorData(); // Client. 마우스 커서 데이터 보내기
 	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag); // Server.
 };

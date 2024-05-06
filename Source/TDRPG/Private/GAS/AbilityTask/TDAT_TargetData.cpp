@@ -48,6 +48,8 @@ void UTDAT_TargetData::SendMouseCursorData() // 서버에 마우스 커서 데이터 보내기
 	Data->HitResult = CursorHit;
 	DataHandle.Add(Data);
 
+	MouseCursorLocation = CursorHit.ImpactPoint;
+
 	// 서버에 TargetData 보내기
 	AbilitySystemComponent->ServerSetReplicatedTargetData(
 		GetAbilitySpecHandle(),
