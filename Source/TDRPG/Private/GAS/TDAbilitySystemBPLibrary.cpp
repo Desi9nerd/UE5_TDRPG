@@ -1,4 +1,4 @@
-#include "GAS/TDAbilitySystemBPLibrary.h"
+ï»¿#include "GAS/TDAbilitySystemBPLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/TDWidgetController.h"
@@ -22,7 +22,7 @@ bool UTDAbilitySystemBPLibrary::MakeWidgetControllerParams(const UObject* WorldC
 			UAbilitySystemComponent* ASC = TDPlayerState->GetAbilitySystemComponent();
 			UAttributeSet* AttributeSet = TDPlayerState->GetAttributeSet();
 
-			// °ª ³Ö±â
+			// ê°’ ë„£ê¸°
 			ResultWCParams.AttributeSet = AttributeSet;
 			ResultWCParams.AbilitySystemComponent = ASC;
 			ResultWCParams.PlayerState = TDPlayerState;
@@ -73,7 +73,7 @@ UTDWidgetControllerSkillMenu* UTDAbilitySystemBPLibrary::GetTDWidgetControllerSK
 
 void UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	AActor* AvatarActor = ASC->GetAvatarActor(); // GameplayEffect°¡ Àû¿ëµÉ Source
+	AActor* AvatarActor = ASC->GetAvatarActor(); // GameplayEffectê°€ ì ìš©ë  Source
 
 	UTDDA_CharacterClass* DataAssetCharacterClass = GetTDDA_CharacterClass(WorldContextObject);
 	FDA_CharacterClass ClassDefaultInfo = DataAssetCharacterClass->GetDA_ClassClass(CharacterClass);
@@ -101,7 +101,7 @@ void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContext
 
 	for (TSubclassOf<UGameplayAbility> AbilityClass : TDDACharacterClass->CommonAbilities)
 	{
-		// CommonAbilities(ex.HitReact, Die)´Â ·¹º§ÀÌ º¯°æµÇµµ º¯°æµÇÁö ¾ÊÀ¸¹Ç·Î InLevel¸¦ 1·Î ÇÏµåÄÚµùÇÔ.
+		// CommonAbilities(ex.HitReact, Die)ëŠ” ë ˆë²¨ì´ ë³€ê²½ë˜ë„ ë³€ê²½ë˜ì§€ ì•Šìœ¼ë¯€ë¡œ InLevelë¥¼ 1ë¡œ í•˜ë“œì½”ë”©í•¨.
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
@@ -112,7 +112,7 @@ void UTDAbilitySystemBPLibrary::GiveStartupAbilities(const UObject* WorldContext
 		IICombat* CombatInterface = Cast<IICombat>(ASC->GetAvatarActor());
 		if (CombatInterface)
 		{
-			// PlayerLevel¿¡ µû¶ó Ability°¡ ´Þ¶óÁö¹Ç·Î PlayerLevel¸¦ º¯¼ö·Î ³Ñ±è.
+			// PlayerLevelì— ë”°ë¼ Abilityê°€ ë‹¬ë¼ì§€ë¯€ë¡œ PlayerLevelë¥¼ ë³€ìˆ˜ë¡œ ë„˜ê¹€.
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
 			ASC->GiveAbility(AbilitySpec);
 		}
@@ -230,7 +230,7 @@ void UTDAbilitySystemBPLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 
 void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin)
 {
-	//* UGamplayStatics::ApplyRadialDamageWithFallOff ÇÔ¼ö¿Í À¯»çÇÏ°Ô ±¸Çö. *//
+	//* UGamplayStatics::ApplyRadialDamageWithFallOff í•¨ìˆ˜ì™€ ìœ ì‚¬í•˜ê²Œ êµ¬í˜„. *//
 
 	FCollisionQueryParams SphereParams;
 	SphereParams.AddIgnoredActors(ActorsToIgnore);

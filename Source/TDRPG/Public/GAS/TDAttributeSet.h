@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "AbilitySystemComponent.h" // #define ATTRIBUTE_ACCESSORS ¸ÅÅ©·Î¿¡ »ç¿ë
+#include "AbilitySystemComponent.h" // #define ATTRIBUTE_ACCESSORS ë§¤í¬ë¡œì— ì‚¬ìš©
 #include "TDAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -10,9 +10,9 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-// DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);¸¦ ¾Æ·¡¿Í °°ÀÌ ¼öÁ¤
-// typedef´Â FGameplayAttribute() signature¿¡ ÇÑÁ¤ÇØ¼­ »ç¿ëÇÑ´Ù. ¹İ¸é¿¡ ¾Æ·¡¿Í °°ÀÌ TStaticFunPtr·Î ¼öÁ¤ÇÏ¸é ¸ğµç signature¿¡ »ç¿ë °¡´ÉÇÏ´Ù.
-// typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;¸¦ template ÇüÅÂ·Î º¯ÇüÇÏ¿© ´ÙÇü¼ºÀ» È®º¸ÇÏ¿´´Ù.
+// DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);ë¥¼ ì•„ë˜ì™€ ê°™ì´ ìˆ˜ì •
+// typedefëŠ” FGameplayAttribute() signatureì— í•œì •í•´ì„œ ì‚¬ìš©í•œë‹¤. ë°˜ë©´ì— ì•„ë˜ì™€ ê°™ì´ TStaticFunPtrë¡œ ìˆ˜ì •í•˜ë©´ ëª¨ë“  signatureì— ì‚¬ìš© ê°€ëŠ¥í•˜ë‹¤.
+// typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;ë¥¼ template í˜•íƒœë¡œ ë³€í˜•í•˜ì—¬ ë‹¤í˜•ì„±ì„ í™•ë³´í•˜ì˜€ë‹¤.
 template<class T>
 using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
@@ -21,7 +21,7 @@ using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateU
  */
 
 USTRUCT()
-struct FEffectProperties // ÀÌÆåÆ® ¼Ó¼º ±¸Á¶Ã¼
+struct FEffectProperties // ì´í™íŠ¸ ì†ì„± êµ¬ì¡°ì²´
 {
 	GENERATED_BODY()
 
@@ -137,7 +137,7 @@ public:
 	FGameplayAttributeData MeleeResistance;
 
 
-	//** Meta Attributes (Attribute¿Í »óÈ£ ÀÛ¿ëÇÒ ÀÓ½Ã °ª. Replicated X)
+	//** Meta Attributes (Attributeì™€ ìƒí˜¸ ì‘ìš©í•  ì„ì‹œ ê°’. Replicated X)
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
 	FGameplayAttributeData IncomingDamage;
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
@@ -193,10 +193,14 @@ public:
 	void OnRep_MeleeResistance(const FGameplayAttributeData& OldMeleeResistance) const;
 
 private:
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // ÀÌÆåÆ® ¼Ó¼º ¼³Á¤ÇÏ±â
+	void ApplyIncomingDamage(const FEffectProperties& Props);
+	void ApplyIncomingExp(const FEffectProperties& Props);
+	void ApplyDebuff(const FEffectProperties& Props);
+
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // ì´í™íŠ¸ ì†ì„± ì„¤ì •í•˜ê¸°
 	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 	void SendExpEvent(const FEffectProperties& Props);
-	void ApplyDebuff(const FEffectProperties& Props);
+
 
 	bool bMakeMaxHealth = false;
 	bool bMakeMaxMana = false;

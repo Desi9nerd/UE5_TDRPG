@@ -1,4 +1,4 @@
-#include "GAS/TDAttributeSet.h"
+ï»¿#include "GAS/TDAttributeSet.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/Character.h"
@@ -12,9 +12,9 @@
 
 UTDAttributeSet::UTDAttributeSet()
 {
-	//** #define ATTRIBUTE_ACCESSORS ¸ÅÅ©·Î¿Í ¿¬µ¿. ÃÊ±â°ª ¼³Á¤ °¡´É.
+	//** #define ATTRIBUTE_ACCESSORS ë§¤í¬ë¡œì™€ ì—°ë™. ì´ˆê¸°ê°’ ì„¤ì • ê°€ëŠ¥.
 
-	// TagsToAttributes¶ó´Â mapº¯¼ö¿¡ key: GameplayTags, value: Attributes°ªÀ» ³Ö¾îÁØ´Ù.
+	// TagsToAttributesë¼ëŠ” mapë³€ìˆ˜ì— key: GameplayTags, value: Attributesê°’ì„ ë„£ì–´ì¤€ë‹¤.
 	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
 
 	// Stat Attributes
@@ -44,7 +44,7 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//** Ç×»ó ¸ğµÎ¿¡°Ô ReplicatedµÇ¾î¾ß ÇÏ´Â °ÍµéÀº COND_None, REPNOTIFY_Always·Î ¼³Á¤
+	//** í•­ìƒ ëª¨ë‘ì—ê²Œ Replicatedë˜ì–´ì•¼ í•˜ëŠ” ê²ƒë“¤ì€ COND_None, REPNOTIFY_Alwaysë¡œ ì„¤ì •
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
@@ -71,12 +71,12 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 }
 
 /** Called just before modifying the value of an attribute. AttributeSet can make additional modifications here. Return true to continue, or false to throw out the modification.*/
-// PreAttributeChangeÇÔ¼ö´Â AttributeÀÇ º¯¼ö º¯°æ Àü¿¡ °üÂûÇÏ¿© ¹üÀ§¸¦ ¼³Á¤ÇØµĞ °ªÀÌ ¹üÀ§¸¦ ¹ş¾î³µÀ»½Ã Àû¿ëµÇÁö ¾Ê°Ô ÇÑ´Ù. Clamp ¿ëµµ·Î¸¸ »ç¿ëÇÏ´Â°É ±ÇÀåÇÑ´Ù.
+// PreAttributeChangeí•¨ìˆ˜ëŠ” Attributeì˜ ë³€ìˆ˜ ë³€ê²½ ì „ì— ê´€ì°°í•˜ì—¬ ë²”ìœ„ë¥¼ ì„¤ì •í•´ë‘” ê°’ì´ ë²”ìœ„ë¥¼ ë²—ì–´ë‚¬ì„ì‹œ ì ìš©ë˜ì§€ ì•Šê²Œ í•œë‹¤. Clamp ìš©ë„ë¡œë§Œ ì‚¬ìš©í•˜ëŠ”ê±¸ ê¶Œì¥í•œë‹¤.
 void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
-	//** ¼öÄ¡ Clamp ¹üÀ§ ÁÖ±â (attribute º¯°æ Àü¿¡ clamp Àû¿ë)
+	//** ìˆ˜ì¹˜ Clamp ë²”ìœ„ ì£¼ê¸° (attribute ë³€ê²½ ì „ì— clamp ì ìš©)
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
@@ -98,9 +98,9 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	Super::PostGameplayEffectExecute(Data);
 
 	FEffectProperties Props;
-	SetEffectProperties(Data, Props); // ÀÌÆåÆ® ¼Ó¼º ¼³Á¤ÇÏ±â
+	SetEffectProperties(Data, Props); // ì´í™íŠ¸ ì†ì„± ì„¤ì •í•˜ê¸°
 
-	//** ¼öÄ¡ Clamp ¹üÀ§ ÁÖ±â (attribute º¯°æ ÈÄ¿¡ clamp Àû¿ë)
+	//** ìˆ˜ì¹˜ Clamp ë²”ìœ„ ì£¼ê¸° (attribute ë³€ê²½ í›„ì— clamp ì ìš©)
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
@@ -111,79 +111,16 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
 
-	//** Damage Ã³¸®
+	//** ë°ë¯¸ì§€ ì²˜ë¦¬
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
-		const float LocalIncomingDamage = GetIncomingDamage(); // º¯¼ö¿¡ µé¾î¿À´Â µ¥¹ÌÁö ÀúÀå
-		SetIncomingDamage(0.f);
-
-		if (LocalIncomingDamage > 0.f)
-		{			
-			const float NewHealth = GetHealth() - LocalIncomingDamage; // NewÃ¼·Â = ÇöÀç Ã¼·Â - µ¥¹ÌÁö °è»ê
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); // Ã¼·Â ¾÷µ¥ÀÌÆ®
-
-			const bool bFatal = NewHealth <= 0.f; // Ã¼·ÂÀÌ 0ÀÌÇÏ¸é true
-			if (bFatal) // Ã¼·Â 0 ÀÌÇÏ
-			{
-				IICombat* CombatInterface = Cast<IICombat>(Props.TargetAvatarActor);
-				if (CombatInterface)
-				{
-					CombatInterface->Die(); // Ä³¸¯ÅÍ »ç¸Á Ã³¸®
-				}
-				SendExpEvent(Props); // °æÇèÄ¡ º¸³»±â
-			}
-			else // Ã¼·Â 0 ÃÊ°ú
-			{
-				FGameplayTagContainer TagContainer;
-				TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
-				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact ÅÂ±×°¡ ÀÖ´Â ¸ğµç GameplayAbilityµéÀ» È°¼ºÈ­
-			}
-
-			const bool bBlock = UTDAbilitySystemBPLibrary::IsBlockedHit(Props.EffectContextHandle);
-			const bool bCriticalHit = UTDAbilitySystemBPLibrary::IsCriticalHit(Props.EffectContextHandle);
-			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit); // µ¥¹ÌÁö ¼ıÀÚ ¶ç¿ì±â. FEffectProperties, µ¥¹ÌÁö, Block, CriticalHit Á¤º¸ Àü´Ş
-
-			if (UTDAbilitySystemBPLibrary::IsDebuff(Props.EffectContextHandle))
-			{
-				ApplyDebuff(Props); // µğ¹öÇÁ Àû¿ë.
-			}
-		}
+		ApplyIncomingDamage(Props);
 	}
 
-	//** °æÇèÄ¡ Ã³¸®
+	//** ê²½í—˜ì¹˜ ì²˜ë¦¬
 	if (Data.EvaluatedData.Attribute == GetIncomingExpAttribute())
 	{
-		const float LocalIncomingExp = GetIncomingExp();
-		SetIncomingExp(0.f);
-
-		IICombat* CombatInterface = Cast<IICombat>(Props.SourceCharacter); 
-		IIPlayer* PlayerInterface = Cast<IIPlayer>(Props.SourceCharacter); 
-		if (PlayerInterface && CombatInterface)
-		{
-			const int32 CurrentPlayerLevel = CombatInterface->GetPlayerLevel(); // ÇöÀç ·¹º§
-			const int32 CurrentExp = PlayerInterface->GetExp(); // ÇöÀç °æÇèÄ¡
-
-			const int32 NewPlayerLevel = PlayerInterface->FindLevelForExp(CurrentExp + LocalIncomingExp); // °æÇèÄ¡ Ãß°¡ ÈÄ »õ·Î¿î ·¹º§
-			const int32 AmountOfLevelUps = NewPlayerLevel - CurrentPlayerLevel; // ·¹º§ º¯µ¿°ª
-
-			if (AmountOfLevelUps > 0)
-			{
-				const int32 AttributePointsReward = PlayerInterface->GetAttributePointsReward(CurrentPlayerLevel);
-				const int32 SkillPointsReward = PlayerInterface->GetSkillPointsReward(CurrentPlayerLevel);
-
-				PlayerInterface->AddToPlayerLevel(AmountOfLevelUps);		  // ·¹º§¾÷
-				PlayerInterface->AddToAttributePoints(AttributePointsReward); // Attribute Point Ãß°¡
-				PlayerInterface->AddToSkillPoints(SkillPointsReward);		  // Skill Point Ãß°¡
-
-				// bMakeMaxHealth, bMakeMaxMana = true¸é PostAttributeChange()¿¡¼­ Ã¼·Â°ú ¸¶³ª ÃÖ´ë·Î ¼³Á¤
-				bMakeMaxHealth = true;
-				bMakeMaxMana = true;
-
-				PlayerInterface->LevelUpCPP(); // ·¹º§¾÷
-			}
-
-			PlayerInterface->AddToExpCPP(LocalIncomingExp);
-		}
+		ApplyIncomingExp(Props);
 	}
 }
 
@@ -204,7 +141,86 @@ void UTDAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, f
 	}
 }
 
-void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // ÀÌÆåÆ® ¼Ó¼º ¼³Á¤ÇÏ±â
+
+void UTDAttributeSet::ApplyIncomingDamage(const FEffectProperties& Props)
+{
+	const float LocalIncomingDamage = GetIncomingDamage(); // ë³€ìˆ˜ì— ë“¤ì–´ì˜¤ëŠ” ë°ë¯¸ì§€ ì €ì¥
+	SetIncomingDamage(0.f);
+
+	if (LocalIncomingDamage > 0.f)
+	{
+		const float NewHealth = GetHealth() - LocalIncomingDamage; // Newì²´ë ¥ = í˜„ì¬ ì²´ë ¥ - ë°ë¯¸ì§€ ê³„ì‚°
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); // ì²´ë ¥ ì—…ë°ì´íŠ¸
+
+		const bool bFatal = NewHealth <= 0.f; // ì²´ë ¥ì´ 0ì´í•˜ë©´ true
+		if (bFatal) // ì²´ë ¥ 0 ì´í•˜
+		{
+			IICombat* CombatInterface = Cast<IICombat>(Props.TargetAvatarActor);
+			if (CombatInterface)
+			{
+				CombatInterface->Die(); // ìºë¦­í„° ì‚¬ë§ ì²˜ë¦¬
+			}
+			SendExpEvent(Props); // ê²½í—˜ì¹˜ ë³´ë‚´ê¸°
+		}
+		else // ì²´ë ¥ 0 ì´ˆê³¼
+		{
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
+			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact íƒœê·¸ê°€ ìˆëŠ” ëª¨ë“  GameplayAbilityë“¤ì„ í™œì„±í™”
+		}
+
+		const bool bBlock = UTDAbilitySystemBPLibrary::IsBlockedHit(Props.EffectContextHandle);
+		const bool bCriticalHit = UTDAbilitySystemBPLibrary::IsCriticalHit(Props.EffectContextHandle);
+		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit); // ë°ë¯¸ì§€ ìˆ«ì ë„ìš°ê¸°. FEffectProperties, ë°ë¯¸ì§€, Block, CriticalHit ì •ë³´ ì „ë‹¬
+
+		if (UTDAbilitySystemBPLibrary::IsDebuff(Props.EffectContextHandle))
+		{
+			ApplyDebuff(Props); // ë””ë²„í”„ ì ìš©.
+		}
+	}
+}
+
+void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
+{
+
+}
+
+void UTDAttributeSet::ApplyIncomingExp(const FEffectProperties& Props)
+{
+	const float LocalIncomingExp = GetIncomingExp();
+	SetIncomingExp(0.f);
+
+	IICombat* CombatInterface = Cast<IICombat>(Props.SourceCharacter);
+	IIPlayer* PlayerInterface = Cast<IIPlayer>(Props.SourceCharacter);
+	if (PlayerInterface && CombatInterface)
+	{
+		const int32 CurrentPlayerLevel = CombatInterface->GetPlayerLevel(); // í˜„ì¬ ë ˆë²¨
+		const int32 CurrentExp = PlayerInterface->GetExp(); // í˜„ì¬ ê²½í—˜ì¹˜
+
+		const int32 NewPlayerLevel = PlayerInterface->FindLevelForExp(CurrentExp + LocalIncomingExp); // ê²½í—˜ì¹˜ ì¶”ê°€ í›„ ìƒˆë¡œìš´ ë ˆë²¨
+		const int32 AmountOfLevelUps = NewPlayerLevel - CurrentPlayerLevel; // ë ˆë²¨ ë³€ë™ê°’
+
+		if (AmountOfLevelUps > 0)
+		{
+			const int32 AttributePointsReward = PlayerInterface->GetAttributePointsReward(CurrentPlayerLevel);
+			const int32 SkillPointsReward = PlayerInterface->GetSkillPointsReward(CurrentPlayerLevel);
+
+			PlayerInterface->AddToPlayerLevel(AmountOfLevelUps);		  // ë ˆë²¨ì—…
+			PlayerInterface->AddToAttributePoints(AttributePointsReward); // Attribute Point ì¶”ê°€
+			PlayerInterface->AddToSkillPoints(SkillPointsReward);		  // Skill Point ì¶”ê°€
+
+			// bMakeMaxHealth, bMakeMaxMana = trueë©´ PostAttributeChange()ì—ì„œ ì²´ë ¥ê³¼ ë§ˆë‚˜ ìµœëŒ€ë¡œ ì„¤ì •
+			bMakeMaxHealth = true;
+			bMakeMaxMana = true;
+
+			PlayerInterface->LevelUpCPP(); // ë ˆë²¨ì—…
+		}
+
+		PlayerInterface->AddToExpCPP(LocalIncomingExp);
+	}
+}
+
+void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // ì´í™íŠ¸ ì†ì„± ì„¤ì •í•˜ê¸°
 {
 	// Source = causer of the effect, Target = target of the effect (owner of this AttributeSet)
 
@@ -241,13 +257,13 @@ void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Dam
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
-		// SouceCharacter°¡ ÇÃ·¹ÀÌ¾î. TargetCharcter(= damage causer)°¡ ¸ó½ºÅÍ.
+		// SouceCharacterê°€ í”Œë ˆì´ì–´. TargetCharcter(= damage causer)ê°€ ëª¬ìŠ¤í„°.
 		if (ATDPlayerController* PC = Cast<ATDPlayerController>(Props.SourceCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
-			return; // ¸®ÅÏ.
+			return; // ë¦¬í„´.
 		}
-		// SouceCharacter°¡ ¸ó½ºÅÍ. TargetCharacter(= damage causer °ø°İÇÑ »ç¶÷)°¡ ÇÃ·¹ÀÌ¾î.
+		// SouceCharacterê°€ ëª¬ìŠ¤í„°. TargetCharacter(= damage causer ê³µê²©í•œ ì‚¬ëŒ)ê°€ í”Œë ˆì´ì–´.
 		if (ATDPlayerController* PC = Cast<ATDPlayerController>(Props.TargetCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
@@ -255,7 +271,7 @@ void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Dam
 	}
 }
 
-void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // ÀÚ½ÅÀ» Á×ÀÎ Ä³¸¯ÅÍ¿¡ °æÇèÄ¡ º¸³»±â
+void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // ìì‹ ì„ ì£½ì¸ ìºë¦­í„°ì— ê²½í—˜ì¹˜ ë³´ë‚´ê¸°
 {
 	IICombat* CombatInterface = Cast<IICombat>(Props.TargetCharacter);
 	if (CombatInterface)
@@ -271,10 +287,6 @@ void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // ÀÚ½ÅÀ» Á×À
 		Payload.EventMagnitude = ExpReward;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingExp, Payload);
 	}
-}
-
-void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
-{
 }
 
 void UTDAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const

@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -27,69 +27,69 @@ class TDRPG_API UTDAbilitySystemBPLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static bool MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& ResultWCParams, ATDHUD*& OutTDHUD);
 
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static UTDWidgetControllerOverlay* GetTDWidgetControllerOverlay(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static UTDWidgetControllerAttributeMenu* GetTDWidgetControllerAttributeMenu(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static UTDWidgetControllerSkillMenu* GetTDWidgetControllerSKillMenu(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
+	UFUNCTION(BlueprintCallable)
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass); // GameplayAbility √ ±‚»≠
+	UFUNCTION(BlueprintCallable)
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass); // GameplayAbility Ï¥àÍ∏∞Ìôî
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|CharacterClass")
-	static UTDDA_CharacterClass* GetTDDA_CharacterClass(const UObject* WorldContextObject); // TDGameMode¿« UTDDACharacterClass∏¶ ∞°¡Æø¿¥¬ «‘ºˆ
+	UFUNCTION(BlueprintCallable)
+	static UTDDA_CharacterClass* GetTDDA_CharacterClass(const UObject* WorldContextObject); // TDGameModeÏùò UTDDACharacterClassÎ•º Í∞ÄÏ†∏Ïò§Îäî Ìï®Ïàò
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|Ability")
+	UFUNCTION(BlueprintCallable)
 	static UTDDA_Ability* GetTDDA_Ability(const UObject* WorldContextObject);
 
 	//********************************************************
-	//** TDAbilityType.h.cppøÕ ø¨µø.
+	//*  TDAbilityType.h.cppÏôÄ Ïó∞Îèô.
 	//** Block Hit, Critical Hit, Debuff
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInDebuff);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetDebuffDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDamage);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDuration);
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintCallable)
 	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffFrequency);
 	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType);
 
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintPure)
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	UFUNCTION(BlueprintPure)
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
-	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure)
+	static bool IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
 	//********************************************************
 
-	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayMechanics")
+	UFUNCTION(BlueprintCallable)
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
 
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayMechanics")
+	UFUNCTION(BlueprintPure)
 	static bool IsSameTeam(AActor* FirstActor, AActor* SecondActor);
 
 
 	static int32 GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel);
 
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	UFUNCTION(BlueprintCallable)
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
 
 	//********************************************************
-	//** ≈◊Ω∫∆ÆøÎ. æ∆∑°¿« BP πˆ¡Ø¿∫ √ﬂ»ƒø° ªË¡¶«“ øπ¡§.
+	//** ÌÖåÏä§Ìä∏Ïö©. ÏïÑÎûòÏùò BP Î≤ÑÏ†ºÏùÄ Ï∂îÌõÑÏóê ÏÇ≠Ï†úÌï† ÏòàÏ†ï.
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	static bool GetItemInfo(const FString& InItemName, FItem& OutItemInfo);
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
