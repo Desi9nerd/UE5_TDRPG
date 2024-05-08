@@ -181,6 +181,16 @@ float UTDAbilitySystemBPLibrary::GetDebuffFrequency(const FGameplayEffectContext
 	return 0.f;
 }
 
+FVector UTDAbilitySystemBPLibrary::GetRagdollImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->GetRagdollImpulse();
+	}
+	return FVector::ZeroVector;
+}
+
 bool UTDAbilitySystemBPLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
@@ -271,6 +281,14 @@ void UTDAbilitySystemBPLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 	}
 }
 
+void UTDAbilitySystemBPLibrary::SetRagdollImpulse(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InRagdollImpulse)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetRagdollImpulse(InRagdollImpulse);
+	}
+}
+
 void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin)
 {
 	//* UGamplayStatics::ApplyRadialDamageWithFallOff 함수와 유사하게 구현. *//
@@ -327,6 +345,7 @@ FGameplayEffectContextHandle UTDAbilitySystemBPLibrary::ApplyDamageEffect(const 
 
 	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
 	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+	SetRagdollImpulse(EffectContexthandle, DamageEffectParams.RagdollImpulse);
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.GEDamageClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
 
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);

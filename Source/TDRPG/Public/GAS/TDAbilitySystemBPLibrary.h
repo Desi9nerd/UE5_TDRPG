@@ -62,6 +62,8 @@ public:
 	static float GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle);
 	UFUNCTION(BlueprintCallable)
 	static float GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure)
+	static FVector GetRagdollImpulse(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintCallable)
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
@@ -75,7 +77,10 @@ public:
 	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDuration);
 	UFUNCTION(BlueprintCallable)
 	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffFrequency);
+	UFUNCTION(BlueprintCallable)
 	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType);
+	UFUNCTION(BlueprintCallable)
+	static void SetRagdollImpulse(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InRagdollImpulse);
 
 	UFUNCTION(BlueprintPure)
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);

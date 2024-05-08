@@ -97,6 +97,8 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			//TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 
 			// 방법2: DamageEffectParams
+			const FVector RagdollImpulse = GetActorForwardVector() * DamageEffectParams.RagdollImpulseMagnitude;
+			DamageEffectParams.RagdollImpulse = RagdollImpulse;
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UTDAbilitySystemBPLibrary::ApplyDamageEffect(DamageEffectParams);
 		}

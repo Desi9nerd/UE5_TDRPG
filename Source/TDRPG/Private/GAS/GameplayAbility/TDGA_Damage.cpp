@@ -26,6 +26,7 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) con
 	Params.DebuffDamage = DebuffDamage;
 	Params.DebuffDuration = DebuffDuration;
 	Params.DebuffFrequency = DebuffFrequency;
+	Params.RagdollImpulseMagnitude = RagdollImpulseMagnitude;
 
 	return Params;
 }

@@ -20,6 +20,7 @@ public:
 	FORCEINLINE float GetDebuffDamage() const { return DebuffDamage; }
 	FORCEINLINE float GetDebuffDuration() const { return DebuffDuration; }
 	FORCEINLINE float GetDebuffFrequency() const { return DebuffFrequency; }
+	FORCEINLINE FVector GetRagdollImpulse() const { return RagdollImpulse; }
 
 	FORCEINLINE void SetCriticalHit(bool bInCriticalHit) { bCriticalHit = bInCriticalHit; }
 	FORCEINLINE void SetBlockedHit(bool bInBlockedHit) { bBlockedHit = bInBlockedHit; }
@@ -28,6 +29,7 @@ public:
 	FORCEINLINE void SetDebuffDuration(float InDuration) { DebuffDuration = InDuration; }
 	FORCEINLINE void SetDebuffFrequency(float InFrequency) { DebuffFrequency = InFrequency; }
 	FORCEINLINE void SetDamageType(TSharedPtr<FGameplayTag> InDamageType) { DamageType = InDamageType; }
+	FORCEINLINE void SetRagdollImpulse(const FVector& InRagdollImpulse) { RagdollImpulse = InRagdollImpulse; }
 
 	FORCEINLINE bool IsCriticalHit() const { return bCriticalHit; }
 	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }
@@ -54,6 +56,9 @@ protected:
 	float DebuffFrequency = 0.f;
 
 	TSharedPtr<FGameplayTag> DamageType;
+
+	UPROPERTY()
+	FVector RagdollImpulse = FVector::ZeroVector;
 };
 
 template<>

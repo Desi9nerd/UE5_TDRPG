@@ -34,12 +34,14 @@ protected:
 	FScalableFloat DamageScalableFloat;
 
 	UPROPERTY(EditDefaultsOnly)
-	float DebuffChance = 0.f;
+	float DebuffChance = 50.f;
 	UPROPERTY(EditDefaultsOnly)
-	float DebuffDamage = 0.f;
+	float DebuffDamage = 3.f;
 	UPROPERTY(EditDefaultsOnly)
 	float DebuffFrequency = 1.f;
 	UPROPERTY(EditDefaultsOnly)
-	float DebuffDuration = 0.f;
+	float DebuffDuration = 3.f;
+	UPROPERTY(EditDefaultsOnly)
+	float RagdollImpulseMagnitude = 60.f;
 	//*******************************************
 };

@@ -11,6 +11,7 @@ class UNiagaraSystem;
 
 /** 스킬로 날아가는 액터
  *  CollisionObjectType을 ECC_Projectile 설정하였고 상대방은 해당 채널의 충돌설정을 Overlap 시에만 피격된다.
+ *	TDGA_DamageProjectile에서 FDamageEffectParams DamageEffectParams를 가져다가 사용함.
  */
 
 UCLASS()

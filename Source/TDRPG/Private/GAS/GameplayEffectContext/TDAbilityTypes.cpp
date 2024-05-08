@@ -86,6 +86,10 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		{
 			RepBits |= 1 << 13;
 		}
+		if (RagdollImpulse != FVector::ZeroVector)
+		{
+			RepBits |= 1 << 14;
+		}
 
 		//***************************************************************************
 	}
@@ -170,6 +174,10 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 			}
 		}
 		DamageType->NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 14))
+	{
+		RagdollImpulse.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
 	//****************************************************************************

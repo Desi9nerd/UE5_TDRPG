@@ -40,4 +40,8 @@ struct FDamageEffectParams
 	float DebuffDuration = 0.f;
 	UPROPERTY()
 	float DebuffFrequency = 0.f;
+	UPROPERTY()
+	float RagdollImpulseMagnitude = 0.f;
+	UPROPERTY()
+	FVector RagdollImpulse = FVector::ZeroVector;
 };
