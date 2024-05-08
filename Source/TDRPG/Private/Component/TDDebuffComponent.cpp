@@ -37,7 +37,9 @@ void UTDDebuffComponent::BeginPlay()
 
 void UTDDebuffComponent::DebuffTagChangedByCount(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	if (NewCount > 0)
+	IICombat* CombatInterface = Cast<IICombat>(GetOwner());
+
+	if (NewCount > 0 && CombatInterface && (false == CombatInterface->IsDead()) ) // NewCount>0이고 Owner가 죽지 않았을때
 	{
 		Activate();
 	}

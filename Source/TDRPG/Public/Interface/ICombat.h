@@ -51,21 +51,21 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
-	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag); // 소켓 위치를 리턴
+	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag) = 0; // 소켓 위치를 리턴
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) // BP ver.
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
-	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget);
+	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
-	virtual UAnimMontage* GetHitReactMontageCPP();
+	virtual UAnimMontage* GetHitReactMontageCPP() = 0;
 
 	virtual void Die(const FVector& RagdollImpulse) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDeadBP() const;
-	virtual bool IsDead() const;
+	virtual bool IsDead() const = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetAvatar();
@@ -79,28 +79,27 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
-	virtual TArray<FTaggedMontage> GetAttackMontagesCPP();
+	virtual TArray<FTaggedMontage> GetAttackMontagesCPP() = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
-	virtual UNiagaraSystem* GetBloodEffectCPP();
+	virtual UNiagaraSystem* GetBloodEffectCPP() = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FTaggedMontage GetTaggedMontageByTag(const FGameplayTag& MontageTag);
-	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag);
+	virtual FTaggedMontage GetTaggedMontageByTagCPP(const FGameplayTag& MontageTag) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	int32 GetMinionCount();
-	virtual int32 GetMinionCountCPP();
-
+	virtual int32 GetMinionCountCPP() = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void IncremenetMinionCount(int32 Amount);
-	virtual void IncremenetMinionCntCPP(int32 Amount);
+	virtual void IncremenetMinionCntCPP(int32 Amount) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass();
-	virtual ECharacterClass GetCharacterClassCPP();
+	virtual ECharacterClass GetCharacterClassCPP() = 0;
 
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature GetOnDeathDelegate() = 0;

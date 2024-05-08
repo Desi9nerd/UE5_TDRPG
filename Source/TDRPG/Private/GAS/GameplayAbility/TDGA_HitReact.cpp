@@ -7,7 +7,6 @@ UTDGA_HitReact::UTDGA_HitReact()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerExecution;
 }
 
-
 void UTDGA_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -20,7 +19,7 @@ void UTDGA_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 	if (CombatInterface)
 	{
 		TObjectPtr<UAnimMontage> MontageToPlay = CombatInterface->GetHitReactMontageCPP();
-		check(MontageToPlay);
+		checkf(MontageToPlay, TEXT("No HitReactMontage. Check UTDGA_HitReact::ActivateAbility()"));
 
 		UAbilityTask_PlayMontageAndWait* PlayHitReactTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("TDGA_HitReact"), MontageToPlay, 1.0f);
 		PlayHitReactTask->OnCompleted.AddUniqueDynamic(this, &ThisClass::RemoveGameplayEffectFromOwnerWithHandle);

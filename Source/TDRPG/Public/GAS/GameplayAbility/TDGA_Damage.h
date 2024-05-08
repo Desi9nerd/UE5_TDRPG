@@ -42,6 +42,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float DebuffDuration = 3.f;
 	UPROPERTY(EditDefaultsOnly)
-	float RagdollImpulseMagnitude = 60.f;
+	float RagdollImpulseMagnitude = 10000.f;
 	//*******************************************
 };

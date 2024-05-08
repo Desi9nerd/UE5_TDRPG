@@ -27,6 +27,7 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//** ICombat *********************************************
+
 	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontageCPP() override;
