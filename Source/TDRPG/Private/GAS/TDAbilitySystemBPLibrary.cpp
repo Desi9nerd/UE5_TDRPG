@@ -158,6 +158,16 @@ bool UTDAbilitySystemBPLibrary::IsCriticalHit(const FGameplayEffectContextHandle
 	return false;
 }
 
+bool UTDAbilitySystemBPLibrary::IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->IsDebuff();
+	}
+	return false;
+}
+
 void UTDAbilitySystemBPLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
 	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());
@@ -174,6 +184,47 @@ void UTDAbilitySystemBPLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	if (TDGameplayEffectContext)
 	{
 		TDGameplayEffectContext->SetCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetDebuff(FGameplayEffectContextHandle& EffectContextHandle, bool bInDebuff)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetDebuff(bInDebuff);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDamage)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetDebuffDamage(InDebuffDamage);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDuration)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetDebuffDuration(InDebuffDuration);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle, float InDebuffFrequency)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetDebuffFrequency(InDebuffFrequency);
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		const TSharedPtr<FGameplayTag> NewDamageType = MakeShared<FGameplayTag>(InDamageType);
+		TDGEContext->SetDamageType(NewDamageType);
 	}
 }
 

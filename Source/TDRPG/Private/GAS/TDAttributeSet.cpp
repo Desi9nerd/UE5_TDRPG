@@ -142,6 +142,11 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			const bool bBlock = UTDAbilitySystemBPLibrary::IsBlockedHit(Props.EffectContextHandle);
 			const bool bCriticalHit = UTDAbilitySystemBPLibrary::IsCriticalHit(Props.EffectContextHandle);
 			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit); // 데미지 숫자 띄우기. FEffectProperties, 데미지, Block, CriticalHit 정보 전달
+
+			if (UTDAbilitySystemBPLibrary::IsDebuff(Props.EffectContextHandle))
+			{
+				ApplyDebuff(Props); // 디버프 적용.
+			}
 		}
 	}
 
@@ -266,6 +271,10 @@ void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // 자신을 죽�
 		Payload.EventMagnitude = ExpReward;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingExp, Payload);
 	}
+}
+
+void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
+{
 }
 
 void UTDAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const

@@ -22,7 +22,11 @@ public:
 
 	FORCEINLINE void SetCriticalHit(bool bInCriticalHit) { bCriticalHit = bInCriticalHit; }
 	FORCEINLINE void SetBlockedHit(bool bInBlockedHit) { bBlockedHit = bInBlockedHit; }
-	FORCEINLINE void SetDebuf(bool bInDebuff) { bDebuff = bInDebuff; }
+	FORCEINLINE void SetDebuff(bool bInDebuff) { bDebuff = bInDebuff; }
+	FORCEINLINE void SetDebuffDamage(float InDamage) { DebuffDamage = InDamage; }
+	FORCEINLINE void SetDebuffDuration(float InDuration) { DebuffDuration = InDuration; }
+	FORCEINLINE void SetDebuffFrequency(float InFrequency) { DebuffFrequency = InFrequency; }
+	FORCEINLINE void SetDamageType(TSharedPtr<FGameplayTag> InDamageType) { DamageType = InDamageType; }
 
 	FORCEINLINE bool IsCriticalHit() const { return bCriticalHit; }
 	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }

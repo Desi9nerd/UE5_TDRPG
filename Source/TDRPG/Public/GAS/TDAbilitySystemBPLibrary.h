@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/TDDA_CharacterClass.h"
 #include "Library/TDItemLibrary.h"
@@ -51,16 +52,28 @@ public:
 	static UTDDA_Ability* GetTDDA_Ability(const UObject* WorldContextObject);
 
 	//********************************************************
-	//** Block Hit, Critical Hit
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
-	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
-	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
-	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
-
+	//** TDAbilityType.h.cpp¿Í ¿¬µ¿.
+	//** Block Hit, Critical Hit, Debuff
 	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
 	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static void SetDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInDebuff);
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static void SetDebuffDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDamage);
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffDuration);
+	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffFrequency);
+	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType);
+
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure, Category = "TDAbilitySystemBPLibrary|GameplayEffects")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 	//********************************************************
 
 	UFUNCTION(BlueprintCallable, Category = "TDAbilitySystemBPLibrary|GameplayMechanics")

@@ -124,9 +124,21 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 			// 디버프 확률 = 자신의 디버프 적용확률 * (100 - 상대방의 디버프 저항률) / 100
 			const float EffectiveDebuffChance = SourceDebuffChance * (100 - TargetDebuffResistance) / 100.f;
 			const bool bDebuff = FMath::RandRange(1, 100) < EffectiveDebuffChance; // 게임의 재미를 위해 '1~100랜덤값 < 계산한 디버프 확률'인 경우 디버프
-			if (bDebuff)
+			if (bDebuff) // 디버프가 적용된다면
 			{
-				//TODO: 
+				FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
+
+				UTDAbilitySystemBPLibrary::SetDebuff(ContextHandle, true);
+				UTDAbilitySystemBPLibrary::SetDamageType(ContextHandle, DamageType);
+
+				const float DebuffDamage = Spec.GetSetByCallerMagnitude(TDGameplayTags.Debuff_Damage, false, -1.f);
+				const float DebuffDuration = Spec.GetSetByCallerMagnitude(TDGameplayTags.Debuff_Duration, false, -1.f);
+				const float DebuffFrequency = Spec.GetSetByCallerMagnitude(TDGameplayTags.Debuff_Frequency, false, -1.f);
+
+				// Debuff Damage/Duration/Frequency를 넘김.
+				UTDAbilitySystemBPLibrary::SetDebuffDamage(ContextHandle, DebuffDamage);
+				UTDAbilitySystemBPLibrary::SetDebuffDuration(ContextHandle, DebuffDuration);
+				UTDAbilitySystemBPLibrary::SetDebuffFrequency(ContextHandle, DebuffFrequency);
 			}
 		}
 	}
