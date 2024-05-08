@@ -25,8 +25,8 @@ public:
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
 	// 规过1: GameplayEffectSpecHandle
-	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
-	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+	//UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	//FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 	// 规过2: DamageEffectParams
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
