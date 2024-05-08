@@ -1,4 +1,4 @@
-#include "GAS/ExecutionCalculation/TDGEEC_Damage.h"
+ï»¿#include "GAS/ExecutionCalculation/TDGEEC_Damage.h"
 #include "AbilitySystemComponent.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "GAS/TDAttributeSet.h"
@@ -9,7 +9,7 @@
 
 struct TDDamageStatics
 {
-	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor); // FGameplayEffectAttributeDefinition ArmorDef¸¦ »ı¼ºÇÏ´Â ¸ÅÅ©·Î
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor); // FGameplayEffectAttributeDefinition ArmorDefë¥¼ ìƒì„±í•˜ëŠ” ë§¤í¬ë¡œ
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmorPenetration);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitChance);
@@ -25,7 +25,7 @@ struct TDDamageStatics
 
 	TDDamageStatics()
 	{
-		// Å¬·¡½º ÀÌ¸§, ¸â¹ö ÀÌ¸§, Source ¶Ç´Â Target, ½º³À¼¦ ÇÒÁö ¿©ºÎ. ÀÚ¼¼ÇÑ »çÇ× F12·Î È®ÀÎ
+		// í´ë˜ìŠ¤ ì´ë¦„, ë©¤ë²„ ì´ë¦„, Source ë˜ëŠ” Target, ìŠ¤ëƒ…ìƒ· í• ì§€ ì—¬ë¶€. ìì„¸í•œ ì‚¬í•­ F12ë¡œ í™•ì¸
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, BlockChance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, ArmorPenetration, Source, false);
@@ -49,21 +49,21 @@ struct TDDamageStatics
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fireball, FireballResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Meteor, MeteorResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Melee, MeleeResistanceDef);
-		// TODO: Resistance Ãß°¡ ½Ã µî·Ï
+		// TODO: Resistance ì¶”ê°€ ì‹œ ë“±ë¡
 	}
 };
 
 static const TDDamageStatics& DamageStatics()
 {
-	// static º¯¼ö »ı¼º ÈÄ º¯¼ö ¸®ÅÏ
+	// static ë³€ìˆ˜ ìƒì„± í›„ ë³€ìˆ˜ ë¦¬í„´
 	static TDDamageStatics DStatics;
 	return DStatics;
 }
 
 UTDGEEC_Damage::UTDGEEC_Damage()
 {
-	// Armor attribute¸¦ Ä¸Ã³ÇÏ¿© ÃßÈÄ¿¡ °è»ê¿¡ ÀÌ¿ë
-	// TArray<FGameplayEffectAttributeCaptureDefinition> RelevantAttributesToCapture; ¹è¿­¿¡ ´ãÀ½
+	// Armor attributeë¥¼ ìº¡ì²˜í•˜ì—¬ ì¶”í›„ì— ê³„ì‚°ì— ì´ìš©
+	// TArray<FGameplayEffectAttributeCaptureDefinition> RelevantAttributesToCapture; ë°°ì—´ì— ë‹´ìŒ
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
@@ -81,17 +81,17 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	// SourceASC¿Í TargetASC°¡ ÀÖ´Â °æ¿ì AvatorActor¸¦ °¡Á®¿Â´Ù
+	// SourceASCì™€ TargetASCê°€ ìˆëŠ” ê²½ìš° AvatorActorë¥¼ ê°€ì ¸ì˜¨ë‹¤
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-	// Source, Target Ä³¸¯ÅÍÀÇ ·¹º§À» »ç¿ëÇÏ±â À§ÇØ IICombat º¯¼ö¸¦ ¸¸µç´Ù
+	// Source, Target ìºë¦­í„°ì˜ ë ˆë²¨ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ IICombat ë³€ìˆ˜ë¥¼ ë§Œë“ ë‹¤
 	IICombat* SourceCombatInterface = Cast<IICombat>(SourceAvatar);
 	IICombat* TargetCombatInterface = Cast<IICombat>(TargetAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
-	// Source¿Í TargetÀÇ TagµéÀ» ¸ğÀº´Ù.
+	// Sourceì™€ Targetì˜ Tagë“¤ì„ ëª¨ì€ë‹¤.
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 	FAggregatorEvaluateParameters EvaluationParameters;
@@ -103,27 +103,27 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	//* Debuff
 	const FTDGameplayTags& TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
 
-	for (TTuple<FGameplayTag, FGameplayTag> Pair : TDGameplayTags.DamageTypesToDebuffs) // TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffsÀ» ¼øÈ¸
+	for (TTuple<FGameplayTag, FGameplayTag> Pair : TDGameplayTags.DamageTypesToDebuffs) // TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffsì„ ìˆœíšŒ
 	{
 		const FGameplayTag& DamageType = Pair.Key;   // DamageType: Fireball, Meteor, Ice, Melee, ...
 		const FGameplayTag& DebuffType = Pair.Value; // DebuffType: DotDamage, Slow, Stun, ...
-		const float TypeDamage = Spec.GetSetByCallerMagnitude(DamageType, false, -1.f); // DamageTypeÅÂ±×·Î magnitude¸¦ Ã£À½. ¸ø Ã£À»½Ã -1.
+		const float TypeDamage = Spec.GetSetByCallerMagnitude(DamageType, false, -1.f); // DamageTypeíƒœê·¸ë¡œ magnitudeë¥¼ ì°¾ìŒ. ëª» ì°¾ì„ì‹œ -1.
 
-		if (TypeDamage > -0.5f) // µ¥¹ÌÁö¸¦ Ã£Àº °æ¿ì. floatÀÇ ¿ÀÂ÷¹üÀ§¸¦ °¨¾ÈÇÏ¿© 0ÀÌ ¾Æ´Ñ -0.5 º¸´Ù Å©°Ô·Î ¼³Á¤. 
+		if (TypeDamage > -0.5f) // ë°ë¯¸ì§€ë¥¼ ì°¾ì€ ê²½ìš°. floatì˜ ì˜¤ì°¨ë²”ìœ„ë¥¼ ê°ì•ˆí•˜ì—¬ 0ì´ ì•„ë‹Œ -0.5 ë³´ë‹¤ í¬ê²Œë¡œ ì„¤ì •. 
 		{
 			//* Debuff
-			// Debuff_ChanceÅÂ±×·Î magnitude(=µğ¹öÇÁ È®·ü)¸¦ Ã£À½. ÅÂ±×¸¦ ¸ø Ã£Àº °æ¿ì -1.
+			// Debuff_Chanceíƒœê·¸ë¡œ magnitude(=ë””ë²„í”„ í™•ë¥ )ë¥¼ ì°¾ìŒ. íƒœê·¸ë¥¼ ëª» ì°¾ì€ ê²½ìš° -1.
 			const float SourceDebuffChance = Spec.GetSetByCallerMagnitude(TDGameplayTags.Debuff_Chance, false, -1.f);
 
 			//* Resistance 
 			float TargetDebuffResistance = 0.f;
-			const FGameplayTag& ResistanceTag = TDGameplayTags.DamageTypesToResistances[DamageType]; // DamageType¿¡ ÇØ´çÇÏ´Â ResistanceÀÇ ÅÂ±×
+			const FGameplayTag& ResistanceTag = TDGameplayTags.DamageTypesToResistances[DamageType]; // DamageTypeì— í•´ë‹¹í•˜ëŠ” Resistanceì˜ íƒœê·¸
 			ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(TDDamageStatics().TagsToCaptureDefs[ResistanceTag], EvaluationParameters, TargetDebuffResistance);
 			TargetDebuffResistance = FMath::Max<float>(TargetDebuffResistance, 0.f);
 
-			// µğ¹öÇÁ È®·ü = ÀÚ½ÅÀÇ µğ¹öÇÁ Àû¿ëÈ®·ü * (100 - »ó´ë¹æÀÇ µğ¹öÇÁ ÀúÇ×·ü) / 100
+			// ë””ë²„í”„ í™•ë¥  = ìì‹ ì˜ ë””ë²„í”„ ì ìš©í™•ë¥  * (100 - ìƒëŒ€ë°©ì˜ ë””ë²„í”„ ì €í•­ë¥ ) / 100
 			const float EffectiveDebuffChance = SourceDebuffChance * (100 - TargetDebuffResistance) / 100.f;
-			const bool bDebuff = FMath::RandRange(1, 100) < EffectiveDebuffChance; // °ÔÀÓÀÇ Àç¹Ì¸¦ À§ÇØ '1~100·£´ı°ª < °è»êÇÑ µğ¹öÇÁ È®·ü'ÀÎ °æ¿ì µğ¹öÇÁ
+			const bool bDebuff = FMath::RandRange(1, 100) < EffectiveDebuffChance; // ê²Œì„ì˜ ì¬ë¯¸ë¥¼ ìœ„í•´ '1~100ëœë¤ê°’ < ê³„ì‚°í•œ ë””ë²„í”„ í™•ë¥ 'ì¸ ê²½ìš° ë””ë²„í”„
 			if (bDebuff)
 			{
 				//TODO: 
@@ -134,21 +134,21 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 
 
-	// µ¥¹ÌÁö º¯¼ö¿¡ ´ã±â. GetSetByCallerMagnitude´Â SetByCaller modifierÀÇ magnitude°ªÀ» °¡Á®¿È
-	// DamageType°ú Resistance¸¦ °í·ÁÇÏ¿© µ¥¹ÌÁö °è»ê ÈÄ µ¥¹ÌÁö º¯¼ö(=Damage)¿¡ ´ã±â.
+	// ë°ë¯¸ì§€ ë³€ìˆ˜ì— ë‹´ê¸°. GetSetByCallerMagnitudeëŠ” SetByCaller modifierì˜ magnitudeê°’ì„ ê°€ì ¸ì˜´
+	// DamageTypeê³¼ Resistanceë¥¼ ê³ ë ¤í•˜ì—¬ ë°ë¯¸ì§€ ê³„ì‚° í›„ ë°ë¯¸ì§€ ë³€ìˆ˜(=Damage)ì— ë‹´ê¸°.
 	float Damage = 0.f;
 	for (const TTuple<FGameplayTag, FGameplayTag>& Pair : FTDGameplayTags::GetTDGameplayTags().DamageTypesToResistances)
 	{
 		const FGameplayTag DamageTypeTag = Pair.Key;
 		const FGameplayTag ResistanceTag = Pair.Value;
 
-		checkf(TDDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString()); // ¹æ¾îÄÚµå. ResistanceTag È®ÀÎ. 
+		checkf(TDDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString()); // ë°©ì–´ì½”ë“œ. ResistanceTag í™•ì¸. 
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TDDamageStatics().TagsToCaptureDefs[ResistanceTag];
 
-		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // ÇØ´ç DamageTypeÀÇ µ¥¹ÌÁö °ª
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // í•´ë‹¹ DamageTypeì˜ ë°ë¯¸ì§€ ê°’
 
 		float Resistance = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance); // ÀúÇ×·Â°ª 
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance); // ì €í•­ë ¥ê°’ 
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
@@ -159,18 +159,18 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 	//**************************************************************************//
 	//* Block
-	// Å¸°ÙÀÇ 'BlockChance¸¦ Ä¸Ã³' + 'Block ¼º°ø ¿©ºÎ(=bBlocked)¸¦ ÆÇ´Ü'
+	// íƒ€ê²Ÿì˜ 'BlockChanceë¥¼ ìº¡ì²˜' + 'Block ì„±ê³µ ì—¬ë¶€(=bBlocked)ë¥¼ íŒë‹¨'
 	float TargetBlockChance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance); // BlockChance Ä¸Ã³
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance); // BlockChance ìº¡ì²˜
 	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
 
-	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance; // Block ¼º°ø ¿©ºÎ ÆÇ´Ü
+	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance; // Block ì„±ê³µ ì—¬ë¶€ íŒë‹¨
 
-	// UTDAbilitySystemBPLibrary¿¡ Block Hit ¼º°ø ¿©ºÎ¸¦ ³Ñ±è
+	// UTDAbilitySystemBPLibraryì— Block Hit ì„±ê³µ ì—¬ë¶€ë¥¼ ë„˜ê¹€
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 	UTDAbilitySystemBPLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
 
-	//* µ¥¹ÌÁö °è»ê. Block ¼º°ø: Damage Àı¹İ, Block ½ÇÆĞ: Damage
+	//* ë°ë¯¸ì§€ ê³„ì‚°. Block ì„±ê³µ: Damage ì ˆë°˜, Block ì‹¤íŒ¨: Damage
 	Damage = bBlocked ? Damage / 2.f : Damage;
 	//**************************************************************************//
 
@@ -178,26 +178,26 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	//**************************************************************************//
 	//* Armor, ArmorPenetration
 	float TargetArmor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor); // TargetArmor Ä¸Ã³
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor); // TargetArmor ìº¡ì²˜
 	TargetArmor = FMath::Max<float>(TargetArmor, 0.f); 
 
 	float SourceArmorPenetration = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration); // SourceArmorPenetration Ä¸Ã³
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration); // SourceArmorPenetration ìº¡ì²˜
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
 
 	const UTDDA_CharacterClass* TDDA_CharacterClass = UTDAbilitySystemBPLibrary::GetTDDA_CharacterClass(SourceAvatar);
 	check(TDDA_CharacterClass->DamageCalculationCoefficients);
-	const FRealCurve* ArmorPenetrationCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString()); // CT_DamageCalculationCoeffientsÀÇ "ArmorPenetration" µ¥ÀÌÅÍ 
-	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel()); // ·¹º§¿¡ ¸Â´Â Column¿¡ Á¢±ÙÇÏ¿© °ªÀ» °¡Á®¿È
+	const FRealCurve* ArmorPenetrationCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString()); // CT_DamageCalculationCoeffientsì˜ "ArmorPenetration" ë°ì´í„° 
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel()); // ë ˆë²¨ì— ë§ëŠ” Columnì— ì ‘ê·¼í•˜ì—¬ ê°’ì„ ê°€ì ¸ì˜´
 
-	// Target's Armor¸¦ Source's ArmorPenetration¸¸Å­ Â÷°¨.
+	// Target's Armorë¥¼ Source's ArmorPenetrationë§Œí¼ ì°¨ê°.
 	TargetArmor *= (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
 	const float EffectiveArmor = TargetArmor;
 
 	const FRealCurve* EffectiveArmorCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString());
 	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 
-	//* µ¥¹ÌÁö °è»ê. EffectiveArmor ÆÛ¼¾Æ®Áö¸¸Å­ µ¥¹ÌÁö Â÷°¨
+	//* ë°ë¯¸ì§€ ê³„ì‚°. EffectiveArmor í¼ì„¼íŠ¸ì§€ë§Œí¼ ë°ë¯¸ì§€ ì°¨ê°
 	Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 	//**************************************************************************//
 
@@ -219,19 +219,19 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	const FRealCurve* CriticalHitResistanceCurve = TDDA_CharacterClass->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
 	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 
-	// Critical Hit Resistance´Â Critical Hit È®·üÀ» ÁÙÀÓ
+	// Critical Hit ResistanceëŠ” Critical Hit í™•ë¥ ì„ ì¤„ì„
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
-	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance; // Critical Hit ¼º°ø °áÁ¤
+	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance; // Critical Hit ì„±ê³µ ê²°ì •
 
-	// UTDAbilitySystemBPLibrary¿¡ Critical Hit ¿©ºÎ¸¦ ³Ñ±è.
+	// UTDAbilitySystemBPLibraryì— Critical Hit ì—¬ë¶€ë¥¼ ë„˜ê¹€.
 	UTDAbilitySystemBPLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
 
-	//** µ¥¹ÌÁö °è»ê. Critical Hit ½Ã µ¥¹ÌÁö 2¹è
+	//** ë°ë¯¸ì§€ ê³„ì‚°. Critical Hit ì‹œ ë°ë¯¸ì§€ 2ë°°
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
 	//**************************************************************************//
 
 
-	//* ÃÖÁ¾ °è»êµÈ µ¥¹ÌÁö¸¦ ³Ñ±è
+	//* ìµœì¢… ê³„ì‚°ëœ ë°ë¯¸ì§€ë¥¼ ë„˜ê¹€
 	const FGameplayModifierEvaluatedData EvaluatedData(UTDAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
