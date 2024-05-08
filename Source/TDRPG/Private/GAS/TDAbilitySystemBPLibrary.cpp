@@ -138,6 +138,49 @@ UTDDA_Ability* UTDAbilitySystemBPLibrary::GetTDDA_Ability(const UObject* WorldCo
 	return TDGameMode->TDDAAbility;
 }
 
+FGameplayTag UTDAbilitySystemBPLibrary::GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		if (TDGameplayEffectContext->GetDamageType().IsValid())
+		{
+			return *TDGameplayEffectContext->GetDamageType();
+		}
+	}
+	return FGameplayTag();
+}
+
+float UTDAbilitySystemBPLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->GetDebuffDamage();
+	}
+	return 0.f;
+}
+
+float UTDAbilitySystemBPLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->GetDebuffDuration();
+	}
+	return 0.f;
+}
+
+float UTDAbilitySystemBPLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->GetDebuffFrequency();
+	}
+	return 0.f;
+}
+
 bool UTDAbilitySystemBPLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
@@ -242,10 +285,10 @@ void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		World->OverlapMultiByObjectType(Overlaps, SphereOrigin, FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), FCollisionShape::MakeSphere(Radius), SphereParams);
 		for (FOverlapResult& Overlap : Overlaps)
 		{
-			const bool ImplementsCombatInterface = Overlap.GetActor()->Implements<UICombat>();
-			if (ImplementsCombatInterface)
+			IICombat* CombatInterface = Cast<IICombat>(Overlap.GetActor());
+			if (CombatInterface)
 			{
-				const bool IsDead = IICombat::Execute_IsDead(Overlap.GetActor());
+				const bool IsDead = CombatInterface->IsDead();
 				if(false == IsDead)
 				{
 					OutOverlappingActors.AddUnique(IICombat::Execute_GetAvatar(Overlap.GetActor()));					

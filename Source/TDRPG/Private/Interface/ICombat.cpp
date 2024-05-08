@@ -25,6 +25,11 @@ void IICombat::Die()
 {
 }
 
+bool IICombat::IsDead() const
+{
+	return false;
+}
+
 AActor* IICombat::GetCombatTargetCPP() const
 {
 	return nullptr;

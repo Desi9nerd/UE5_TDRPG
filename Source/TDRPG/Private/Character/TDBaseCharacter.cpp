@@ -171,7 +171,12 @@ FVector ATDBaseCharacter::GetCombatSocketLocationCPP(const FGameplayTag& Montage
 	return FVector();
 }
 
-bool ATDBaseCharacter::IsDead_Implementation() const
+bool ATDBaseCharacter::IsDeadBP_Implementation() const
+{
+	return bDead;
+}
+
+bool ATDBaseCharacter::IsDead() const
 {
 	return bDead;
 }

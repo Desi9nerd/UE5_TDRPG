@@ -60,7 +60,8 @@ public:
 	virtual void Die();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool IsDead() const;
+	bool IsDeadBP() const;
+	virtual bool IsDead() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetAvatar();

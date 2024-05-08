@@ -5,6 +5,7 @@
 #include "GameplayEffectExtension.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
+#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
 #include "Interface/IPlayer.h"
 #include "Kismet/GameplayStatics.h"
@@ -100,6 +101,10 @@ void UTDAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props); // 이펙트 속성 설정하기
 
+	IICombat* CombatInterface = Cast<IICombat>(Props.TargetCharacter);
+	if (CombatInterface && CombatInterface->IsDead()) return; // GameplayEffect를 적용해야하는 상대방이 죽은 경우 바로 리턴.
+
+
 	//** 수치 Clamp 범위 주기 (attribute 변경 후에 clamp 적용)
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
@@ -175,14 +180,55 @@ void UTDAttributeSet::ApplyIncomingDamage(const FEffectProperties& Props)
 
 		if (UTDAbilitySystemBPLibrary::IsDebuff(Props.EffectContextHandle))
 		{
-			ApplyDebuff(Props); // 디버프 적용.
+			ApplyDebuff(Props); // 상대방에 디버프 적용.
 		}
 	}
 }
 
+// BP에서 생성한 GameplayEffect 클래스를 적용하려면 동적으로 적용해야 한다.
+// 동적으로 추가하면 replication이 적용되지 않으므로 서버에서 실행한 후 변경사항이 발생하면 replicated되어 클라이언트에 알려줘야 한다.
 void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
 {
+	const FTDGameplayTags& TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
+	FGameplayEffectContextHandle GEContextHandle = Props.SourceASC->MakeEffectContext();
+	GEContextHandle.AddSourceObject(Props.SourceAvatarActor);
 
+	const FGameplayTag DamageType = UTDAbilitySystemBPLibrary::GetDamageType(Props.EffectContextHandle);
+	const float DebuffDamage = UTDAbilitySystemBPLibrary::GetDebuffDamage(Props.EffectContextHandle);
+	const float DebuffDuration = UTDAbilitySystemBPLibrary::GetDebuffDuration(Props.EffectContextHandle);
+	const float DebuffFrequency = UTDAbilitySystemBPLibrary::GetDebuffFrequency(Props.EffectContextHandle);
+
+	// GameplayEffect 동적 생성.
+	FString DebuffName = FString::Printf(TEXT("DynamicDebuff_%s"), *DamageType.ToString());
+	UGameplayEffect* GE = NewObject<UGameplayEffect>(GetTransientPackage(), FName(DebuffName));
+
+	GE->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+	GE->Period = DebuffFrequency;
+	GE->DurationMagnitude = FScalableFloat(DebuffDuration);
+
+	GE->InheritableOwnedTagsContainer.AddTag(TDGameplayTags.DamageTypesToDebuffs[DamageType]); // DamageType태크 key에 대응하는 value(=Debuff 태그)를 담음.
+
+	GE->StackingType = EGameplayEffectStackingType::AggregateBySource;
+	GE->StackLimitCount = 1;
+
+	const int32 Index = GE->Modifiers.Num();
+	GE->Modifiers.Add(FGameplayModifierInfo());
+	FGameplayModifierInfo& ModifierInfo = GE->Modifiers[Index];
+
+	ModifierInfo.ModifierMagnitude = FScalableFloat(DebuffDamage);
+	ModifierInfo.ModifierOp = EGameplayModOp::Additive;
+	ModifierInfo.Attribute = UTDAttributeSet::GetIncomingDamageAttribute();
+
+	// GameplayEffectSpec 동적 생성.
+	FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(GE, GEContextHandle, 1.f);
+	if (MutableSpec)
+	{
+		FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(MutableSpec->GetContext().Get());
+		TSharedPtr<FGameplayTag> DebuffDamageType = MakeShareable(new FGameplayTag(DamageType));
+		TDGEContext->SetDamageType(DebuffDamageType);
+
+		Props.TargetASC->ApplyGameplayEffectSpecToSelf(*MutableSpec); // 상대방에 디버프 적용!
+	}
 }
 
 void UTDAttributeSet::ApplyIncomingExp(const FEffectProperties& Props)

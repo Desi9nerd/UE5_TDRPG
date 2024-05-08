@@ -55,6 +55,15 @@ public:
 	//*  TDAbilityType.h.cpp와 연동.
 	//** Block Hit, Critical Hit, Debuff
 	UFUNCTION(BlueprintCallable)
+	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintCallable)
+	static float GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintCallable)
+	static float GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintCallable)
+	static float GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintCallable)
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
 	UFUNCTION(BlueprintCallable)
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);

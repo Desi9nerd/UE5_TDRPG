@@ -16,6 +16,7 @@ struct FTDGameplayEffectContext : public FGameplayEffectContext
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 	FORCEINLINE float GetDebuffDamage() const { return DebuffDamage; }
 	FORCEINLINE float GetDebuffDuration() const { return DebuffDuration; }
 	FORCEINLINE float GetDebuffFrequency() const { return DebuffFrequency; }
