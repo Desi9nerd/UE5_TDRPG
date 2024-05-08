@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GAS/GameplayAbility/TDGA.h"
+#include "Library/TDDamageLibrary.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
 #include "TDGA_Damage.generated.h"

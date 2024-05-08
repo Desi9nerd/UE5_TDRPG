@@ -2,7 +2,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
-#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
+#include "Library/TDDamageLibrary.h"
 #include "TDProjectile.generated.h"
 
 class USphereComponent;
