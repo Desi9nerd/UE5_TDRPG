@@ -95,7 +95,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 	}
 
 	//** 변경된 RepBits값을 바탕으로 Serialize를 해야되는 것들을 Serialize 해준다.
-	Ar.SerializeBits(&RepBits, 9);
+	Ar.SerializeBits(&RepBits, 14); // 추가하면 LengthBits도 변경!
 
 	if (RepBits & (1 << 0))
 	{
