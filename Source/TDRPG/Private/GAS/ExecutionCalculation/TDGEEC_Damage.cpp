@@ -49,6 +49,7 @@ struct TDDamageStatics
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fireball, FireballResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Meteor, MeteorResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Melee, MeleeResistanceDef);
+		// TODO: Resistance 추가 시 등록
 	}
 };
 
@@ -96,6 +97,41 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
+
+
+	//**************************************************************************//
+	//* Debuff
+	const FTDGameplayTags& TDGameplayTags = FTDGameplayTags::GetTDGameplayTags();
+
+	for (TTuple<FGameplayTag, FGameplayTag> Pair : TDGameplayTags.DamageTypesToDebuffs) // TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs을 순회
+	{
+		const FGameplayTag& DamageType = Pair.Key;   // DamageType: Fireball, Meteor, Ice, Melee, ...
+		const FGameplayTag& DebuffType = Pair.Value; // DebuffType: DotDamage, Slow, Stun, ...
+		const float TypeDamage = Spec.GetSetByCallerMagnitude(DamageType, false, -1.f); // DamageType태그로 magnitude를 찾음. 못 찾을시 -1.
+
+		if (TypeDamage > -0.5f) // 데미지를 찾은 경우. float의 오차범위를 감안하여 0이 아닌 -0.5 보다 크게로 설정. 
+		{
+			//* Debuff
+			// Debuff_Chance태그로 magnitude(=디버프 확률)를 찾음. 태그를 못 찾은 경우 -1.
+			const float SourceDebuffChance = Spec.GetSetByCallerMagnitude(TDGameplayTags.Debuff_Chance, false, -1.f);
+
+			//* Resistance 
+			float TargetDebuffResistance = 0.f;
+			const FGameplayTag& ResistanceTag = TDGameplayTags.DamageTypesToResistances[DamageType]; // DamageType에 해당하는 Resistance의 태그
+			ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(TDDamageStatics().TagsToCaptureDefs[ResistanceTag], EvaluationParameters, TargetDebuffResistance);
+			TargetDebuffResistance = FMath::Max<float>(TargetDebuffResistance, 0.f);
+
+			// 디버프 확률 = 자신의 디버프 적용확률 * (100 - 상대방의 디버프 저항률) / 100
+			const float EffectiveDebuffChance = SourceDebuffChance * (100 - TargetDebuffResistance) / 100.f;
+			const bool bDebuff = FMath::RandRange(1, 100) < EffectiveDebuffChance; // 게임의 재미를 위해 '1~100랜덤값 < 계산한 디버프 확률'인 경우 디버프
+			if (bDebuff)
+			{
+				//TODO: 
+			}
+		}
+	}
+	//**************************************************************************//
+
 
 
 	// 데미지 변수에 담기. GetSetByCallerMagnitude는 SetByCaller modifier의 magnitude값을 가져옴
