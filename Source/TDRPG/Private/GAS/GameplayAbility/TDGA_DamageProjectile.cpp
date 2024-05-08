@@ -55,7 +55,7 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		HitResult.Location = ProjectileTargetLocation;
 		EffectContextHandle.AddHitResult(HitResult);
 
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GameplayEffectDamageClass, GetAbilityLevel(), EffectContextHandle);
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(GEDamageClass, GetAbilityLevel(), EffectContextHandle);
 
 		const FTDGameplayTags GameplayTags = FTDGameplayTags::GetTDGameplayTags();
 

@@ -1,9 +1,12 @@
 #include "GAS/TDAbilitySystemBPLibrary.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/TDWidgetController.h"
 #include "Player/TDPlayerState.h"
 #include "UI/HUD/TDHUD.h"
 #include "GameMode/TDGameModeBase.h"
+#include "GameplayTags/TDGameplayTags.h"
 #include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "Interface/ICombat.h"
 #include "Library/TDItemLibrary.h"
@@ -221,6 +224,25 @@ int32 UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(const UObject* Wor
 	const float ExpReward = DA_CharacterClassInfo.ExpReward.GetValueAtLevel(CharacterLevel);
 
 	return static_cast<int32>(ExpReward);
+}
+
+FGameplayEffectContextHandle UTDAbilitySystemBPLibrary::ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams)
+{
+	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+
+	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
+	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.GEDamageClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance, DamageEffectParams.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage, DamageEffectParams.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration, DamageEffectParams.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency, DamageEffectParams.DebuffFrequency);
+
+	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	return EffectContexthandle;
 }
 
 bool UTDAbilitySystemBPLibrary::GetItemInfo(const FString& InItemName, FItem& OutItemInfo)

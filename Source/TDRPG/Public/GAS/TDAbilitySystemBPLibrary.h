@@ -5,6 +5,7 @@
 #include "Library/TDItemLibrary.h"
 #include "TDAbilitySystemBPLibrary.generated.h"
 
+struct FDamageEffectParams;
 struct FGameplayEffectContextHandle;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
@@ -71,7 +72,8 @@ public:
 
 	static int32 GetExpRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass, int32 CharacterLevel);
 
-
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
 
 	//********************************************************
 	//** 테스트용. 아래의 BP 버젼은 추후에 삭제할 예정.

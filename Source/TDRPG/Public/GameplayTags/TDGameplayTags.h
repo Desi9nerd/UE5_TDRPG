@@ -39,6 +39,11 @@ public:
 	FGameplayTag Debuff_Stun;
 	FGameplayTag Debuff_None;
 
+	FGameplayTag Debuff_Chance;
+	FGameplayTag Debuff_Damage;
+	FGameplayTag Debuff_Duration;
+	FGameplayTag Debuff_Frequency;
+
 	// Meta Attributes
 	FGameplayTag Attributes_Meta_IncomingExp;
 

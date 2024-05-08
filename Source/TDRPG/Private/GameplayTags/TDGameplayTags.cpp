@@ -71,6 +71,10 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Debuff_Stun = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Stun"), FString("디버프: 기절"));
 	GameplayTags.Debuff_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.None"), FString("디버프: 없음"));
 
+	GameplayTags.Debuff_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Chance"), FString("디버프 걸릴 확률"));
+	GameplayTags.Debuff_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Damage"), FString("디버프 데미지 적용 수치"));
+	GameplayTags.Debuff_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Duration"), FString("디버프 지속시간"));
+	GameplayTags.Debuff_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Frequency"), FString("디버프 빈도"));
 
 	// Meta Attributes
 	GameplayTags.Attributes_Meta_IncomingExp = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Meta.IncomingExp"), FString("경험치 획득 Meta Attribute"));
