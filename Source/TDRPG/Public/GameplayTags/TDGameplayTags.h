@@ -34,6 +34,11 @@ public:
 
 	FGameplayTag Attributes_Resistance_Melee;
 
+	FGameplayTag Debuff_DotDamage;
+	FGameplayTag Debuff_Slow;
+	FGameplayTag Debuff_Stun;
+	FGameplayTag Debuff_None;
+
 	// Meta Attributes
 	FGameplayTag Attributes_Meta_IncomingExp;
 
@@ -69,14 +74,17 @@ public:
 
 	//** Meta ************************************************
 	// Damage Type
-	FGameplayTag Damage;
-	FGameplayTag Damage_Fireball;
-	FGameplayTag Damage_Meteor;
+	FGameplayTag DamageType;
+	FGameplayTag DamageType_Fireball;
+	FGameplayTag DamageType_Meteor;
+	FGameplayTag DamageType_Ice;
 
-	FGameplayTag Damage_Melee;
+	FGameplayTag DamageType_Melee;
+	FGameplayTag DamageType_None;
 
 	// TMap. key: DamageType, value: Resistance
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 
 	// Effect
 	FGameplayTag Effect_HitReact;

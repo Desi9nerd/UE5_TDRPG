@@ -53,23 +53,40 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 
 	//** Meta
 	// Damage Type
-	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("데미지"));
-	GameplayTags.Damage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fireball"), FString("파이어볼 데미지"));
-	GameplayTags.Damage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Meteor"), FString("메테오 데미지"));
-	GameplayTags.Damage_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Melee"), FString("근접공격 데미지"));
+	GameplayTags.DamageType = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType"), FString("데미지 타입"));
+	GameplayTags.DamageType_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Fireball"), FString("파이어볼 데미지 타입"));
+	GameplayTags.DamageType_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Meteor"), FString("메테오 데미지 타입"));
+	GameplayTags.DamageType_Ice = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Ice"), FString("얼음 데미지 타입"));
+	GameplayTags.DamageType_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Melee"), FString("근접공격 데미지 타입"));
+	GameplayTags.DamageType_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.None"), FString("데미지 타입 없음"));
 
 	// Resistance
 	GameplayTags.Attributes_Resistance_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fireball"), FString("파이어볼 데미지 저항"));
 	GameplayTags.Attributes_Resistance_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Meteor"), FString("메테오 데미지 저항"));
 	GameplayTags.Attributes_Resistance_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Melee"), FString("근접공격 데미지 저항"));
 
+	// Debuffs
+	GameplayTags.Debuff_DotDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.DotDamage"), FString("디버프: 도트 데미지"));
+	GameplayTags.Debuff_Slow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Slow"), FString("디버프: 둔화"));
+	GameplayTags.Debuff_Stun = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Stun"), FString("디버프: 기절"));
+	GameplayTags.Debuff_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.None"), FString("디버프: 없음"));
+
+
 	// Meta Attributes
 	GameplayTags.Attributes_Meta_IncomingExp = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Meta.IncomingExp"), FString("경험치 획득 Meta Attribute"));
 
+	//**************************************************************************************
 	// TMap 등록. DamageTypesToResistances
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fireball, GameplayTags.Attributes_Resistance_Fireball);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Meteor, GameplayTags.Attributes_Resistance_Meteor);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Melee, GameplayTags.Attributes_Resistance_Melee);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Fireball, GameplayTags.Attributes_Resistance_Fireball);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Meteor, GameplayTags.Attributes_Resistance_Meteor);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Melee, GameplayTags.Attributes_Resistance_Melee);
+
+	// TMap 등록. DamageTypes To Debuff
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Fireball, GameplayTags.Debuff_DotDamage);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Melee, GameplayTags.Debuff_None);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Ice, GameplayTags.Debuff_Slow);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Meteor, GameplayTags.Debuff_Stun);
+	//**************************************************************************************
 
 	// Effect
 	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"), FString("피격 시 GameplayTag Granted 반응"));

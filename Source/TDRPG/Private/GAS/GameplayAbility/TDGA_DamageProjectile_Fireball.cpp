@@ -3,7 +3,7 @@
 
 FString UTDGA_DamageProjectile_Fireball::GetDescription(int32 AbilityLevel)
 {
-	const int32 Damage = GetDamageByDamageType(AbilityLevel, FTDGameplayTags::GetTDGameplayTags().Damage_Fireball);
+	const float ScaledDamage = DamageScalableFloat.GetValueAtLevel(AbilityLevel);
 	const float ManaCost = FMath::Abs(GetManaCost(AbilityLevel));
 	const float Cooldown = GetCooldown(AbilityLevel);
 
@@ -21,9 +21,9 @@ FString UTDGA_DamageProjectile_Fireball::GetDescription(int32 AbilityLevel)
 			// Cooldown
 			"<Small>쿨타임: </><Cooldown>%.1f</>\n"
 			// Damage
-			"<Small>데미지 피해량: </><Damage>%d</>\n"),
+			"<Small>데미지 피해량: </><Damage>%.f</>\n"),
 			// Values
-			AbilityLevel, ManaCost,	Cooldown, Damage);
+			AbilityLevel, ManaCost,	Cooldown, ScaledDamage);
 	}
 
 	return FString::Printf(TEXT(
@@ -39,14 +39,14 @@ FString UTDGA_DamageProjectile_Fireball::GetDescription(int32 AbilityLevel)
 		"<Small>쿨타임: </><Cooldown>%.1f</>\n"
 		"<Default>파이어볼을 날려 적에게 피해를 입힙니다.</>\n"
 		// Damage
-		"<Small>데미지 피해량: </><Damage>%d</>\n"),
+		"<Small>데미지 피해량: </><Damage>%.f</>\n"),
 		// Values
-		AbilityLevel, FMath::Min(AbilityLevel, NumProjectiles), ManaCost, Cooldown,  Damage);
+		AbilityLevel, FMath::Min(AbilityLevel, NumProjectiles), ManaCost, Cooldown, ScaledDamage);
 }
 
 FString UTDGA_DamageProjectile_Fireball::GetNextAbilityLevelDescription(int32 AbilityLevel)
 {
-	const int32 Damage = GetDamageByDamageType(AbilityLevel, FTDGameplayTags::GetTDGameplayTags().Damage_Fireball);
+	const float ScaledDamage = DamageScalableFloat.GetValueAtLevel(AbilityLevel);
 	const float ManaCost = FMath::Abs(GetManaCost(AbilityLevel));
 	const float Cooldown = GetCooldown(AbilityLevel);
 
@@ -62,7 +62,7 @@ FString UTDGA_DamageProjectile_Fireball::GetNextAbilityLevelDescription(int32 Ab
 		// Cooldown
 		"<Small>쿨타임: </><Cooldown>%.1f</>\n"
 		// Damage
-		"<Small>데미지 피해량: </><Damage>%d</>\n"),
+		"<Small>데미지 피해량: </><Damage>%.f</>\n"),
 		// Values
-		AbilityLevel, FMath::Min(AbilityLevel, NumProjectiles), ManaCost, Cooldown, Damage);
+		AbilityLevel, FMath::Min(AbilityLevel, NumProjectiles), ManaCost, Cooldown, ScaledDamage);
 }
