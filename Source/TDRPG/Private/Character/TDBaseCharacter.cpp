@@ -1,6 +1,7 @@
 #include "Character/TDBaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "MotionWarpingComponent.h"
+#include "Component/TDDebuffComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
@@ -9,7 +10,7 @@
 
 ATDBaseCharacter::ATDBaseCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//** Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
@@ -24,6 +25,9 @@ ATDBaseCharacter::ATDBaseCharacter()
 	GetMesh()->SetGenerateOverlapEvents(true); // Mesh에 Overlap 이벤트 발생 true로 설정
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
+	DebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DebuffComponent"));
+	DebuffComponent->SetupAttachment(GetRootComponent());
+	DebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTag의 기본값. 현재 테스트를 위해 DotDamage로 설정.
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
@@ -75,6 +79,7 @@ void ATDBaseCharacter::MulticastHandleDeath_Implementation() // 캐릭터 사망 처리
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
+	DebuffComponent->Deactivate();
 	bDead = true;
 }
 
@@ -248,6 +253,16 @@ ECharacterClass ATDBaseCharacter::GetCharacterClass_Implementation()
 ECharacterClass ATDBaseCharacter::GetCharacterClassCPP()
 {
 	return CharacterClass;
+}
+
+FOnASCRegisteredSignature ATDBaseCharacter::GetOnASCRegisteredDelegate()
+{
+	return OnASCRegisteredDelegate;
+}
+
+FOnDeathSignature ATDBaseCharacter::GetOnDeathDelegate()
+{
+	return OnDeathDelegate;
 }
 
 void ATDBaseCharacter::IncremenetMinionCount_Implementation(int32 Amount)

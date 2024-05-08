@@ -157,6 +157,8 @@ void ATDEnemyCharacter::InitAbilityActorInfo()
 	{
 		InitializeDefaultAttributes();		
 	}
+
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 }
 
 void ATDEnemyCharacter::InitializeDefaultAttributes() const

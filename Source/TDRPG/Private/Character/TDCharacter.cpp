@@ -247,6 +247,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 
 	InitializeDefaultAttributes(); // Attibutes 초기값 설정하기
 

@@ -7,6 +7,10 @@
 
 class UAnimMontage;
 class UNiagaraSystem;
+class UAbilitySystemComponent;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
 
 //** Attack Montage와 해당 몽타주에 대응하는 GameplayTag을 같이 사용하기 위해 구조체를 만들어 사용*/
 USTRUCT(BlueprintType)
@@ -97,4 +101,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass();
 	virtual ECharacterClass GetCharacterClassCPP();
+
+	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
+	virtual FOnDeathSignature GetOnDeathDelegate() = 0;
 };

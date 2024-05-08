@@ -15,7 +15,8 @@
 				"CoreUObject",
 				"EnhancedInput",
 				"AIModule",
-				"GameplayTags"
+				"GameplayTags",
+				"Niagara"
 			]
 		}
 	],

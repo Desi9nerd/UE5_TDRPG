@@ -9,6 +9,7 @@
 
 class UMotionWarpingComponent;
 class UAbilitySystemComponent;
+class UTDDebuffComponent;
 class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
@@ -47,6 +48,8 @@ public:
 	virtual int32 GetMinionCountCPP() override;
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual ECharacterClass GetCharacterClassCPP() override;
+	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
+	virtual FOnDeathSignature GetOnDeathDelegate() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -57,6 +60,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> ATKMontages; // 공격 몽타주 배열
+
+	FOnASCRegisteredSignature OnASCRegisteredDelegate;
+	FOnDeathSignature OnDeathDelegate;
 
 protected:
 	virtual void BeginPlay() override;
@@ -98,6 +104,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
+	TObjectPtr<UTDDebuffComponent> DebuffComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
