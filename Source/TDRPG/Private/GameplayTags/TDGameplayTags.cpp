@@ -39,12 +39,14 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Status.Equipped"), FString("Abilities 상태: 장착됨"));
 
 	GameplayTags.Abilities_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fireball"), FString("Abilities: 파이어볼"));
+	GameplayTags.Abilities_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.StoneEdge"), FString("Abilities: 스톤엣지"));
 	GameplayTags.Abilities_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Meteor"), FString("Abilities: 메테오"));
 	GameplayTags.Abilities_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Flash"), FString("Abilities: 대쉬"));
 	GameplayTags.Abilities_Skill_Dash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Dash"), FString("Abilities: 점멸"));
 
 	// Cooldown
 	GameplayTags.Cooldown_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Fireball"), FString("Cooldown: 파이어볼"));
+	GameplayTags.Cooldown_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.StoneEdge"), FString("Cooldown: 스톤엣지"));
 	GameplayTags.Cooldown_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Meteor"), FString("Cooldown: 메테오"));
 	GameplayTags.Cooldown_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Flash"), FString("Cooldown: 대쉬"));
 	GameplayTags.Cooldown_Skill_Dash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Dash"), FString("Cooldown: 점멸"));
@@ -74,6 +76,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 
 	// Event
 	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Fireball"), FString("파이어볼"));
+	GameplayTags.Event_Montage_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.StoneEdge"), FString("스톤엣지"));
 	GameplayTags.Event_Montage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Meteor"), FString("메테오"));
 	GameplayTags.Event_Montage_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Flash"), FString("점멸"));
 	GameplayTags.Event_Montage_Dash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Dash"), FString("대쉬"));

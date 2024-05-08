@@ -12,6 +12,8 @@ UTDGA_Dash::UTDGA_Dash()
 
 void UTDGA_Dash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	if (false == GetAvatarActorFromActorInfo()->HasAuthority()) return; // 서버가 아닌 경우 예외처리
+
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
@@ -32,6 +34,7 @@ void UTDGA_Dash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const 
 		PlayDashTask->ReadyForActivation();
 
 		UAbilityTask_WaitGameplayEvent* WaitTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, FTDGameplayTags::GetTDGameplayTags().Event_Montage_Dash);
+		WaitTask->ReadyForActivation();
 	}
 }
 
