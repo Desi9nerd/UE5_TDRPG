@@ -67,9 +67,10 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	//}
 
 	// 방법2: DamageEffectParams
+	if (DamageEffectParams.SourceAbilitySystemComponent == nullptr) return;
 	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-	if (IsValid(SourceAvatarActor)) return;
-	if (SourceAvatarActor == OtherActor) return; // 자기자신 예외처리.
+	if (false == IsValid(SourceAvatarActor)) return;
+	if (SourceAvatarActor == OtherActor) return; // 액터를 던진 자기자신은 Overlap되지 않게 예외처리 리턴.
 	if (UTDAbilitySystemBPLibrary::IsSameTeam(SourceAvatarActor, OtherActor)) return; // 같은 팀이면 피격되지 않도록 바로 리턴.
 
 
