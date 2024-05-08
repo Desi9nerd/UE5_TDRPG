@@ -1,4 +1,4 @@
-#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
+ï»¿#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 
 UScriptStruct* FTDGameplayEffectContext::GetScriptStruct() const
 {
@@ -56,7 +56,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 			RepBits |= 1 << 6;
 		}
 		//***************************************************************************
-		//* Custom Ãß°¡ºÎºÐ: BlockHit, CriticalHit, Debuff
+		//* Custom ì¶”ê°€ë¶€ë¶„: BlockHit, CriticalHit, Debuff
 
 		if (bBlockedHit)
 		{
@@ -90,7 +90,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		//***************************************************************************
 	}
 
-	//** º¯°æµÈ RepBits°ªÀ» ¹ÙÅÁÀ¸·Î Serialize¸¦ ÇØ¾ßµÇ´Â °ÍµéÀ» Serialize ÇØÁØ´Ù.
+	//** ë³€ê²½ëœ RepBitsê°’ì„ ë°”íƒ•ìœ¼ë¡œ Serializeë¥¼ í•´ì•¼ë˜ëŠ” ê²ƒë“¤ì„ Serialize í•´ì¤€ë‹¤.
 	Ar.SerializeBits(&RepBits, 9);
 
 	if (RepBits & (1 << 0))
@@ -134,7 +134,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		bHasWorldOrigin = false;
 	}
 	//***************************************************************************
-	//* Custom Ãß°¡ºÎºÐ: BlockHit, CriticalHit, Debuff
+	//* Custom ì¶”ê°€ë¶€ë¶„: BlockHit, CriticalHit, Debuff
 
 	if (RepBits & (1 << 7))
 	{
@@ -166,7 +166,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		{
 			if (false == DamageType.IsValid())
 			{
-				DamageType = TSharedPtr<FGameplayTag>(new FGameplayTag()); // DamageType ¾ø´Ù¸é »ý¼º ÈÄ ºó °ªÀ¸·Î ¼³Á¤.
+				DamageType = TSharedPtr<FGameplayTag>(new FGameplayTag()); // DamageType ì—†ë‹¤ë©´ ìƒì„± í›„ ë¹ˆ ê°’ìœ¼ë¡œ ì„¤ì •.
 			}
 		}
 		DamageType->NetSerialize(Ar, Map, bOutSuccess);
@@ -176,7 +176,7 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 
 	if (Ar.IsLoading())
 	{
-		AddInstigator(Instigator.Get(), EffectCauser.Get()); // InstigatorAbilitySystemComponent ÃÊ±âÈ­
+		AddInstigator(Instigator.Get(), EffectCauser.Get()); // InstigatorAbilitySystemComponent ì´ˆê¸°í™”
 	}
 
 	bOutSuccess = true;

@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
 #include "TDAbilityTypes.generated.h"
 
 class UGameplayEffect;
 
-/** FGameplayEffectContext¿¡ Critical Hit, Block Hit, Debuff ¿ä¼Ò¸¦ Ãß°¡ÇÏ±â À§ÇØ ¸¸µë.
- *  GameplayEffectContext¸¦ »ó¼Ó¹Ş¾Æ GetScriptStruct, NetSerialize¸¦ ÀçÁ¤ÀÇ
- *	TDAbilitySystemGlobals¿¡¼­ AllocGameplayEffectContext ÇÔ¼ö ÀçÁ¤ÀÇÀÇ ¸®ÅÏ Å¸ÀÔÀ» FTDGameplayEffectContextÀ¸·Î ¸¸µé¾î GAS¿¡¼­ FTDGameplayEffectContext¸¦ »ç¿ëÇÏµµ·Ï ¼öÁ¤ÇÔ.
+/** FGameplayEffectContextì— Critical Hit, Block Hit, Debuff ìš”ì†Œë¥¼ ì¶”ê°€í•˜ê¸° ìœ„í•´ ë§Œë“¬.
+ *  GameplayEffectContextë¥¼ ìƒì†ë°›ì•„ GetScriptStruct, NetSerializeë¥¼ ì¬ì •ì˜
+ *	TDAbilitySystemGlobalsì—ì„œ AllocGameplayEffectContext í•¨ìˆ˜ ì¬ì •ì˜ì˜ ë¦¬í„´ íƒ€ì…ì„ FTDGameplayEffectContextìœ¼ë¡œ ë§Œë“¤ì–´ GASì—ì„œ FTDGameplayEffectContextë¥¼ ì‚¬ìš©í•˜ë„ë¡ ìˆ˜ì •í•¨.
  */
 
 USTRUCT(BlueprintType)
@@ -28,7 +28,7 @@ public:
 	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }
 	FORCEINLINE bool IsDebuff() const { return bDebuff; }
 
-	//** FGameplayEffectContext ÇÔ¼ö ÀçÁ¤ÀÇ
+	//** FGameplayEffectContext í•¨ìˆ˜ ì¬ì •ì˜
 	virtual UScriptStruct* GetScriptStruct() const;
 	virtual FGameplayEffectContext* Duplicate() const;
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess); // Custom serialization
