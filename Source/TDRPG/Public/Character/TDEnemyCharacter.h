@@ -30,7 +30,7 @@ public:
 
 	//** ICombat ÇÔ¼ö
 	virtual int32 GetPlayerLevel() override;
-	virtual void Die() override;
+	virtual void Die(const FVector& RagdollImpulse) override;
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 

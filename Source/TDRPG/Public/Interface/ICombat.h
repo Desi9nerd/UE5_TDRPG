@@ -61,7 +61,7 @@ public:
 	UAnimMontage* GetHitReactMontage();
 	virtual UAnimMontage* GetHitReactMontageCPP();
 
-	virtual void Die();
+	virtual void Die(const FVector& RagdollImpulse) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDeadBP() const;

@@ -21,10 +21,6 @@ UAnimMontage* IICombat::GetHitReactMontageCPP()
 	return nullptr;
 }
 
-void IICombat::Die()
-{
-}
-
 bool IICombat::IsDead() const
 {
 	return false;

@@ -30,7 +30,7 @@ public:
 	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontageCPP() override;
-	virtual void Die() override;
+	virtual void Die(const FVector& RagdollImpulse) override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual FVector GetCombatSocketLocationCPP(const FGameplayTag& MontageTag) override;
 	virtual bool IsDeadBP_Implementation() const override;
@@ -53,7 +53,7 @@ public:
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath(); // 캐릭터 사망 처리
+	virtual void Multicast_ApplyDeath(const FVector& RagdollImpulse); // 캐릭터 사망 처리
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;

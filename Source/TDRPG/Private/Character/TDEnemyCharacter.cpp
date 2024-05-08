@@ -76,7 +76,7 @@ AActor* ATDEnemyCharacter::GetCombatTargetCPP() const
 	return CombatTarget;
 }
 
-void ATDEnemyCharacter::Die()
+void ATDEnemyCharacter::Die(const FVector& RagdollImpulse)
 {
 	SetLifeSpan(LifeSpanUntilDead); // 5초 뒤 캐릭터 destroy
 
@@ -85,7 +85,7 @@ void ATDEnemyCharacter::Die()
 		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	}
 
-	Super::Die();
+	Super::Die(RagdollImpulse);
 }
 
 int32 ATDEnemyCharacter::GetPlayerLevel()

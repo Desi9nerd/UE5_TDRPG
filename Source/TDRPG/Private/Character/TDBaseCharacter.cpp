@@ -55,14 +55,14 @@ UAnimMontage* ATDBaseCharacter::GetHitReactMontageCPP()
 	return HitReactMontage;
 }
 
-void ATDBaseCharacter::Die()
+void ATDBaseCharacter::Die(const FVector& RagdollImpulse)
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
-	MulticastHandleDeath(); // 캐릭터 사망 처리. Server & Client
+	Multicast_ApplyDeath(RagdollImpulse); // 캐릭터 사망 처리. Server & Client
 }
 
-void ATDBaseCharacter::MulticastHandleDeath_Implementation() // 캐릭터 사망 처리
+void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& RagdollImpulse) // 캐릭터 사망 처리
 {
 	// 사망 사운드 재생
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
@@ -71,12 +71,14 @@ void ATDBaseCharacter::MulticastHandleDeath_Implementation() // 캐릭터 사망 처리
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	Weapon->AddImpulse(RagdollImpulse * 0.05f, NAME_None, true);
 
 	// Ragdoll 적용을 위해 캐릭터 매쉬/캡슐 설정하기 
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll 충격 적용
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
 	DebuffComponent->Deactivate();
