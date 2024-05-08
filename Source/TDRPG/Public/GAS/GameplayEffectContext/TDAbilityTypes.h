@@ -5,7 +5,7 @@
 
 class UGameplayEffect;
 
-/** FGameplayEffectContext에 Critical Hit, Block Hit 요소를 추가하기 위해 만듬.
+/** FGameplayEffectContext에 Critical Hit, Block Hit, Debuff 요소를 추가하기 위해 만듬.
  *  GameplayEffectContext를 상속받아 GetScriptStruct, NetSerialize를 재정의
  *	TDAbilitySystemGlobals에서 AllocGameplayEffectContext 함수 재정의의 리턴 타입을 FTDGameplayEffectContext으로 만들어 GAS에서 FTDGameplayEffectContext를 사용하도록 수정함.
  */
@@ -16,11 +16,17 @@ struct FTDGameplayEffectContext : public FGameplayEffectContext
 	GENERATED_BODY()
 
 public:
-	bool IsCriticalHit() const { return bIsCriticalHit; }
-	bool IsBlockedHit() const { return bIsBlockedHit; }
+	FORCEINLINE float GetDebuffDamage() const { return DebuffDamage; }
+	FORCEINLINE float GetDebuffDuration() const { return DebuffDuration; }
+	FORCEINLINE float GetDebuffFrequency() const { return DebuffFrequency; }
 
-	void SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
-	void SetIsBlockedHit(bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
+	FORCEINLINE void SetCriticalHit(bool bInCriticalHit) { bCriticalHit = bInCriticalHit; }
+	FORCEINLINE void SetBlockedHit(bool bInBlockedHit) { bBlockedHit = bInBlockedHit; }
+	FORCEINLINE void SetDebuf(bool bInDebuff) { bDebuff = bInDebuff; }
+
+	FORCEINLINE bool IsCriticalHit() const { return bCriticalHit; }
+	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }
+	FORCEINLINE bool IsDebuff() const { return bDebuff; }
 
 	//** FGameplayEffectContext 함수 재정의
 	virtual UScriptStruct* GetScriptStruct() const;
@@ -29,11 +35,20 @@ public:
 
 protected:
 	UPROPERTY()
-	bool bIsBlockedHit = false;
+	bool bBlockedHit = false;
+	UPROPERTY()
+	bool bCriticalHit = false;
 
 	UPROPERTY()
-	bool bIsCriticalHit = false;
+	bool bDebuff = false;
+	UPROPERTY()
+	float DebuffDamage = 0.f;
+	UPROPERTY()
+	float DebuffDuration = 0.f;
+	UPROPERTY()
+	float DebuffFrequency = 0.f;
 
+	TSharedPtr<FGameplayTag> DamageType;
 };
 
 template<>

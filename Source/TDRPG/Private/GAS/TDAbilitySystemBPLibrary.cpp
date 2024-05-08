@@ -163,7 +163,7 @@ void UTDAbilitySystemBPLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& Ef
 	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());
 	if (TDGameplayEffectContext)
 	{
-		TDGameplayEffectContext->SetIsCriticalHit(bInIsBlockedHit);
+		TDGameplayEffectContext->SetCriticalHit(bInIsBlockedHit);
 	}
 }
 
@@ -173,7 +173,7 @@ void UTDAbilitySystemBPLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());
 	if (TDGameplayEffectContext)
 	{
-		TDGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+		TDGameplayEffectContext->SetCriticalHit(bInIsCriticalHit);
 	}
 }
 
