@@ -163,7 +163,7 @@ void UTDAttributeSet::ApplyIncomingDamage(const FEffectProperties& Props)
 			IICombat* CombatInterface = Cast<IICombat>(Props.TargetAvatarActor);
 			if (CombatInterface)
 			{
-				CombatInterface->Die(UTDAbilitySystemBPLibrary::GetRagdollImpulse(Props.EffectContextHandle)); // 캐릭터 사망 처리
+				CombatInterface->Die(UTDAbilitySystemBPLibrary::GetRagdollImpulse(Props.EffectContextHandle)); // 캐릭터 사망 처리. RagdollImpulse값도 같이 보냄.
 			}
 			SendExpEvent(Props); // 경험치 보내기
 		}
