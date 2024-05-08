@@ -86,10 +86,10 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Melee, GameplayTags.Attributes_Resistance_Melee);
 
 	// TMap 등록. DamageTypes To Debuff
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Fireball, GameplayTags.Debuff_DotDamage);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Melee, GameplayTags.Debuff_None);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Ice, GameplayTags.Debuff_Slow);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Meteor, GameplayTags.Debuff_Stun);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Fireball, GameplayTags.Debuff_DotDamage);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Melee, GameplayTags.Debuff_None);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Ice, GameplayTags.Debuff_Slow);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Meteor, GameplayTags.Debuff_Stun);
 	//**************************************************************************************
 
 	// Effect

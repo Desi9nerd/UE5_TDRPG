@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
+#include "GAS/GameplayEffectContext/TDAbilityTypes.h"
 #include "TDProjectile.generated.h"
 
 class USphereComponent;
@@ -23,8 +24,13 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
+	// 规过1: GameplayEffectSpecHandle
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	// 规过2: DamageEffectParams
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	FDamageEffectParams DamageEffectParams;
 
 protected:
 	virtual void BeginPlay() override;

@@ -43,6 +43,8 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 
 		ATDProjectile* Projectile = GetWorld()->SpawnActorDeferred<ATDProjectile>(ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
+		
+		// 방법1: Gameplay Effect Spec
 		// Gameplay Effect Spec으로 데미지 처리.
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
@@ -62,7 +64,11 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		const float ScaledDamage = DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageType, ScaledDamage);// GameplayEffect에서 Set by Caller로 사용할 때 적용되는 key, value. FTDGameplayTags구조체 내의 Damage타입의 GameplayTag를 key로, ScaledDamage을 value로 사용.
 
-		Projectile->DamageEffectSpecHandle = SpecHandle;
+		Projectile->DamageEffectSpecHandle = SpecHandle; // Projectile 액터의 DamageEffectSpecHandle에 값을 넣어줌.
+		
+
+		// 방법2: Damage Effect Params
+		Projectile->DamageEffectParams = SetDamageEffectParams();
 
 		Projectile->FinishSpawning(SpawnTransform);
 	}

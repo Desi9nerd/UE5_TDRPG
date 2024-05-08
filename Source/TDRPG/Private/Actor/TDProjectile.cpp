@@ -58,13 +58,19 @@ void ATDProjectile::Destroyed()
 
 void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// 방법1: GameplayEffectSpecHandle
 	if (false == DamageEffectSpecHandle.Data.IsValid()) return; // 예외처리
 	if (DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return; // 액터를 던진 자기자신은 Overlap되지 않게 리턴.
-	
 	if (UTDAbilitySystemBPLibrary::IsSameTeam(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
 	{
 		return; // 예외처리. 같은 팀이면 피격되지 않도록 바로 리턴.
 	}
+
+	// 방법2: DamageEffectParams
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (IsValid(SourceAvatarActor)) return;
+	if (SourceAvatarActor == OtherActor) return; // 자기자신 예외처리.
+	if (UTDAbilitySystemBPLibrary::IsSameTeam(SourceAvatarActor, OtherActor)) return; // 같은 팀이면 피격되지 않도록 바로 리턴.
 
 
 	if (false == bHit) // 피격 최초 성공 시에 적용. bHit은 아래에서 false로 변경된다.
@@ -80,12 +86,18 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		bHit = true;
 	}
 
+
 	if (HasAuthority()) // Server
 	{
 		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor);
 		if (IsValid(TargetASC))
 		{
+			// 방법1: GameplayEffectSpecHandle
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+
+			// 방법2: DamageEffectParams
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UTDAbilitySystemBPLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
 
 		Destroy();
