@@ -1,4 +1,4 @@
-#include "Actor/TDProjectile.h"
+ï»¿#include "Actor/TDProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -12,11 +12,11 @@
 ATDProjectile::ATDProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	bReplicates = true; // ¾×ÅÍ°¡ replicatedµÉ ¼ö ÀÖµµ·Ï true ¼³Á¤
+	bReplicates = true; // ì•¡í„°ê°€ replicatedë  ìˆ˜ ìˆë„ë¡ true ì„¤ì •
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
-	Sphere->SetCollisionObjectType(ECC_Projectile); // CustomÀ¸·Î ÁöÁ¤ÇÑ ECollisionChannel
+	Sphere->SetCollisionObjectType(ECC_Projectile); // Customìœ¼ë¡œ ì§€ì •í•œ ECollisionChannel
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
@@ -37,18 +37,18 @@ void ATDProjectile::BeginPlay()
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
 
-	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent()); // LoopingSound Àç»ı
+	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent()); // LoopingSound ì¬ìƒ
 }
 
 void ATDProjectile::Destroyed()
 {
-	if (false == bHit && false == HasAuthority()) // ÇÇ°İX && Client
+	if (false == bHit && false == HasAuthority()) // í”¼ê²©X && Client
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		if (IsValid(LoopingSoundComponent))
 		{
-			LoopingSoundComponent->Stop(); // LoopingSound Àç»ı ¸ØÃß±â
+			LoopingSoundComponent->Stop(); // LoopingSound ì¬ìƒ ë©ˆì¶”ê¸°
 		}
 		bHit = true;
 	}
@@ -58,30 +58,30 @@ void ATDProjectile::Destroyed()
 
 void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// ¹æ¹ı1: GameplayEffectSpecHandle
-	//if (false == DamageEffectSpecHandle.Data.IsValid()) return; // ¿¹¿ÜÃ³¸®
-	//if (DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return; // ¾×ÅÍ¸¦ ´øÁø ÀÚ±âÀÚ½ÅÀº OverlapµÇÁö ¾Ê°Ô ¸®ÅÏ.
+	// ë°©ë²•1: GameplayEffectSpecHandle
+	//if (false == DamageEffectSpecHandle.Data.IsValid()) return; // ì˜ˆì™¸ì²˜ë¦¬
+	//if (DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return; // ì•¡í„°ë¥¼ ë˜ì§„ ìê¸°ìì‹ ì€ Overlapë˜ì§€ ì•Šê²Œ ë¦¬í„´.
 	//if (UTDAbilitySystemBPLibrary::IsSameTeam(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
 	//{
-	//	return; // ¿¹¿ÜÃ³¸®. °°Àº ÆÀÀÌ¸é ÇÇ°İµÇÁö ¾Êµµ·Ï ¹Ù·Î ¸®ÅÏ.
+	//	return; // ì˜ˆì™¸ì²˜ë¦¬. ê°™ì€ íŒ€ì´ë©´ í”¼ê²©ë˜ì§€ ì•Šë„ë¡ ë°”ë¡œ ë¦¬í„´.
 	//}
 
-	// ¹æ¹ı2: DamageEffectParams
+	// ë°©ë²•2: DamageEffectParams
 	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	if (IsValid(SourceAvatarActor)) return;
-	if (SourceAvatarActor == OtherActor) return; // ÀÚ±âÀÚ½Å ¿¹¿ÜÃ³¸®.
-	if (UTDAbilitySystemBPLibrary::IsSameTeam(SourceAvatarActor, OtherActor)) return; // °°Àº ÆÀÀÌ¸é ÇÇ°İµÇÁö ¾Êµµ·Ï ¹Ù·Î ¸®ÅÏ.
+	if (SourceAvatarActor == OtherActor) return; // ìê¸°ìì‹  ì˜ˆì™¸ì²˜ë¦¬.
+	if (UTDAbilitySystemBPLibrary::IsSameTeam(SourceAvatarActor, OtherActor)) return; // ê°™ì€ íŒ€ì´ë©´ í”¼ê²©ë˜ì§€ ì•Šë„ë¡ ë°”ë¡œ ë¦¬í„´.
 
 
-	if (false == bHit) // ÇÇ°İ ÃÖÃÊ ¼º°ø ½Ã¿¡ Àû¿ë. bHitÀº ¾Æ·¡¿¡¼­ false·Î º¯°æµÈ´Ù.
+	if (false == bHit) // í”¼ê²© ìµœì´ˆ ì„±ê³µ ì‹œì— ì ìš©. bHitì€ ì•„ë˜ì—ì„œ falseë¡œ ë³€ê²½ëœë‹¤.
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s spawned"), *GetName()); // ½ºÆùµÇ´Â Projectile °³¼ö È®ÀÎ¿ë
+		//UE_LOG(LogTemp, Warning, TEXT("%s spawned"), *GetName()); // ìŠ¤í°ë˜ëŠ” Projectile ê°œìˆ˜ í™•ì¸ìš©
 
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		if (IsValid(LoopingSoundComponent))
 		{
-			LoopingSoundComponent->Stop(); // LoopingSound Àç»ı ¸ØÃß±â
+			LoopingSoundComponent->Stop(); // LoopingSound ì¬ìƒ ë©ˆì¶”ê¸°
 		}
 		bHit = true;
 	}
@@ -92,10 +92,10 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor);
 		if (IsValid(TargetASC))
 		{
-			// ¹æ¹ı1: GameplayEffectSpecHandle
+			// ë°©ë²•1: GameplayEffectSpecHandle
 			//TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 
-			// ¹æ¹ı2: DamageEffectParams
+			// ë°©ë²•2: DamageEffectParams
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UTDAbilitySystemBPLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
@@ -104,6 +104,6 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	}
 	else // Client
 	{
-		bHit = true; // ÇÇ°İO
+		bHit = true; // í”¼ê²©O
 	}
 }

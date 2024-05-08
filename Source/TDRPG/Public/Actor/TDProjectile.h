@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
@@ -9,8 +9,8 @@ class USphereComponent;
 class UProjectileMovementComponent;
 class UNiagaraSystem;
 
-/** ½ºÅ³·Î ³¯¾Æ°¡´Â ¾×ÅÍ
- *  CollisionObjectTypeÀ» ECC_Projectile ¼³Á¤ÇÏ¿´°í »ó´ë¹æÀº ÇØ´ç Ã¤³ÎÀÇ Ãæµ¹¼³Á¤À» Overlap ½Ã¿¡¸¸ ÇÇ°İµÈ´Ù.
+/** ìŠ¤í‚¬ë¡œ ë‚ ì•„ê°€ëŠ” ì•¡í„°
+ *  CollisionObjectTypeì„ ECC_Projectile ì„¤ì •í•˜ì˜€ê³  ìƒëŒ€ë°©ì€ í•´ë‹¹ ì±„ë„ì˜ ì¶©ëŒì„¤ì •ì„ Overlap ì‹œì—ë§Œ í”¼ê²©ëœë‹¤.
  */
 
 UCLASS()
@@ -24,11 +24,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
-	// ¹æ¹ı1: GameplayEffectSpecHandle
+	// ë°©ë²•1: GameplayEffectSpecHandle
 	//UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	//FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
-	// ¹æ¹ı2: DamageEffectParams
+	// ë°©ë²•2: DamageEffectParams
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FDamageEffectParams DamageEffectParams;
 
@@ -46,7 +46,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 8.f;
 
-	bool bHit = false; // ÇÇ°İ ¿©ºÎ true/false
+	bool bHit = false; // í”¼ê²© ì—¬ë¶€ true/false
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
