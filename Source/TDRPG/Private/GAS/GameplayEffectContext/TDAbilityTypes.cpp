@@ -90,12 +90,16 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		{
 			RepBits |= 1 << 14;
 		}
+		if (KnockbackImpulse != FVector::ZeroVector)
+		{
+			RepBits |= 1 << 15;
+		}
 
 		//***************************************************************************
 	}
 
 	//** 변경된 RepBits값을 바탕으로 Serialize를 해야되는 것들을 Serialize 해준다.
-	Ar.SerializeBits(&RepBits, 14); // 추가하면 LengthBits도 변경!
+	Ar.SerializeBits(&RepBits, 15); // 추가하면 LengthBits도 변경!!
 
 	if (RepBits & (1 << 0))
 	{
@@ -178,6 +182,10 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 	if (RepBits & (1 << 14))
 	{
 		RagdollImpulse.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 15))
+	{
+		KnockbackImpulse.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
 	//****************************************************************************

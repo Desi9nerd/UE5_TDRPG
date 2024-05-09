@@ -6,7 +6,7 @@
 class UGameplayEffect;
 
 /** FGameplayEffectContext에 Critical Hit, Block Hit, Debuff 요소를 추가하기 위해 만듬.
- *  GameplayEffectContext를 상속받아 GetScriptStruct, NetSerialize를 재정의
+ *  FGameplayEffectContext를 상속받아 GetScriptStruct, NetSerialize를 재정의
  *	TDAbilitySystemGlobals에서 AllocGameplayEffectContext 함수 재정의의 리턴 타입을 FTDGameplayEffectContext으로 만들어 GAS에서 FTDGameplayEffectContext를 사용하도록 수정함.
  */
 
@@ -21,6 +21,7 @@ public:
 	FORCEINLINE float GetDebuffDuration() const { return DebuffDuration; }
 	FORCEINLINE float GetDebuffFrequency() const { return DebuffFrequency; }
 	FORCEINLINE FVector GetRagdollImpulse() const { return RagdollImpulse; }
+	FORCEINLINE FVector GetKnockbackImpulse() const { return KnockbackImpulse; }
 
 	FORCEINLINE void SetCriticalHit(bool bInCriticalHit) { bCriticalHit = bInCriticalHit; }
 	FORCEINLINE void SetBlockedHit(bool bInBlockedHit) { bBlockedHit = bInBlockedHit; }
@@ -30,6 +31,7 @@ public:
 	FORCEINLINE void SetDebuffFrequency(float InFrequency) { DebuffFrequency = InFrequency; }
 	FORCEINLINE void SetDamageType(TSharedPtr<FGameplayTag> InDamageType) { DamageType = InDamageType; }
 	FORCEINLINE void SetRagdollImpulse(const FVector& InRagdollImpulse) { RagdollImpulse = InRagdollImpulse; }
+	FORCEINLINE void SetKnockbackImpulse(const FVector& InKnockbackImpulse) { KnockbackImpulse = InKnockbackImpulse; }
 
 	FORCEINLINE bool IsCriticalHit() const { return bCriticalHit; }
 	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }
@@ -59,6 +61,9 @@ protected:
 
 	UPROPERTY()
 	FVector RagdollImpulse = FVector::ZeroVector;
+
+	UPROPERTY()
+	FVector KnockbackImpulse = FVector::ZeroVector;
 };
 
 template<>

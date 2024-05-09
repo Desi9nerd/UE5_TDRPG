@@ -96,11 +96,31 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			// 방법1: GameplayEffectSpecHandle
 			//TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 
+			//************************************************************************************
 			// 방법2: DamageEffectParams
+
+			// **** DamageEffectParams을 업데이트. 업데이트 된 후 GameplayAbility(GA)에서 가져다가 사용. ex. TDGA_DamageProjectile
+			// Ragdoll
 			const FVector RagdollImpulse = GetActorForwardVector() * DamageEffectParams.RagdollImpulseMagnitude;
 			DamageEffectParams.RagdollImpulse = RagdollImpulse;
+			// Knockback
+			const bool bKnockback = FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance;
+			if (bKnockback)
+			{
+				FRotator Rotation = GetActorRotation();
+				Rotation.Pitch = 45.f;
+
+				const FVector KnockbackDirection = Rotation.Vector(); // 이 액터(=TDProjectile)의 방향
+				const FVector KnockbackImpulse = KnockbackDirection * DamageEffectParams.KnockbackImpulseMagnitude;
+				DamageEffectParams.KnockbackImpulse = KnockbackImpulse;
+			}
+			// Target AbilitySystemComponent
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-			UTDAbilitySystemBPLibrary::ApplyDamageEffect(DamageEffectParams);
+			// **** DamageEffectParams을 업데이트 완료.
+
+			UTDAbilitySystemBPLibrary::ApplyDamageEffect(DamageEffectParams); // BP나 전역적으로 사용할 수 있도록 UTDAbilitySystemBPLibrary에도 업데이트
+
+			//************************************************************************************
 		}
 
 		Destroy();

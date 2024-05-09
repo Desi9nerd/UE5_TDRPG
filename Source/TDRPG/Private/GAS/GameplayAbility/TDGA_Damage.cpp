@@ -14,21 +14,33 @@ void UTDGA_Damage::CauseDamage(AActor* TargetActor)
 
 FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) const
 {
-	FDamageEffectParams Params;
-	Params.WorldContextObject = GetAvatarActorFromActorInfo();
-	Params.GEDamageClass = GEDamageClass;
-	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
-	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-	Params.BaseDamage = DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
-	Params.AbilityLevel = GetAbilityLevel();
-	Params.DamageType = DamageType;
-	Params.DebuffChance = DebuffChance;
-	Params.DebuffDamage = DebuffDamage;
-	Params.DebuffDuration = DebuffDuration;
-	Params.DebuffFrequency = DebuffFrequency;
-	Params.RagdollImpulseMagnitude = RagdollImpulseMagnitude;
+	// FDamageEffectParams 을 설정한다. TDGA_Damage 자식 클래스에서 '충돌체, 발사체'의 DamageEffectParams 값에 해당 값이 들어가도록 여기의 SetDamageEffectParams()함수를 호출한다.
 
-	return Params;
+	FDamageEffectParams DamageEffectParams;
+	DamageEffectParams.WorldContextObject = GetAvatarActorFromActorInfo();
+	DamageEffectParams.GEDamageClass = GEDamageClass;
+	DamageEffectParams.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	DamageEffectParams.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	DamageEffectParams.BaseDamage = DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
+	DamageEffectParams.AbilityLevel = GetAbilityLevel();
+	DamageEffectParams.DamageType = DamageType;
+	DamageEffectParams.DebuffChance = DebuffChance;
+	DamageEffectParams.DebuffDamage = DebuffDamage;
+	DamageEffectParams.DebuffDuration = DebuffDuration;
+	DamageEffectParams.DebuffFrequency = DebuffFrequency;
+	DamageEffectParams.RagdollImpulseMagnitude = RagdollImpulseMagnitude;
+	DamageEffectParams.KnockbackImpulseMagnitude = KnockbackImpulseMagnitude;
+	DamageEffectParams.KnockbackChance = KnockbackChance;
+	if (IsValid(TargetActor))
+	{
+		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation(); // 내 기준에서 상대방 방향 회전값
+		Rotation.Pitch = 45.f;
+		const FVector ToTarget = Rotation.Vector(); // 내 기준에서 상대방 방향
+		DamageEffectParams.RagdollImpulse = ToTarget * RagdollImpulseMagnitude;
+		DamageEffectParams.KnockbackImpulse = ToTarget * KnockbackImpulseMagnitude;
+	}
+
+	return DamageEffectParams;
 }
 
 FTaggedMontage UTDGA_Damage::GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const

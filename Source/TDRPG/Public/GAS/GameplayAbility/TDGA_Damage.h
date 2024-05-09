@@ -6,7 +6,7 @@
 #include "Interface/ICombat.h"
 #include "TDGA_Damage.generated.h"
 
-/**
+/** 공격 스킬에 공통으로 들어가는 데미지 관련 처리를 하는 GameplayAbility 클래스
  * 
  */
 UCLASS()
@@ -18,6 +18,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
 
+	UFUNCTION(BlueprintPure)
 	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr) const;
 
 protected:
@@ -43,5 +44,9 @@ protected:
 	float DebuffDuration = 3.f;
 	UPROPERTY(EditDefaultsOnly)
 	float RagdollImpulseMagnitude = 10000.f;
+	UPROPERTY(EditDefaultsOnly)
+	float KnockbackImpulseMagnitude = 1000.f;
+	UPROPERTY(EditDefaultsOnly)
+	float KnockbackChance = 0.f;
 	//*******************************************
 };

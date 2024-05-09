@@ -172,6 +172,13 @@ void UTDAttributeSet::ApplyIncomingDamage(const FEffectProperties& Props)
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
+
+			// Knockback 적용하기
+			const FVector& KnockbackImpulse = UTDAbilitySystemBPLibrary::GetKnockbackImpulse(Props.EffectContextHandle);
+			if (false == KnockbackImpulse.IsNearlyZero(1.f)) // 값이 0이 아니라면
+			{
+				Props.TargetCharacter->LaunchCharacter(KnockbackImpulse, true, true); // 상대방에 Knockback 적용.
+			}
 		}
 
 		const bool bBlock = UTDAbilitySystemBPLibrary::IsBlockedHit(Props.EffectContextHandle);

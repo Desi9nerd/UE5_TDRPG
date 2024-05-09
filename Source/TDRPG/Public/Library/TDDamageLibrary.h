@@ -44,4 +44,10 @@ struct FDamageEffectParams
 	float RagdollImpulseMagnitude = 0.f;
 	UPROPERTY()
 	FVector RagdollImpulse = FVector::ZeroVector;
+	UPROPERTY(BlueprintReadWrite)
+	float KnockbackImpulseMagnitude = 0.f;
+	UPROPERTY(BlueprintReadWrite)
+	float KnockbackChance = 0.f;
+	UPROPERTY(BlueprintReadWrite)
+	FVector KnockbackImpulse = FVector::ZeroVector;
 };

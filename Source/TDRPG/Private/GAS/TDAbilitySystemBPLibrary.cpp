@@ -191,6 +191,16 @@ FVector UTDAbilitySystemBPLibrary::GetRagdollImpulse(const FGameplayEffectContex
 	return FVector::ZeroVector;
 }
 
+FVector UTDAbilitySystemBPLibrary::GetKnockbackImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
+	if (TDGameplayEffectContext)
+	{
+		return TDGameplayEffectContext->GetKnockbackImpulse();
+	}
+	return FVector::ZeroVector;
+}
+
 bool UTDAbilitySystemBPLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	const FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<const FTDGameplayEffectContext*>(EffectContextHandle.Get());
@@ -289,6 +299,14 @@ void UTDAbilitySystemBPLibrary::SetRagdollImpulse(FGameplayEffectContextHandle& 
 	}
 }
 
+void UTDAbilitySystemBPLibrary::SetKnockbackImpulse(FGameplayEffectContextHandle& EffectContextHandle, const FVector& InKnockbackImpulse)
+{
+	if (FTDGameplayEffectContext* TDGEContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TDGEContext->SetKnockbackImpulse(InKnockbackImpulse);
+	}
+}
+
 void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin)
 {
 	//* UGamplayStatics::ApplyRadialDamageWithFallOff 함수와 유사하게 구현. *//
@@ -346,6 +364,7 @@ FGameplayEffectContextHandle UTDAbilitySystemBPLibrary::ApplyDamageEffect(const 
 	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
 	EffectContexthandle.AddSourceObject(SourceAvatarActor);
 	SetRagdollImpulse(EffectContexthandle, DamageEffectParams.RagdollImpulse);
+	SetKnockbackImpulse(EffectContexthandle, DamageEffectParams.KnockbackImpulse);
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.GEDamageClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
 
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
