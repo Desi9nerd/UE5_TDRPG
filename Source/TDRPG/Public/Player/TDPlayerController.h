@@ -8,6 +8,7 @@ class ATDItemActor;
 class ATDHUD;
 class UInputMappingContext;
 class UInputAction;
+class UNiagaraSystem;
 struct FInputActionValue;
 class IIEnemy;
 class UTDDAInput;
@@ -75,6 +76,8 @@ private:
 	float AutoRunAcceptanceRadius = 50.f;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline; // 이동경로 Spline
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> ClickMoveEffect; // 이동 클릭 시 보이는 이펙트
 
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;

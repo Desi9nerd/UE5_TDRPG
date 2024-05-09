@@ -8,6 +8,7 @@
 #include "Components/SplineComponent.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
 #include "Components/VerticalBox.h"
@@ -23,7 +24,7 @@ ATDPlayerController::ATDPlayerController()
 {
 	bReplicates = true;
 
-	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
+	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
 }
 
 void ATDPlayerController::PlayerTick(float DeltaTime)
@@ -161,7 +162,7 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				{
 					// NavPath의 포인트들을 Spline의 포인트로 추가
 					Spline->AddSplinePoint(NavPointLocation, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), NavPointLocation, 10.f, 8, FColor::Green, false, 5.f);
+					//DrawDebugSphere(GetWorld(), NavPointLocation, 10.f, 8, FColor::Green, false, 5.f);
 				}
 
 				if (NavPath->PathPoints.Num() > 0)
@@ -169,6 +170,7 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1]; // CachedDestination를 마지막 PathPoints로 설정. 이렇게하면 AutoRunning때 항상 도달가능한 도착지점이 된다.
 					bAutoRunning = true;					
 				}
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickMoveEffect, CachedDestination); // 마우스 클릭 효과
 			}
 		}
 		FollowTime = 0.f;
