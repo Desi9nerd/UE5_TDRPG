@@ -25,7 +25,6 @@ void UTDInventoryComponent::BeginPlay()
 	check(TDPlayerController);
 
 	InitializeInventory();
-	//TDPlayerController->CreateInventoryCategoryWidgets();
 }
 
 void UTDInventoryComponent::InitializeInventory()
@@ -64,7 +63,6 @@ void UTDInventoryComponent::Server_PickupItem_Implementation()
 	}
 }
 
-
 void UTDInventoryComponent::Server_RelootItem_Implementation()
 {
 
@@ -82,23 +80,16 @@ void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 	ArmorCategory.SetNum(AmountOfSlots);
 	PotionCategory.SetNum(AmountOfSlots);
 	FoodCategory.SetNum(AmountOfSlots);
-
-	//FString Temp = FString::FromInt(WeaponCategory.Num());
-	//UE_LOG(LogTemp, Warning, TEXT("WeaponCategory Size = %s"), *Temp);
+	
 }
 
 void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 {
-	if (TDPlayerController->IsLocalController())
-	{
-		Client_AddtoInventory(InItem);
-	}
+	Client_AddtoInventory(InItem);
 }
 
 void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* InItem)
 {
-	ItemToAdd = InItem;
-
 	checkf(ItemDataTable, TEXT("No Item DataTable. Check UTDInventoryComponent::Client_AddtoInventory_Implementation"));
 	if (ItemDataTable)
 	{
@@ -106,11 +97,11 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 		
 		if (ItemToAddInfo.bStackable) // 인벤토리 내에 해당 아이템이 있는지 찾음.
 		{
-			FindPartialStack(ItemToAddInfo);
+			FindPartialStack(InItem, ItemToAddInfo);
 		}
 		else
 		{
-			CreateNewStack(ItemToAddInfo);
+			CreateNewStack(InItem, ItemToAddInfo);
 		}
 
 		DestroyPickupItem(InItem, true);
@@ -123,10 +114,6 @@ void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW
 	{
 		if (OutInventory[i].SlotIndex == SlotIdx)
 		{
-			//OutInventory[i].ItemQuantity = Quantity; // 아이템 수량 갱신.
-			//OutInventory[i].Item = Item; // 아이템 정보 갱신.
-			//OutInventory[i].InventorySlot = InventorySlot;
-
 			if (Item.ItemCategory == SelectedInventoryCategory)
 			{
 				OutInventory[i].InventorySlot = InventorySlot;
@@ -138,7 +125,7 @@ void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW
 }
 
 // 인벤토리 내 해당 아이템이 있는지 확인. Stack 여부 검사 후 쌓기.
-void UTDInventoryComponent::FindPartialStack(FItem& ItemToAddInfo)
+void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
 	TArray<FInventorySlot>* CategoryArray = nullptr;
 
@@ -172,7 +159,6 @@ void UTDInventoryComponent::FindPartialStack(FItem& ItemToAddInfo)
 				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 				// 인벤토리에 아이템 추가
-				//UTDUW_InventorySlot* Temp = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
 				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 
 				if (RemainingQuantity == 0)
@@ -188,7 +174,7 @@ void UTDInventoryComponent::FindPartialStack(FItem& ItemToAddInfo)
 }
 
 // Stack 새로 만들기 또는 Stack 불가능한 아이템 채우기.
-void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
+void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
 	TArray<FInventorySlot>* CategoryArray = nullptr;
 
@@ -210,12 +196,17 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 		break;
 	}
 
+	//if (nullptr == CategoryArray) UE_LOG(LogTemp, Warning, TEXT("No CategoryArray"));
+	//UE_LOG(LogTemp, Warning, TEXT("%d"), CategoryArray->Num());
+
+
 	if (CategoryArray)
 	{
 		bool bRelootItem = false;
 		int32 i = 0; // 루프 외부에서 i를 선언하여 사용합니다.
 		for (; i < CategoryArray->Num() - 1; i++)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT(" %d"), (*CategoryArray)[i].ItemQuantity);
 			if ((*CategoryArray)[i].ItemQuantity == 0)
 			{
 				bInventoryIsFull = false;
@@ -227,7 +218,6 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 					// 인벤토리에 아이템 추가
-					//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
 					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 					bRelootItem = true;
 
@@ -236,8 +226,9 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 				}
 				else
 				{
+					//if (nullptr == (*CategoryArray)[i].InventorySlot) UE_LOG(LogTemp, Warning, TEXT("No Inventory Slot!"));
+
 					// 인벤토리에 아이템 추가
-					//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
 					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 				}
 			}
@@ -258,7 +249,6 @@ void UTDInventoryComponent::CreateNewStack(FItem& ItemToAddInfo)
 			if (bInventoryIsFull)
 			{
 				// 인벤토리에 아이템 추가
-				//UTDUW_InventorySlot* SlotWidget = Cast<UTDUW_InventorySlot>((*CategoryArray)[i].InventorySlot);
 				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 			}
 		}

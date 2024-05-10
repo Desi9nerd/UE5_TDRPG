@@ -53,21 +53,21 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
 
-	TArray<FInventorySlot> SelectedCategoryItems;
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
 
 	switch (SelectedCategory)
 	{
 	case EItemCategory::Weapon:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		SelectedCategoryItems = &(TDCharacter->GetInventoryComponent()->GetWeaponCategory());
 		break;
 	case EItemCategory::Armor:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
 		break;
 	case EItemCategory::Potion:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
 		break;
 	case EItemCategory::Food:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
 		break;
 	default:
 		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
@@ -80,10 +80,12 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
 		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
 
-		Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
-
 		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-		InventorySlotWidget->UpdateInventorySlotUI(SelectedCategoryItems[i].Item, SelectedCategoryItems[i].ItemQuantity);
+		InventorySlotWidget->UpdateInventorySlotUI((*SelectedCategoryItems)[i].Item, (*SelectedCategoryItems)[i].ItemQuantity);
+
+		Grid_Inventory->AddChildToGrid(InventorySlotWidget, i / 4, i % 4);
+
+		(*SelectedCategoryItems)[i].InventorySlot = InventorySlotWidget;
 	}
 }
 
@@ -94,21 +96,21 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
 
-	TArray<FInventorySlot> SelectedCategoryItems;
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
 
 	switch (SelectedCategory)
 	{
 	case EItemCategory::Weapon:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
 		break;
 	case EItemCategory::Armor:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
 		break;
 	case EItemCategory::Potion:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
 		break;
 	case EItemCategory::Food:
-		SelectedCategoryItems = TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
 		break;
 	default:
 		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
@@ -117,10 +119,11 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 	
 	for (int i = 0; i < AmountOfSlots; i++)
 	{
-		Grid_Inventory->AddChildToGrid(SelectedCategoryItems[i].InventorySlot, i / 4, i % 4);
-
 		// 선택된 카테고리 내의 InventorySlot의 'Item'와 'ItemQuantity'를 업데이트.
-		SelectedCategoryItems[i].InventorySlot->UpdateInventorySlotUI(SelectedCategoryItems[i].Item, SelectedCategoryItems[i].ItemQuantity);
+		(*SelectedCategoryItems)[i].InventorySlot->UpdateInventorySlotUI((*SelectedCategoryItems)[i].Item, (*SelectedCategoryItems)[i].ItemQuantity);
+
+		Grid_Inventory->AddChildToGrid((*SelectedCategoryItems)[i].InventorySlot, i / 4, i % 4);
+
 	}
 }
 

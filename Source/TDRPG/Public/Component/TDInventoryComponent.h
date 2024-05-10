@@ -47,8 +47,8 @@ private:
 
 	void AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory);
 
-	void FindPartialStack(FItem& ItemToAddInfo);
-	void CreateNewStack(FItem& ItemToAddInfo);
+	void FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
+	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 
 	void SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);
 	UFUNCTION(Server, Reliable)
@@ -79,8 +79,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<UDataTable> ItemDataTable;
-
-	TObjectPtr<ATDItemActor> ItemToAdd;
 	
 	bool HasToCreateStack;
 	//bool bRelootItem = false;
