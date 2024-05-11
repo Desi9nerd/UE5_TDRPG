@@ -108,18 +108,10 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 
 void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory)
 {
-	//for (int i = 0; i < OutInventory.Num(); i++)
-	//{
-		//if (OutInventory[i].SlotIndex == SlotIdx)
-		//{
-			if (Item.ItemCategory == SelectedInventoryCategory)
-			{
-				//OutInventory[SlotIdx].InventorySlot = InventorySlot;
-				OutInventory[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
-			}
-			//break;
-		//}
-	//}
+	if (Item.ItemCategory == SelectedInventoryCategory)
+	{
+		OutInventory[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+	}
 }
 
 // 인벤토리 내 해당 아이템이 있는지 확인. Stack 여부 검사 후 쌓기.
