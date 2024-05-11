@@ -115,9 +115,7 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 	
 	for (int i = 0; i < AmountOfSlots; i++)
 	{
-		// 선택된 카테고리 내의 InventorySlot의 'Item'와 'ItemQuantity'를 업데이트.
-		(*SelectedCategoryItems)[i].InventorySlot->UpdateInventorySlotUI((*SelectedCategoryItems)[i].Item, (*SelectedCategoryItems)[i].ItemQuantity);
-
+		// Grid_Inventory에 선택된 카테고리 아이템들이 보이게 하기.
 		Grid_Inventory->AddChildToGrid((*SelectedCategoryItems)[i].InventorySlot, i / 4, i % 4);
 	}
 }
