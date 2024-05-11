@@ -16,7 +16,7 @@ class TDRPG_API UTDUW_InventorySlot : public UTDUW
 
 public:
 	void NativeConstruct() override;
-	void UpdateInventorySlotUI(FItem& InItem, int32 InItemQuantity);
+	void UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity);
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UImage> Image_Slot;

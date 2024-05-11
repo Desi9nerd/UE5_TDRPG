@@ -38,6 +38,8 @@ void UTDUW_Inventory::NativeConstruct()
 	
 	Button_Category_Weapon->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnWeaponButtonClicked);
 	Button_Category_Armor->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnArmorButtonClicked);
+	Button_Category_Potion->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnPotionButtonClicked);
+	Button_Category_Food->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnFoodButtonClicked);
 }
 
 void UTDUW_Inventory::NativeDestruct()
@@ -51,6 +53,8 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	checkf(TDCharacter, TEXT("No TDCharacter. Check  UTDUW_Inventory::CreateInventorySlotWidgets()"));
 
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
+
+	/*
 	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
 
 	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
@@ -58,7 +62,7 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	switch (SelectedCategory)
 	{
 	case EItemCategory::Weapon:
-		SelectedCategoryItems = &(TDCharacter->GetInventoryComponent()->GetWeaponCategory());
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
 		break;
 	case EItemCategory::Armor:
 		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
@@ -86,6 +90,80 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 		Grid_Inventory->AddChildToGrid(InventorySlotWidget, i / 4, i % 4);
 
 		(*SelectedCategoryItems)[i].InventorySlot = InventorySlotWidget;
+	}
+	*/
+
+	TArray<FInventorySlot>* WeaponCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+	TArray<FInventorySlot>* ArmorCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+	TArray<FInventorySlot>* PotionCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+	TArray<FInventorySlot>* FoodCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+
+	UpdateCategoryItems(WeaponCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(ArmorCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(PotionCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(FoodCategoryItems, AmountOfSlots);
+	DisplayInventorySlotWidgets();
+
+	//for (int i = 0; i < AmountOfSlots; i++)
+	//{
+	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+
+	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+	//	InventorySlotWidget->UpdateInventorySlotUI((*WeaponCategoryItems)[i].Item, (*WeaponCategoryItems)[i].ItemQuantity);
+
+	//	Grid_Inventory->AddChildToGrid(InventorySlotWidget, i / 4, i % 4);
+
+	//	(*WeaponCategoryItems)[i].InventorySlot = InventorySlotWidget;
+	//}
+
+	//for (int i = 0; i < AmountOfSlots; i++)
+	//{
+	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+	//
+	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+	//	InventorySlotWidget->UpdateInventorySlotUI((*ArmorCategoryItems)[i].Item, (*ArmorCategoryItems)[i].ItemQuantity);
+	//	
+	//
+	//	(*ArmorCategoryItems)[i].InventorySlot = InventorySlotWidget;
+	//}
+	//for (int i = 0; i < AmountOfSlots; i++)
+	//{
+	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+	//
+	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+	//	InventorySlotWidget->UpdateInventorySlotUI((*PotionCategoryItems)[i].Item, (*PotionCategoryItems)[i].ItemQuantity);
+	//	
+	//
+	//	(*PotionCategoryItems)[i].InventorySlot = InventorySlotWidget;
+	//}
+	//for (int i = 0; i < AmountOfSlots; i++)
+	//{
+	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+	//
+	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+	//	InventorySlotWidget->UpdateInventorySlotUI((*FoodCategoryItems)[i].Item, (*FoodCategoryItems)[i].ItemQuantity);
+	//	
+	//
+	//	(*FoodCategoryItems)[i].InventorySlot = InventorySlotWidget;
+	//}
+
+}
+
+void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots)
+{
+	for (int i = 0; i < AmountOfSlots; i++)
+	{
+		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+
+		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
+		InventorySlotWidget->UpdateInventorySlotUI((*CategoryItems)[i].Item, (*CategoryItems)[i].ItemQuantity);
+
+		(*CategoryItems)[i].InventorySlot = InventorySlotWidget;
 	}
 }
 
@@ -123,16 +201,33 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 		(*SelectedCategoryItems)[i].InventorySlot->UpdateInventorySlotUI((*SelectedCategoryItems)[i].Item, (*SelectedCategoryItems)[i].ItemQuantity);
 
 		Grid_Inventory->AddChildToGrid((*SelectedCategoryItems)[i].InventorySlot, i / 4, i % 4);
-
 	}
 }
 
 void UTDUW_Inventory::OnWeaponButtonClicked()
 {
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Weapon);
+
+	DisplayInventorySlotWidgets();
 }
 
 void UTDUW_Inventory::OnArmorButtonClicked()
 {
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Armor);
+
+	DisplayInventorySlotWidgets();
+}
+
+void UTDUW_Inventory::OnPotionButtonClicked()
+{
+	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Potion);
+
+	DisplayInventorySlotWidgets();
+}
+
+void UTDUW_Inventory::OnFoodButtonClicked()
+{
+	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Food);
+
+	DisplayInventorySlotWidgets();
 }

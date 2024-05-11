@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
+#include "Library/TDItemLibrary.h"
 #include "UI/Widget/TDUW.h"
 #include "TDUW_Inventory.generated.h"
 
@@ -23,6 +24,8 @@ public:
 	virtual void NativeDestruct() override;
 
 	void CreateInventorySlotWidgets();
+	void UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots);
+
 	void DisplayInventorySlotWidgets();
 
 private:
@@ -30,6 +33,10 @@ private:
 	void OnWeaponButtonClicked();
 	UFUNCTION()
 	void OnArmorButtonClicked();
+	UFUNCTION()
+	void OnPotionButtonClicked();
+	UFUNCTION()
+	void OnFoodButtonClicked();
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UHorizontalBox> HB_Categories;
@@ -38,6 +45,10 @@ private:
 	TObjectPtr<UButton> Button_Category_Weapon;
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UButton> Button_Category_Armor;
+	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
+	TObjectPtr<UButton> Button_Category_Potion;
+	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
+	TObjectPtr<UButton> Button_Category_Food;
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UGridPanel> Grid_Inventory;

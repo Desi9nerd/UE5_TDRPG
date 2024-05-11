@@ -15,7 +15,7 @@ void UTDUW_InventorySlot::NativeConstruct()
 	}
 }
 
-void UTDUW_InventorySlot::UpdateInventorySlotUI(FItem& InItem, int32 InItemQuantity)
+void UTDUW_InventorySlot::UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity)
 {
 	if (InItemQuantity == 0)
 	{

@@ -11,8 +11,10 @@ ATDItemActor::ATDItemActor()
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	Mesh->SetupAttachment(GetRootComponent());
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SphereCollision = CreateDefaultSubobject<USphereComponent>("SphereCollision");
 	SphereCollision->SetupAttachment(Mesh);
+	SphereCollision->SetSphereRadius(100.f);
 }
 
 void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
