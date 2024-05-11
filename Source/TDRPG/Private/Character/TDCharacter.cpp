@@ -25,10 +25,6 @@ ATDCharacter::ATDCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	// Sphere Collision
-	SphereCollision = CreateDefaultSubobject<USphereComponent>("SphereCollision");
-	SphereCollision->SetupAttachment(RootComponent);
-
 	// Camera
 	CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	CameraSpringArm->SetupAttachment(RootComponent);

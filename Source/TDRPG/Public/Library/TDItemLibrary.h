@@ -58,7 +58,7 @@ struct FInventorySlot
 	FItem Item = FItem();
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 ItemQuantity = 1;
+	int32 ItemQuantity = 0;
 
 	UPROPERTY(EditDefaultsOnly)
 	UTDUW_InventorySlot* InventorySlot = nullptr;

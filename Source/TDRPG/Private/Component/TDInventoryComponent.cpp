@@ -2,6 +2,7 @@
 
 #include "Actor/TDItemActor.h"
 #include "Character/TDCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/GridPanel.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
@@ -50,9 +51,9 @@ void UTDInventoryComponent::PickupItem()
 
 void UTDInventoryComponent::Server_PickupItem_Implementation()
 {
-	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwner());
 	TArray<AActor*> OverlappingActors;
-	TDCharacter->SphereCollision->GetOverlappingActors(OverlappingActors, ATDItemActor::StaticClass());
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwner());
+	TDCharacter->GetOverlappingActors(OverlappingActors, ATDItemActor::StaticClass());
 
 	if (OverlappingActors.Num() > 0)
 	{
@@ -276,6 +277,7 @@ void UTDInventoryComponent::DestroyPickupItem(ATDItemActor* InItem, bool InDestr
 
 void UTDInventoryComponent::Server_DestroyPickupItem_Implementation(ATDItemActor* InItem, bool InDestroyItem)
 {
-	InItem->DestroyPickupItem(InDestroyItem);
+	//InItem->DestroyPickupItem(InDestroyItem); // 삭제예정: 옵션1
+	InItem->DestroyItem();
 }
 //******************************************************************************

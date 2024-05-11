@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "TDBaseCharacter.h"
 #include "Interface/IPlayer.h"
@@ -57,9 +56,7 @@ public:
 	virtual int32 GetSkillPoints() const override;
 	virtual int32 GetSkillPointsBP_Implementation() const override;
 	//********************************************************
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> SphereCollision;
+	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<USpringArmComponent> CameraSpringArm;
