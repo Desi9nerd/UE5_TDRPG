@@ -22,7 +22,6 @@ void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(ATDItemActor, ItemQuantity, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(ATDItemActor, bDestroyItem, COND_None, REPNOTIFY_Always); // 삭제예정: 옵션1
 }
 
 void ATDItemActor::DestroyItem()
@@ -44,20 +43,6 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 		UE_LOG(LogTemp, Warning, TEXT("Item Overlapped! "));
 	}
 }
-
-//void ATDItemActor::OnDestroyRootItem(bool InbDestroyItem)
-//{
-//	bDestroyItem = InbDestroyItem;
-//}
-//
-//void ATDItemActor::OnRep_DestroyItem()
-//{
-//	FTimerHandle TestTimerHanlde;
-//	if (bDestroyItem)
-//	{
-//		Destroy(); // 액터 소멸.
-//	}
-//}
 
 // 오대성님, 
 // 얕은 복사

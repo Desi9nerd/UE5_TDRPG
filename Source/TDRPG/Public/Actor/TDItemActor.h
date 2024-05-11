@@ -21,8 +21,8 @@ public:
 	FORCEINLINE const FString& GetItemName() const { return ItemName; }
 	FORCEINLINE int32 GetItemQuantity() const { return ItemQuantity; }
 	FORCEINLINE void SetItemQuantity(int32 InItemQuantity) { ItemQuantity = InItemQuantity; }
-	//FORCEINLINE void DestroyPickupItem(bool DestroyItem) { bDestroyItem = DestroyItem; } // 삭제예정: 옵션1
-	void DestroyItem(); // 위에거 대체용으로 만든 함수
+
+	void DestroyItem();
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,15 +39,9 @@ protected:
 private:
 	void OnDestroyRootItem(bool InbDestroyItem);
 
-	//UFUNCTION()
-	//void OnRep_DestroyItem(); // 삭제예정: 옵션1
-
 	UPROPERTY(EditDefaultsOnly)
 	FString ItemName;
 
 	UPROPERTY(EditDefaultsOnly, Replicated)
 	int32 ItemQuantity;
-
-	//UPROPERTY(ReplicatedUsing = OnRep_DestroyItem) // 삭제예정: 옵션1
-	//bool bDestroyItem;
 };
