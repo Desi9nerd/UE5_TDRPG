@@ -53,10 +53,13 @@ void UTDInventoryComponent::Server_PickupItem_Implementation()
 
 	if (OverlappingActors.Num() > 0)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
+		for (int32 i = 0; i < OverlappingActors.Num(); i++)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
 
-		ATDItemActor* OverlappingItem = Cast<ATDItemActor>(OverlappingActors[0]);
-		AddtoInventory(OverlappingItem);
+			ATDItemActor* OverlappingItem = Cast<ATDItemActor>(OverlappingActors[i]);
+			AddtoInventory(OverlappingItem);			
+		}
 	}
 }
 
