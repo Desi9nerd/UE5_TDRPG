@@ -68,54 +68,7 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 
 	// SelectedInventoryCategory의 기준으로 Inventory 보이게 하기
 	DisplayInventorySlotWidgets();
-
-
-	//for (int i = 0; i < AmountOfSlots; i++)
-	//{
-	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
-	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-
-	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-	//	InventorySlotWidget->UpdateInventorySlotUI((*WeaponCategoryItems)[i].Item, (*WeaponCategoryItems)[i].ItemQuantity);
-
-	//	Grid_Inventory->AddChildToGrid(InventorySlotWidget, i / 4, i % 4);
-
-	//	(*WeaponCategoryItems)[i].InventorySlot = InventorySlotWidget;
-	//}
-
-	//for (int i = 0; i < AmountOfSlots; i++)
-	//{
-	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
-	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-	//
-	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-	//	InventorySlotWidget->UpdateInventorySlotUI((*ArmorCategoryItems)[i].Item, (*ArmorCategoryItems)[i].ItemQuantity);
-	//	
-	//
-	//	(*ArmorCategoryItems)[i].InventorySlot = InventorySlotWidget;
-	//}
-	//for (int i = 0; i < AmountOfSlots; i++)
-	//{
-	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
-	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-	//
-	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-	//	InventorySlotWidget->UpdateInventorySlotUI((*PotionCategoryItems)[i].Item, (*PotionCategoryItems)[i].ItemQuantity);
-	//	
-	//
-	//	(*PotionCategoryItems)[i].InventorySlot = InventorySlotWidget;
-	//}
-	//for (int i = 0; i < AmountOfSlots; i++)
-	//{
-	//	UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
-	//	UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-	//
-	//	// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-	//	InventorySlotWidget->UpdateInventorySlotUI((*FoodCategoryItems)[i].Item, (*FoodCategoryItems)[i].ItemQuantity);
-	//	
-	//
-	//	(*FoodCategoryItems)[i].InventorySlot = InventorySlotWidget;
-	//}
+	
 }
 
 void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots)
@@ -171,6 +124,8 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 
 void UTDUW_Inventory::OnWeaponButtonClicked()
 {
+	if (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory() == EItemCategory::Weapon) return;
+
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Weapon);
 
 	DisplayInventorySlotWidgets();
@@ -178,6 +133,8 @@ void UTDUW_Inventory::OnWeaponButtonClicked()
 
 void UTDUW_Inventory::OnArmorButtonClicked()
 {
+	if (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory() == EItemCategory::Armor) return;
+
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Armor);
 
 	DisplayInventorySlotWidgets();
@@ -185,6 +142,8 @@ void UTDUW_Inventory::OnArmorButtonClicked()
 
 void UTDUW_Inventory::OnPotionButtonClicked()
 {
+	if (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory() == EItemCategory::Potion) return;
+
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Potion);
 
 	DisplayInventorySlotWidgets();
@@ -192,6 +151,8 @@ void UTDUW_Inventory::OnPotionButtonClicked()
 
 void UTDUW_Inventory::OnFoodButtonClicked()
 {
+	if (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory() == EItemCategory::Food) return;
+
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::Food);
 
 	DisplayInventorySlotWidgets();
