@@ -1,10 +1,6 @@
 ﻿#include "Component/TDInventoryComponent.h"
-
 #include "Actor/TDItemActor.h"
 #include "Character/TDCharacter.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/GridPanel.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"
@@ -197,18 +193,13 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 	default:
 		break;
 	}
-
-	//if (nullptr == CategoryArray) UE_LOG(LogTemp, Warning, TEXT("No CategoryArray"));
-	//UE_LOG(LogTemp, Warning, TEXT("%d"), CategoryArray->Num());
-
-
+	
 	if (CategoryArray)
 	{
 		bool bRelootItem = false;
 		int32 i = 0; // 루프 외부에서 i를 선언하여 사용합니다.
 		for (; i < CategoryArray->Num() - 1; i++)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT(" %d"), (*CategoryArray)[i].ItemQuantity);
 			if ((*CategoryArray)[i].ItemQuantity == 0)
 			{
 				bInventoryIsFull = false;
@@ -228,8 +219,6 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 				}
 				else
 				{
-					//if (nullptr == (*CategoryArray)[i].InventorySlot) UE_LOG(LogTemp, Warning, TEXT("No Inventory Slot!"));
-
 					// 인벤토리에 아이템 추가
 					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
 				}

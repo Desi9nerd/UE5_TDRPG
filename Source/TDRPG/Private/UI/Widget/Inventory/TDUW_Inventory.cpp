@@ -54,55 +54,21 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 
 	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
 
-	/*
-	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
-
-	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
-
-	switch (SelectedCategory)
-	{
-	case EItemCategory::Weapon:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
-		break;
-	case EItemCategory::Armor:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
-		break;
-	case EItemCategory::Potion:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
-		break;
-	case EItemCategory::Food:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
-		break;
-	default:
-		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
-		break;
-	}
-
-	
-	for (int i = 0; i < AmountOfSlots; i++)
-	{
-		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
-		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
-
-		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
-		InventorySlotWidget->UpdateInventorySlotUI((*SelectedCategoryItems)[i].Item, (*SelectedCategoryItems)[i].ItemQuantity);
-
-		Grid_Inventory->AddChildToGrid(InventorySlotWidget, i / 4, i % 4);
-
-		(*SelectedCategoryItems)[i].InventorySlot = InventorySlotWidget;
-	}
-	*/
-
+	// TDInventoryComponent의 아이템 종류들 가져와서 담기
 	TArray<FInventorySlot>* WeaponCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
 	TArray<FInventorySlot>* ArmorCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
 	TArray<FInventorySlot>* PotionCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
 	TArray<FInventorySlot>* FoodCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
 
+	// 무기, 방어구, 포션, 음식 InventorySlot 생성
 	UpdateCategoryItems(WeaponCategoryItems, AmountOfSlots);
 	UpdateCategoryItems(ArmorCategoryItems, AmountOfSlots);
 	UpdateCategoryItems(PotionCategoryItems, AmountOfSlots);
 	UpdateCategoryItems(FoodCategoryItems, AmountOfSlots);
+
+	// SelectedInventoryCategory의 기준으로 Inventory 보이게 하기
 	DisplayInventorySlotWidgets();
+
 
 	//for (int i = 0; i < AmountOfSlots; i++)
 	//{
@@ -150,7 +116,6 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	//
 	//	(*FoodCategoryItems)[i].InventorySlot = InventorySlotWidget;
 	//}
-
 }
 
 void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots)
