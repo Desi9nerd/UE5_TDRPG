@@ -3,6 +3,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "TDGA.generated.h"
 
+class UTDAT_TargetData;
 /**
  * 
  */
@@ -12,6 +13,8 @@ class TDRPG_API UTDGA : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
 	virtual FString GetDescription(int32 AbilityLevel);
 	virtual FString GetNextAbilityLevelDescription(int32 AbilityLevel);
 	static FString GetLockedDescription(int32 AbilityLevel);
@@ -23,4 +26,6 @@ public:
 protected:
 	float GetManaCost(float InAbilityLevel = 1.f) const;
 	float GetCooldown(float InAbilityLevel = 1.f) const;
+
+	TObjectPtr<UTDAT_TargetData> TargetDataAbilityTask;
 };

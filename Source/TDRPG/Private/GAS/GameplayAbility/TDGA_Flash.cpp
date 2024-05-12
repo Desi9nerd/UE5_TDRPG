@@ -38,6 +38,7 @@ void UTDGA_Flash::OnFlashTeleport(FGameplayEventData Payload)
 {
 	UTDAT_TargetData* TargetDataTask = UTDAT_TargetData::CreateTargetDataUnderMouse(this);
 	TargetDataTask->Activate();
+	TargetDataTask->ReadyForActivation();
 
 	FVector_NetQuantize FlashLocation = TargetDataTask->MouseCursorLocation;
 	

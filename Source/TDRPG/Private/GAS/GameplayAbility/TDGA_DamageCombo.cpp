@@ -2,6 +2,7 @@
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Character/TDBaseCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UTDGA_DamageCombo::UTDGA_DamageCombo()
 {
@@ -12,8 +13,8 @@ void UTDGA_DamageCombo::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	//ATDBaseCharacter* TDBaseCharacter = CastChecked<ATDBaseCharacter>(ActorInfo->AvatarActor.Get());
-	//TDBaseCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	ATDBaseCharacter* TDBaseCharacter = CastChecked<ATDBaseCharacter>(ActorInfo->AvatarActor.Get());
+	TDBaseCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboActionMontage, 1.0f, GetNextSection());
 	PlayAttackTask->OnCompleted.AddDynamic(this, &ThisClass::OnCompleteCallback);
@@ -35,17 +36,17 @@ void UTDGA_DamageCombo::InputPressed(const FGameplayAbilitySpecHandle Handle, co
 	}
 }
 
-//void UTDGA_DamageCombo::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
-//{
-//	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-//}
+void UTDGA_DamageCombo::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
+{
+	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
+}
 
 void UTDGA_DamageCombo::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	//ATDBaseCharacter* TDBaseCharacter = CastChecked<ATDBaseCharacter>(ActorInfo->AvatarActor.Get());
-	//TDBaseCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	ATDBaseCharacter* TDBaseCharacter = CastChecked<ATDBaseCharacter>(ActorInfo->AvatarActor.Get());
+	TDBaseCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 	//** 콤보 초기화	
 	CurrentCombo = 0;
@@ -80,7 +81,7 @@ void UTDGA_DamageCombo::StartComboTimer() // 콤보 타이머
 	ensure(EffectiveFrameCount.IsValidIndex(ComboIndex));
 
 	const float ComboEffectiveTime = EffectiveFrameCount[ComboIndex] / FrameRate; // 몇 초 이후에 점검할지 변수
-	if (ComboEffectiveTime > 0.0f)
+	if (ComboEffectiveTime > 0.f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &ThisClass::CheckComboInput, ComboEffectiveTime, false);
 	}

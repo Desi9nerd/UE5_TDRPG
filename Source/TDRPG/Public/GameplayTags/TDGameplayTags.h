@@ -64,6 +64,7 @@ public:
 
 
 	FGameplayTag Abilities_Skill_Fireball;
+	FGameplayTag Abilities_Skill_ComboFlameShooting;
 	FGameplayTag Abilities_Skill_StoneEdge;
 	FGameplayTag Abilities_Skill_Meteor;
 
@@ -72,6 +73,7 @@ public:
 
 	// Cooldown
 	FGameplayTag Cooldown_Skill_Fireball;
+	FGameplayTag Cooldown_Skill_ComboFlameShooting;
 	FGameplayTag Cooldown_Skill_StoneEdge;
 	FGameplayTag Cooldown_Skill_Meteor;
 	FGameplayTag Cooldown_Skill_Flash;
@@ -96,6 +98,7 @@ public:
 
 	// Event
 	FGameplayTag Event_Montage_Fireball;
+	FGameplayTag Event_Montage_ComboFlameShooting;
 	FGameplayTag Event_Montage_StoneEdge;
 	FGameplayTag Event_Montage_Meteor;
 	FGameplayTag Event_Montage_Flash;

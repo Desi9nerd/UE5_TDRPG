@@ -1,5 +1,14 @@
 ﻿#include "GAS/GameplayAbility/TDGA.h"
 #include "GAS/TDAttributeSet.h"
+#include "GAS/AbilityTask/TDAT_TargetData.h"
+
+void UTDGA::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	TargetDataAbilityTask = UTDAT_TargetData::CreateTargetDataUnderMouse(this);
+	TargetDataAbilityTask->ReadyForActivation();
+}
 
 FString UTDGA::GetDescription(int32 AbilityLevel)
 {
