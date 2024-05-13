@@ -1,6 +1,8 @@
 #include "GAS/GameplayAbility/TDGA_DamageProjectile_Arrow.h"
 #include "Interface/ICombat.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Actor/TDProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 FString UTDGA_DamageProjectile_Arrow::GetDescription(int32 Level)
 {
@@ -20,29 +22,91 @@ void UTDGA_DamageProjectile_Arrow::SpawnProjectiles(const FVector& ProjectileTar
 
 	const FVector SocketLocation = CombatInterface->GetCombatSocketLocationCPP(SocketTag);
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-	if (bOverridePitch) Rotation.Pitch = PitchOverride;
-
-	const FVector Forward = Rotation.Vector();
-	const FVector LeftOfSpread = Forward.RotateAngleAxis(-ArrowSpread / 2.f, FVector::UpVector);
-	const FVector RightOfSpread = Forward.RotateAngleAxis(ArrowSpread / 2.f, FVector::UpVector);
-	
-	if (NumProjectiles > 1) // Arrow 2개 이상. ArrowSpread = FMath::Min(MaxNumArrows, GetAbilityLevel());
+	if (bOverridePitch) // 발사체의 Pitch(위아래) 여부 확인 후 적용
 	{
-		const float DeltaSpread = ArrowSpread / (NumProjectiles - 1);
-		for (int32 i = 0; i < NumProjectiles; i++)
+		if (Cast<IICombat>(HomingTarget))
 		{
-			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
-			const FVector Start = SocketLocation + FVector(0, 0, 5);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Start, Start + Direction * 75.f, 1, FLinearColor::Yellow, 60, 1);
+			Rotation.Pitch = PitchOverride + 25.f;
+		}
+		else
+		{
+			Rotation.Pitch = PitchOverride;
 		}
 	}
-	else // Arrow 1개
+
+
+	const FVector Forward = Rotation.Vector();
+
+	const int32 EffectiveNumProjectiles = FMath::Min(NumProjectiles, GetAbilityLevel());
+	TArray<FRotator> Rotations = EvenlySpacedRotators(Forward, FVector::UpVector, ArrowSpread, EffectiveNumProjectiles);
+
+	for (const FRotator& Rot : Rotations)
 	{
-		const FVector Start = SocketLocation + FVector(0, 0, 5);
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Start, Start + Forward * 75.f, 1, FLinearColor::Yellow, 60, 1);
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rot.Quaternion());
+
+		ATDProjectile* Projectile = GetWorld()->SpawnActorDeferred<ATDProjectile>(ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		Projectile->DamageEffectParams = SetDamageEffectParams();
+
+		if (HomingTarget && Cast<IICombat>(HomingTarget))
+		{
+			Projectile->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
+		}
+		//else
+		//{
+		//	Projectile->TargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+		//	Projectile->TargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+		//	Projectile->ProjectileMovement->HomingTargetComponent = Projectile->TargetSceneComponent;
+		//}
+
+		Projectile->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+		Projectile->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
+
+		Projectile->FinishSpawning(SpawnTransform);
+	}
+}
+
+TArray<FRotator> UTDGA_DamageProjectile_Arrow::EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfRotators)
+{
+	TArray<FRotator> Rotators;
+
+	if (NumOfRotators > 1)
+	{
+		const float DeltaSpread = Spread / (NumOfRotators - 1);
+		for (int32 i = 0; i < NumOfRotators; i++)
+		{
+			const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			Rotators.Add(Direction.Rotation());
+		}
+	}
+	else
+	{
+		Rotators.Add(ForwardVector.Rotation());
 	}
 
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation, SocketLocation + Forward * 100.f, 1, FLinearColor::White, 120, 1);
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation, SocketLocation + LeftOfSpread * 100.f, 1, FLinearColor::Gray, 120, 1);
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation, SocketLocation + RightOfSpread * 100.f, 1, FLinearColor::Gray, 120, 1);
+	return Rotators;
+}
+
+TArray<FVector> UTDGA_DamageProjectile_Arrow::EvenlyRotatedVectors(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfVectors)
+{
+	TArray<FVector> Vectors;
+
+	if (NumOfVectors > 1)
+	{
+		const float DeltaSpread = Spread / (NumOfVectors - 1);
+		for (int32 i = 0; i < NumOfVectors; i++)
+		{
+			const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			Vectors.Add(Direction);
+		}
+	}
+	else
+	{
+		Vectors.Add(ForwardVector);
+	}
+	return Vectors;
 }

@@ -19,9 +19,23 @@ public:
 	void SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride, AActor* HomingTarget);
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
-	float ArrowSpread = 90.f;
+	UPROPERTY(EditDefaultsOnly)
+	float ArrowSpread = 45.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
+	UPROPERTY(EditDefaultsOnly)
 	int32 MaxNumArrows = 5;
+
+	UPROPERTY(EditDefaultsOnly)
+	float HomingAccelerationMin = 1600.f;
+	UPROPERTY(EditDefaultsOnly)
+	float HomingAccelerationMax = 3200.f;
+	UPROPERTY(EditDefaultsOnly)
+	bool bLaunchHomingProjectiles = true;
+
+private:
+	UFUNCTION(BlueprintPure)
+	static TArray<FRotator> EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfRotators);
+
+	UFUNCTION(BlueprintPure)
+	static TArray<FVector> EvenlyRotatedVectors(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfVectors);
 };

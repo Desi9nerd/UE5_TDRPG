@@ -24,6 +24,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+	UPROPERTY()
+	TObjectPtr<USceneComponent> TargetSceneComponent;
 
 	// 방법1: GameplayEffectSpecHandle
 	//UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
