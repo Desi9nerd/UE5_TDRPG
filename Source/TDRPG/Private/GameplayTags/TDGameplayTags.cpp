@@ -41,6 +41,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fireball"), FString("Abilities: 파이어볼"));
 	GameplayTags.Abilities_Skill_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.MagicArrow"), FString("Abilities: 매직 애로우"));
 	GameplayTags.Abilities_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.ComboFlameShooting"), FString("Abilities: 화염 난사"));
+	GameplayTags.Abilities_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.EnergyLance"), FString("Abilities: 에너르기파"));
 	GameplayTags.Abilities_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.StoneEdge"), FString("Abilities: 스톤엣지"));
 	GameplayTags.Abilities_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Meteor"), FString("Abilities: 메테오"));
 	GameplayTags.Abilities_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Flash"), FString("Abilities: 대쉬"));
@@ -50,6 +51,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Cooldown_Skill_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Fireball"), FString("Cooldown: 파이어볼"));
 	GameplayTags.Cooldown_Skill_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.MagicArrow"), FString("Cooldown: 매직 애로우"));
 	GameplayTags.Cooldown_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.ComboFlameShooting"), FString("Cooldown: 화염 난사"));
+	GameplayTags.Cooldown_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.EnergyLance"), FString("Cooldown: 에너르기파"));
 	GameplayTags.Cooldown_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.StoneEdge"), FString("Cooldown: 스톤엣지"));
 	GameplayTags.Cooldown_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Meteor"), FString("Cooldown: 메테오"));
 	GameplayTags.Cooldown_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Flash"), FString("Cooldown: 대쉬"));
@@ -103,6 +105,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Event_Montage_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Fireball"), FString("파이어볼"));
 	GameplayTags.Event_Montage_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.MagicArrow"), FString("매직 애로우"));
 	GameplayTags.Event_Montage_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.ComboFlameShooting"), FString("화염 난사"));
+	GameplayTags.Event_Montage_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.EnergyLance"), FString("에너르기파"));
 	GameplayTags.Event_Montage_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.StoneEdge"), FString("스톤엣지"));
 	GameplayTags.Event_Montage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Meteor"), FString("메테오"));
 	GameplayTags.Event_Montage_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Flash"), FString("점멸"));

@@ -130,6 +130,11 @@ void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bTargeting = ThisActor ? true : false;
 		bAutoRunning = false;
 	}
+
+	if (GetASC()) 
+	{
+		GetASC()->InputTagPressed(InputTag); // AbilitySystemComponent의 InputTag 눌림 함수를 콜.
+	}
 }
 
 void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)

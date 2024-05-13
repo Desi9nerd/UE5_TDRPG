@@ -101,6 +101,10 @@ public:
 	ECharacterClass GetCharacterClass();
 	virtual ECharacterClass GetCharacterClassCPP() = 0;
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetInShockLoopBP(bool bInLoop);
+	//virtual void SetInShockLoop(bool bInLoop) = 0;
+
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature GetOnDeathDelegate() = 0;
 };
