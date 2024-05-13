@@ -63,6 +63,18 @@ void ATDPlayerController::ShowDamageNumber_Implementation(float DamageAmount, AC
 
 void ATDPlayerController::CursorTrace() // 마우스 커서 Trace
 {
+	//**************************************************************************************
+	//** 예외 처리: BlockTag_CursorTrace 상태
+	if (GetASC() && GetASC()->HasMatchingGameplayTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_CursorTrace))
+	{
+		if (LastActor) LastActor->UnHighlightActor();
+		if (ThisActor) ThisActor->UnHighlightActor();
+		LastActor = nullptr;
+		ThisActor = nullptr;
+		return;
+	}
+	//**************************************************************************************
+
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (false == CursorHit.bBlockingHit) return;
 
@@ -125,6 +137,15 @@ void ATDPlayerController::SetupInputComponent()
 
 void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	//**************************************************************************************
+	//** 예외 처리: BlockTag_InputPressed 상태
+	if (GetASC() && GetASC()->HasMatchingGameplayTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputPressed))
+	{
+		return;
+	}
+	//**************************************************************************************
+
+
 	if (InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB)) // 마우스 우클릭
 	{
 		bTargeting = ThisActor ? true : false;
@@ -139,6 +160,14 @@ void ATDPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	//**************************************************************************************
+	//** 예외 처리: BlockTag_InputReleased 상태
+	if (GetASC() && GetASC()->HasMatchingGameplayTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputReleased))
+	{
+		return;
+	}
+	//**************************************************************************************
+
 	if (false == InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB))
 	{
 		if (GetASC())
@@ -175,7 +204,12 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1]; // CachedDestination를 마지막 PathPoints로 설정. 이렇게하면 AutoRunning때 항상 도달가능한 도착지점이 된다.
 					bAutoRunning = true;					
 				}
-				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickMoveEffect, CachedDestination); // 마우스 클릭 효과
+
+				// BlockTag_InputPressed 상태일 때는 마우스 클릭 효과가 안 나타나도록 하기.
+				if (GetASC() && false == GetASC()->HasMatchingGameplayTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputPressed))
+				{
+					UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickMoveEffect, CachedDestination); // 마우스 클릭 효과
+				}
 			}
 		}
 		FollowTime = 0.f;
@@ -185,6 +219,14 @@ void ATDPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void ATDPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
+	//**************************************************************************************
+	//** 예외 처리: BlockTag_InputHeld 상태
+	if (GetASC() && GetASC()->HasMatchingGameplayTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputHeld))
+	{
+		return;
+	}
+	//**************************************************************************************
+
 	if (false == InputTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().InputTag_RMB))
 	{
 		if (IsValid(GetASC()))

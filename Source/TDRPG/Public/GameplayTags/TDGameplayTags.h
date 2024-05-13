@@ -123,6 +123,7 @@ public:
 	FGameplayTag Montage_ATK_3;
 	FGameplayTag Montage_ATK_4;
 
+	//********************************************************
 	// Enhanced Input
 	FGameplayTag InputTag_Q;
 	FGameplayTag InputTag_W;
@@ -132,11 +133,18 @@ public:
 	FGameplayTag InputTag_S;
 	FGameplayTag InputTag_D;
 	FGameplayTag InputTag_F;
+	FGameplayTag InputTag_V;
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_Spacebar;
 	FGameplayTag InputTag_Passive_1;
 	FGameplayTag InputTag_Passive_2;
+
+	// Input ป๓ลย: Pressed, Held, Released, CursorTrace
+	FGameplayTag BlockTag_InputPressed;
+	FGameplayTag BlockTag_InputHeld;
+	FGameplayTag BlockTag_InputReleased;
+	FGameplayTag BlockTag_CursorTrace;
 	//********************************************************
 
 	// Gameplay Cues

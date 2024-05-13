@@ -124,6 +124,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Montage_ATK_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.3"), FString("공격 3"));
 	GameplayTags.Montage_ATK_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.ATK.4"), FString("공격 4"));
 
+	//************************************************************************************************
 	// Enhanced Input
 	GameplayTags.InputTag_Q = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.Q"), FString("Q버튼 Input Tag"));
 	GameplayTags.InputTag_W = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.W"), FString("W버튼 Input Tag"));
@@ -133,11 +134,20 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_S = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.S"),FString("S버튼 Input Tag"));
 	GameplayTags.InputTag_D = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.D"),FString("D버튼 Input Tag"));
 	GameplayTags.InputTag_F = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.F"),FString("F버튼 Input Tag"));
+	GameplayTags.InputTag_V = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.V"),FString("V버튼 Input Tag"));
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LMB"), FString("왼쪽 마우스 버튼 Input Tag"));
 	GameplayTags.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.RMB"), FString("오른쪽 마우스 버튼 Input Tag"));
 	GameplayTags.InputTag_Spacebar = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.Spacebar"), FString("스페이스바 버튼 Input Tag"));
 	GameplayTags.InputTag_Passive_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.Passive.1"),FString("패시브1 Input Tag"));
 	GameplayTags.InputTag_Passive_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.Passive.2"),FString("패시브2 Input Tag"));
+
+	// Input 상태: Pressed, Held, Released, CursorTrace
+	GameplayTags.BlockTag_InputPressed = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("BlockTag.InputPressed"), FString("Block: Input Pressed 상태"));
+	GameplayTags.BlockTag_InputHeld = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("BlockTag.InputHeld"), FString("Block: Input Held 상태"));
+	GameplayTags.BlockTag_InputReleased = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("BlockTag.InputReleased"), FString("Block: Input Released 상태"));
+	GameplayTags.BlockTag_CursorTrace = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("BlockTag.CursorTrace"), FString("Block: Input Trace 상태"));
+
+	//************************************************************************************************
 
 	// Gameplay Cues
 	GameplayTags.GameplayCue_MeleeImpact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.MeleeImpact"), FString("MeleeAttack 피격 시 이펙트"));
