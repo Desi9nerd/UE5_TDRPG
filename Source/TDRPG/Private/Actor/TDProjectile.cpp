@@ -49,6 +49,7 @@ void ATDProjectile::Destroyed()
 		if (IsValid(LoopingSoundComponent))
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+			LoopingSoundComponent->DestroyComponent();
 		}
 		bHit = true;
 	}
@@ -83,6 +84,7 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		if (IsValid(LoopingSoundComponent))
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+			LoopingSoundComponent->DestroyComponent();
 		}
 		bHit = true;
 	}
