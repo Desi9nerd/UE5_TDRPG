@@ -149,6 +149,7 @@ public:
 
 	// Gameplay Cues
 	FGameplayTag GameplayCue_MeleeImpact;
+	FGameplayTag GameplayCue_Burst;
 
 	//********************************************************
 	// Inventory + Item
