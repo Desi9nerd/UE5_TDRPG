@@ -52,6 +52,11 @@ void UTDAbilitySystemComponent::InputTagPressed(const FGameplayTag& InputTag)
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputReleased(AbilitySpec);
+			
+			if (AbilitySpec.IsActive())
+			{
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			}
 		}
 	}
 }
@@ -65,6 +70,11 @@ void UTDAbilitySystemComponent::InputTagReleased(const FGameplayTag& InputTag)
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputReleased(AbilitySpec);
+
+			if (AbilitySpec.IsActive()) // 계속 누르고 있는 상태였으면
+			{
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			}
 		}
 	}
 }
