@@ -21,14 +21,15 @@ ATDEnemyCharacter::ATDEnemyCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->bUseRVOAvoidance = true; // Enemy끼리 겹쳐서 잘 안 움직이는것 방지. Agents avoid obstacles by using velocity vectors within a specified radius.
+	BaseWalkSpeed = 300.f;
 
-	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
-	AttributeSet = CreateDefaultSubobject<UTDAttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UTDAttributeSet>(TEXT("AttributeSet"));
 
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
 	HealthBar->SetupAttachment(GetRootComponent());
 }
 
@@ -45,6 +46,9 @@ void ATDEnemyCharacter::PossessedBy(AController* NewController)
 	//** Blackboard의 key를 찾고 해당 key의 value값을 설정하기.
 	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
 	TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
+
+	// ASC에 태그 델리게이트 등록:  Debuff_Stun 태그 감지 시 StunTagChanged 함수가 실행되도록 한다.
+	AbilitySystemComponent->RegisterGameplayTagEvent(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::StunTagChanged);
 }
 
 void ATDEnemyCharacter::HighlightActor()
@@ -152,6 +156,7 @@ void ATDEnemyCharacter::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	AbilitySystemComponent->RegisterGameplayTagEvent(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::StunTagChanged);
 
 	if (HasAuthority()) // Server
 	{
@@ -164,4 +169,14 @@ void ATDEnemyCharacter::InitAbilityActorInfo()
 void ATDEnemyCharacter::InitializeDefaultAttributes() const
 {
 	UTDAbilitySystemBPLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
+void ATDEnemyCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	Super::StunTagChanged(CallbackTag, NewCount);
+
+	if (TDAIController && TDAIController->GetBlackboardComponent())
+	{
+		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("Stunned")), bStunned);
+	}
 }

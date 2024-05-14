@@ -10,8 +10,10 @@
 #include "MotionWarpingComponent.h"
 #include "GAS/Data/TDDA_LevelUp.h"
 #include "NiagaraComponent.h"
+#include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameplayTags/TDGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 
 ATDCharacter::ATDCharacter()
@@ -20,6 +22,7 @@ ATDCharacter::ATDCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	BaseWalkSpeed = 600.f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -107,9 +110,9 @@ void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevel()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 
-	if (UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(GetAbilitySystemComponent()))
+	if (GetTDASC())
 	{
-		TDASC->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+		GetTDASC()->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
 	}
 }
 
@@ -118,9 +121,9 @@ void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevelBP_Implementation()"));
 	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
 
-	if (UTDAbilitySystemComponent* TDASC = Cast<UTDAbilitySystemComponent>(GetAbilitySystemComponent()))
+	if (GetTDASC())
 	{
-		TDASC->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+		GetTDASC()->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
 	}
 }
 
@@ -220,6 +223,41 @@ int32 ATDCharacter::GetSkillPointsBP_Implementation() const
 	return TDPlayerState->GetSkillPoints();
 }
 
+void ATDCharacter::OnRep_Stunned()
+{
+	if (GetTDASC())
+	{
+		const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+		FGameplayTagContainer BlockedTags;
+		BlockedTags.AddTag(GameplayTags.BlockTag_CursorTrace);
+		BlockedTags.AddTag(GameplayTags.BlockTag_InputHeld);
+		BlockedTags.AddTag(GameplayTags.BlockTag_InputPressed);
+		BlockedTags.AddTag(GameplayTags.BlockTag_InputReleased);
+		if (bStunned)
+		{
+			GetTDASC()->AddLooseGameplayTags(BlockedTags);
+			StunDebuffComponent->Activate();
+		}
+		else
+		{
+			GetTDASC()->RemoveLooseGameplayTags(BlockedTags);
+			StunDebuffComponent->Deactivate();
+		}
+	}
+}
+
+void ATDCharacter::OnRep_Burned()
+{
+	if (bBurned)
+	{
+		DebuffComponent->Activate();
+	}
+	else
+	{
+		DebuffComponent->Deactivate();
+	}
+}
+
 //void ATDCharacter::LevelUp_Implementation()
 //{
 //	Multicast_LevelUpParticleEffect();  // 서버 + 모든 클라이언트들에게 레벨업 이펙트를 보여줌.
@@ -244,6 +282,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 	AbilitySystemComponent = TDPlayerState->GetAbilitySystemComponent();
 	AttributeSet = TDPlayerState->GetAttributeSet();
 	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
+	AbilitySystemComponent->RegisterGameplayTagEvent(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::StunTagChanged);
 
 	InitializeDefaultAttributes(); // Attibutes 초기값 설정하기
 

@@ -213,7 +213,19 @@ void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
 	GE->Period = DebuffFrequency;
 	GE->DurationMagnitude = FScalableFloat(DebuffDuration);
 
-	GE->InheritableOwnedTagsContainer.AddTag(TDGameplayTags.DamageTypesToDebuffs[DamageType]); // DamageType태크 key에 대응하는 value(=Debuff 태그)를 담음.
+	// TODO: 여기 체크
+	// DamageType태크 key에 대응하는 value(=Debuff 태그)를 담음.
+	const FGameplayTag DebuffTag = FTDGameplayTags::GetTDGameplayTags().DamageTypesToDebuffs[DamageType];
+	GE->InheritableOwnedTagsContainer.AddTag(DebuffTag);
+	if (DebuffTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun))
+	{
+		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_CursorTrace);
+		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputHeld);
+		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputPressed);
+		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputReleased);
+	}
+
+	GE->InheritableOwnedTagsContainer.AddTag(TDGameplayTags.DamageTypesToDebuffs[DamageType]); 
 
 	GE->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	GE->StackLimitCount = 1;

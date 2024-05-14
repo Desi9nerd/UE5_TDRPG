@@ -1,9 +1,11 @@
 #include "Character/TDBaseCharacter.h"
+#include "Net/UnrealNetwork.h"
 #include "AbilitySystemComponent.h"
 #include "MotionWarpingComponent.h"
 #include "Component/TDDebuffComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "TDRPG/TDRPG.h" // ECC_Projectile
@@ -28,15 +30,35 @@ ATDBaseCharacter::ATDBaseCharacter()
 	DebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DebuffComponent"));
 	DebuffComponent->SetupAttachment(GetRootComponent());
 	DebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTag의 기본값. 현재 테스트를 위해 DotDamage로 설정.
+	StunDebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("StunDebuffComponent"));
+	StunDebuffComponent->SetupAttachment(GetRootComponent());
+	StunDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_Stun;
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ATDBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATDBaseCharacter, bStunned);
+	DOREPLIFETIME(ATDBaseCharacter, bBurned);
+}
+
 UAbilitySystemComponent* ATDBaseCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+TObjectPtr<UTDAbilitySystemComponent> ATDBaseCharacter::GetTDASC()
+{
+	if (IsValid(TDASC)) return TDASC;
+
+	TDASC = Cast<UTDAbilitySystemComponent>(AbilitySystemComponent);
+
+	return TDASC;
 }
 
 void ATDBaseCharacter::UpdateFacingTargetCPP(const FVector& FacingTarget)
@@ -82,6 +104,7 @@ void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& Ragdol
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
 	DebuffComponent->Deactivate(); // 디버프 해제
+	StunDebuffComponent->Deactivate();
 	bDead = true;
 	OnDeathDelegate.Broadcast(this); // 사망 Broadcast
 }
@@ -118,11 +141,32 @@ void ATDBaseCharacter::InitializeDefaultAttributes() const // Attributes 초기값 
 
 void ATDBaseCharacter::AddCharacterAbilities() // 서버에서만 실행.
 {
-	UTDAbilitySystemComponent* TDASC = CastChecked<UTDAbilitySystemComponent>(AbilitySystemComponent);
 	if (false == HasAuthority()) return; // 서버가 아니면 return
 
-	TDASC->AddCharacterAbilities(StartupAbilities);
-	TDASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
+	GetTDASC()->AddCharacterAbilities(StartupAbilities);
+	GetTDASC()->AddCharacterPassiveAbilities(StartupPassiveAbilities);
+}
+
+void ATDBaseCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bStunned = NewCount > 0;
+
+	if (bStunned)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	}
+}
+
+void ATDBaseCharacter::OnRep_Stunned()
+{
+}
+
+void ATDBaseCharacter::OnRep_Burned()
+{
 }
 
 FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // 소켓 위치를 리턴

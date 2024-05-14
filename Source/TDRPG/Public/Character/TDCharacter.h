@@ -56,7 +56,10 @@ public:
 	virtual int32 GetSkillPoints() const override;
 	virtual int32 GetSkillPointsBP_Implementation() const override;
 	//********************************************************
-	
+
+	virtual void OnRep_Stunned() override;
+	virtual void OnRep_Burned() override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<USpringArmComponent> CameraSpringArm;

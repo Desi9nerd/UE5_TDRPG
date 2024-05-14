@@ -9,6 +9,7 @@
 
 class UMotionWarpingComponent;
 class UAbilitySystemComponent;
+class UTDAbilitySystemComponent;
 class UTDDebuffComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -23,7 +24,9 @@ class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInter
 
 public:
 	ATDBaseCharacter();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//** ICombat *********************************************
@@ -50,10 +53,11 @@ public:
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual ECharacterClass GetCharacterClassCPP() override;
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
-	virtual FOnDeathSignature GetOnDeathDelegate() override;
+	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	virtual void SetInShockLoop(bool bInLoop) override;
 	virtual USkeletalMeshComponent* GetWeaponBP_Implementation() override;
 	virtual USkeletalMeshComponent* GetWeapon() override;
+	virtual void SpawnWeapon() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -65,8 +69,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> ATKMontages; // 공격 몽타주 배열
 
+	//********************************************************
+	//** Delegate
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;
 	FOnDeathSignature OnDeathDelegate;
+	//********************************************************
 
 protected:
 	virtual void BeginPlay() override;
@@ -74,13 +81,13 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	UPROPERTY(EditAnywhere, Category = "Combat| Team")
 	uint8 TeamID;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TObjectPtr<USkeletalMeshComponent> Weapon;
-
+	//********************************************************
+	//** 소켓
 	UPROPERTY(EditAnywhere, Category = "Combat") // 에디터에서 적음
 	FName WeaponTipSocketName; // 무기 소켓 이름
 	UPROPERTY(EditAnywhere, Category = "Combat")
@@ -91,18 +98,41 @@ protected:
 	FName RightHandSocketName;
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName TrailSocketName;
+	//********************************************************
 
+	//********************************************************
+	//** 매쉬, 이펙트, 사운드
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UNiagaraSystem> BloodEffect;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USoundBase> DeathSound;
+	//********************************************************
+
+	//********************************************************
+	//** 캐릭터 상태
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 300.f;
 
 	bool bDead = false;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Stunned, BlueprintReadOnly)
+	bool bStunned = false;
+	UPROPERTY(ReplicatedUsing = OnRep_Burned, BlueprintReadOnly)
+	bool bBurned = false;
+
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+	UFUNCTION()
+	virtual void OnRep_Burned();
+	//********************************************************
 
 	UPROPERTY(EditAnywhere, Category = "Motion Warping Component")
 	FName WarpTargetName = FName("FacingTarget");
 
+	//********************************************************
+	//** Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion Warping Component")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
@@ -111,7 +141,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
 	TObjectPtr<UTDDebuffComponent> DebuffComponent;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTDDebuffComponent> StunDebuffComponent;
+	//********************************************************
 
+	//********************************************************
+	//** Attributes
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
@@ -121,6 +156,7 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	//********************************************************
 
 	int32 MinionCnt = 0; // 미니언
 
@@ -135,4 +171,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY()
+	TObjectPtr<UTDAbilitySystemComponent> TDASC;
 };
