@@ -103,7 +103,13 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SetInShockLoopBP(bool bInLoop);
-	//virtual void SetInShockLoop(bool bInLoop) = 0;
+	virtual void SetInShockLoop(bool bInLoop) = 0;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeaponBP();
+	virtual USkeletalMeshComponent* GetWeapon() = 0;
+
+	
 
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature GetOnDeathDelegate() = 0;

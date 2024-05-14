@@ -31,6 +31,6 @@ protected:
 	TObjectPtr<ACharacter> OwnerCharacter;
 
 private:
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UAnimMontage> EnergyLanceMontage;
 };

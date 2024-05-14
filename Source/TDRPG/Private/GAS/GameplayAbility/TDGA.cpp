@@ -1,14 +1,33 @@
 ﻿#include "GAS/GameplayAbility/TDGA.h"
+
+#include "Character/TDCharacter.h"
 #include "GAS/TDAttributeSet.h"
 #include "GAS/AbilityTask/TDAT_TargetData.h"
+#include "Interface/ICombat.h"
 
-void UTDGA::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	TargetDataAbilityTask = UTDAT_TargetData::CreateTargetDataUnderMouse(this);
-	TargetDataAbilityTask->ReadyForActivation();
-}
+//void UTDGA::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+//{
+//	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+//
+//	TargetDataAbilityTask = UTDAT_TargetData::CreateTargetDataUnderMouse(this);
+//	TargetDataAbilityTask->ReadyForActivation();
+//
+//	if (IsValid(WeaponMeshClass))
+//	{
+//		SpawnWeapon();
+//	}
+//}
+//
+//void UTDGA::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+//	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+//{
+//	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+//
+//	if (IsValid(WeaponMesh))
+//	{
+//		WeaponMesh->DestroyComponent();
+//	}
+//}
 
 FString UTDGA::GetDescription(int32 AbilityLevel)
 {
@@ -52,4 +71,16 @@ float UTDGA::GetCooldown(float InAbilityLevel) const
 	}
 
 	return Cooldown;
+}
+
+void UTDGA::SpawnWeapon()
+{
+	USkeletalMeshComponent* Test = Cast<USkeletalMeshComponent>(WeaponMeshClass);
+	WeaponMesh = NewObject<USkeletalMeshComponent>(this, WeaponMeshClass);
+
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetAvatarActorFromActorInfo());
+	WeaponMesh->AttachToComponent(TDCharacter->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, FName(TEXT("Weapon")));
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponMesh->bCastDynamicShadow = false;
+	WeaponMesh->SetSimulatePhysics(false);
 }

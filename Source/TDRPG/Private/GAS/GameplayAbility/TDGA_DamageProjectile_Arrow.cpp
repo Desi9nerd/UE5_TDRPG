@@ -26,7 +26,7 @@ void UTDGA_DamageProjectile_Arrow::SpawnProjectiles(const FVector& ProjectileTar
 	{
 		if (Cast<IICombat>(HomingTarget))
 		{
-			Rotation.Pitch = PitchOverride + 25.f;
+			Rotation.Pitch = PitchOverride + 5.f;
 		}
 		else
 		{

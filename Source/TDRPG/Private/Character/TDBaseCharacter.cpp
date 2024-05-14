@@ -267,6 +267,21 @@ FOnDeathSignature ATDBaseCharacter::GetOnDeathDelegate()
 	return OnDeathDelegate;
 }
 
+void ATDBaseCharacter::SetInShockLoop(bool bInLoop)
+{
+	return;
+}
+
+USkeletalMeshComponent* ATDBaseCharacter::GetWeaponBP_Implementation()
+{
+	return Weapon;
+}
+
+USkeletalMeshComponent* ATDBaseCharacter::GetWeapon()
+{
+	return Weapon;
+}
+
 void ATDBaseCharacter::IncremenetMinionCount_Implementation(int32 Amount)
 {
 	MinionCnt += Amount;

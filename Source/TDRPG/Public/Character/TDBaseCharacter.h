@@ -51,6 +51,9 @@ public:
 	virtual ECharacterClass GetCharacterClassCPP() override;
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature GetOnDeathDelegate() override;
+	virtual void SetInShockLoop(bool bInLoop) override;
+	virtual USkeletalMeshComponent* GetWeaponBP_Implementation() override;
+	virtual USkeletalMeshComponent* GetWeapon() override;
 	//********************************************************
 
 	UFUNCTION(NetMulticast, Reliable)
