@@ -1,5 +1,6 @@
 #include "GAS/AbilityTask/TDAT_TargetData.h"
 #include "AbilitySystemComponent.h"
+#include "TDRPG/TDRPG.h"
 
 UTDAT_TargetData* UTDAT_TargetData::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
@@ -41,7 +42,7 @@ void UTDAT_TargetData::SendMouseCursorData() // 서버에 마우스 커서 데이터 보내기
 	APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
 
 	FHitResult CursorHit; // 마우스 커서 충돌
-	PC->GetHitResultUnderCursor(ECC_Visibility, false, CursorHit); // 마우스 커서 위치
+	PC->GetHitResultUnderCursor(ECC_Target, false, CursorHit); // 마우스 커서 위치
 
 	FGameplayAbilityTargetDataHandle DataHandle;
 	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit(); // Target data with a single hit result, data is packed into the hit result

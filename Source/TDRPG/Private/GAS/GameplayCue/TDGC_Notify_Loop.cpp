@@ -1,14 +1,16 @@
-#include "GAS/GameplayCue/TDGC_Notify_Loop.h"
+ï»¿#include "GAS/GameplayCue/TDGC_Notify_Loop.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Kismet/GameplayStatics.h"
 
 ATDGC_Notify_Loop::ATDGC_Notify_Loop()
 {
-	// GameplayCue°¡ Á¦°ÅµÉ ¶§ ÀÚµ¿À¸·Î °´Ã¼¸¦ ÆÄ±«ÇÏµµ·Ï ¼³Á¤. ÀÌ·¸°Ô ÇÔÀ¸·Î½á, GameplayCue°¡ Á¦°ÅµÇ¾úÀ» ¶§ ÀÌ °´Ã¼µµ ÇÔ²² Á¤¸®µÈ´Ù.
+	// GameplayCueê°€ ì œê±°ë  ë•Œ ìžë™ìœ¼ë¡œ ê°ì²´ë¥¼ íŒŒê´´í•˜ë„ë¡ ì„¤ì •. ì´ë ‡ê²Œ í•¨ìœ¼ë¡œì¨, GameplayCueê°€ ì œê±°ë˜ì—ˆì„ ë•Œ ì´ ê°ì²´ë„ í•¨ê»˜ ì •ë¦¬ëœë‹¤.
 	bAutoDestroyOnRemove = true;
 
-	// GameplayCue ÅÂ±× ¼³Á¤
+	// GameplayCue íƒœê·¸ ì„¤ì •
 	GameplayCueTag = FTDGameplayTags::GetTDGameplayTags().GameplayCue_Loop;
 }
 
@@ -17,7 +19,7 @@ bool ATDGC_Notify_Loop::WhileActive_Implementation(AActor* MyTarget, const FGame
 	BeamSystem = UNiagaraFunctionLibrary::SpawnSystemAttached(
 		SystemTemplate,
 		Parameters.TargetAttachComponent.Get(),
-		SocketName,	 // ºÎÂø À§Ä¡ ÀÌ¸§
+		SocketName,	 // ë¶€ì°© ìœ„ì¹˜ ì´ë¦„
 		FVector(0.f, 0.f, 0.f),	
 		FRotator(0.f, 0.f, 0.f),
 		EAttachLocation::KeepRelativeOffset,
@@ -26,8 +28,20 @@ bool ATDGC_Notify_Loop::WhileActive_Implementation(AActor* MyTarget, const FGame
 		ENCPoolMethod::None,
 		true
 		);
-
 	BeamSystem->SetNiagaraVariableVec3(BeamEnd, Parameters.Location);
+
+	LoopSound = UGameplayStatics::SpawnSoundAttached(
+		LoopingSound,
+		Parameters.TargetAttachComponent.Get(),
+		NAME_None,
+		FVector(0.f, 0.f, 0.f),
+		FRotator(0.f, 0.f, 0.f),
+		EAttachLocation::KeepRelativeOffset,
+		true,
+		1.f,
+		1.f,
+		0.f
+	);
 
 	return false;
 }
@@ -37,6 +51,10 @@ bool ATDGC_Notify_Loop::OnRemove_Implementation(AActor* MyTarget, const FGamepla
 	if (IsValid(BeamSystem))
 	{
 		BeamSystem->DestroyComponent();
+	}
+	if (IsValid(LoopSound))
+	{
+		LoopSound->FadeOut(0.3f, 0.f, EAudioFaderCurve::SCurve);
 	}
 
 	return false;
