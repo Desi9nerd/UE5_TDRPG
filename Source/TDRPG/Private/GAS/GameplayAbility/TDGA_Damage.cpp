@@ -43,6 +43,11 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) con
 	return DamageEffectParams;
 }
 
+float UTDGA_Damage::GetDamageAtCurrentAbilityLevel() const
+{
+	return DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
+}
+
 FTaggedMontage UTDGA_Damage::GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const
 {
 	if (TaggedMontages.Num() > 0)

@@ -81,8 +81,9 @@ void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& Ragdol
 	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll 충격 적용
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
-	DebuffComponent->Deactivate();
+	DebuffComponent->Deactivate(); // 디버프 해제
 	bDead = true;
+	OnDeathDelegate.Broadcast(this); // 사망 Broadcast
 }
 
 void ATDBaseCharacter::BeginPlay()
@@ -262,7 +263,7 @@ FOnASCRegisteredSignature ATDBaseCharacter::GetOnASCRegisteredDelegate()
 	return OnASCRegisteredDelegate;
 }
 
-FOnDeathSignature ATDBaseCharacter::GetOnDeathDelegate()
+FOnDeathSignature& ATDBaseCharacter::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
 }
@@ -280,6 +281,10 @@ USkeletalMeshComponent* ATDBaseCharacter::GetWeaponBP_Implementation()
 USkeletalMeshComponent* ATDBaseCharacter::GetWeapon()
 {
 	return Weapon;
+}
+
+void ATDBaseCharacter::SpawnWeapon()
+{
 }
 
 void ATDBaseCharacter::IncremenetMinionCount_Implementation(int32 Amount)

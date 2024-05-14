@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr) const;
 
+	UFUNCTION(BlueprintPure)
+	float GetDamageAtCurrentAbilityLevel() const;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;

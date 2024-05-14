@@ -27,6 +27,16 @@ public:
 	void StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTargets);
 	//*****************************************************
 
+	//*****************************************************
+	//** 鸥百(=利) 磷澜 贸府 窃荐甸.
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrimaryTargetDiedBP(AActor* DeadActor);
+	void PrimaryTargetDied(AActor* DeadActor);
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDiedBP(AActor* DeadActor);
+	void AdditionalTargetDied(AActor* DeadActor);
+	//*****************************************************
+
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	FVector MouseHitLocation;
@@ -40,6 +50,8 @@ protected:
 	TObjectPtr<ACharacter> OwnerCharacter;
 
 private:
+	void RegisterOnDeathDelegate(AActor* InActor);
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UAnimMontage> EnergyLanceMontage;
 

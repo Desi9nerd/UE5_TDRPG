@@ -29,7 +29,7 @@ void UTDGA_DamageEnergyLance::TraceFirstTarget(const FVector& BeamTargetLocation
 {
 	checkf(OwnerCharacter, TEXT("No OwnerCharacter, Check UTDGA_DamageEnergyLance::TraceFirstTarget"));
 
-	IICombat* CombatInterface = Cast<IICombat>(OwnerCharacter);
+	IICombat* CombatInterface = Cast<IICombat>(OwnerCharacter); // 자기 자신.
 	if (CombatInterface)
 	{
 		if (USkeletalMeshComponent* Weapon = CombatInterface->GetWeapon())
@@ -57,6 +57,15 @@ void UTDGA_DamageEnergyLance::TraceFirstTarget(const FVector& BeamTargetLocation
 			}
 		}
 	}
+
+	//RegisterOnDeathDelegate(MouseHitActor); // 마우스로 가르킨 적(캐릭터)에 FOnDeathSignature 델리게이트 등록.
+	if (IICombat* CombatInterface2 = Cast<IICombat>(MouseHitActor)) // 마우스로 가르킨 적(캐릭터).
+	{
+		if (false == CombatInterface2->GetOnDeathDelegate().IsAlreadyBound(this, &ThisClass::PrimaryTargetDiedBP))
+		{
+			CombatInterface2->GetOnDeathDelegate().AddDynamic(this, &ThisClass::PrimaryTargetDiedBP);
+		}
+	}
 }
 
 void UTDGA_DamageEnergyLance::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTargets)
@@ -73,8 +82,41 @@ void UTDGA_DamageEnergyLance::StoreAdditionalTargets(TArray<AActor*>& OutAdditio
 		AdditionalTargetAcceptRadius,
 		MouseHitActor->GetActorLocation());
 
-	//int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
-	int32 NumAdditionTargets = 5;
+	int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
+	//int32 NumAdditionTargets = 5;
 
-	UTDAbilitySystemBPLibrary::GetClosestTargets(NumAdditionTargets, OverlappingActors, OutAdditionalTargets, MouseHitActor->GetActorLocation());
+	UTDAbilitySystemBPLibrary::GetClosestTargets(5, OverlappingActors, OutAdditionalTargets, MouseHitActor->GetActorLocation());
+
+	for (AActor* Target : OutAdditionalTargets)
+	{
+		//RegisterOnDeathDelegate(Target); // 주변에 스킬 적용되는 적 하나하나 FOnDeathSignature 델리게이트 등록.
+		if (IICombat* CombatInterface = Cast<IICombat>(Target))
+		{
+			if (false == CombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &ThisClass::AdditionalTargetDiedBP))
+			{
+				CombatInterface->GetOnDeathDelegate().AddDynamic(this, &ThisClass::AdditionalTargetDiedBP);
+			}
+		}
+	}
+}
+
+void UTDGA_DamageEnergyLance::RegisterOnDeathDelegate(AActor* InActor)
+{
+	// InActor(= 마우스로 가르킨 적, 주변에 스킬 적용되는 적)에 FOnDeathSignature 델리게이트 등록.
+	IICombat* CombatInterface = Cast<IICombat>(InActor);
+	if (CombatInterface)
+	{
+		if (false == CombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &ThisClass::PrimaryTargetDied))
+		{
+			CombatInterface->GetOnDeathDelegate().AddDynamic(this, &ThisClass::PrimaryTargetDied);
+		}
+	}
+}
+
+void UTDGA_DamageEnergyLance::PrimaryTargetDied(AActor* DeadActor)
+{
+}
+
+void UTDGA_DamageEnergyLance::AdditionalTargetDied(AActor* DeadActor)
+{
 }

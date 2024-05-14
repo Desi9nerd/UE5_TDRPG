@@ -109,8 +109,11 @@ public:
 	USkeletalMeshComponent* GetWeaponBP();
 	virtual USkeletalMeshComponent* GetWeapon() = 0;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SpawnWeaponBP();
+	virtual void SpawnWeapon() = 0;
 	
 
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
-	virtual FOnDeathSignature GetOnDeathDelegate() = 0;
+	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // 인터페이스를 사용하는 캐릭터에서 원본에 접근하도록 레퍼런스(&) 사용.
 };
