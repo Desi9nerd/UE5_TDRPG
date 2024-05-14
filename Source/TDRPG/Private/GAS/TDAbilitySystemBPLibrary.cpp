@@ -334,6 +334,43 @@ void UTDAbilitySystemBPLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 	}
 }
 
+void UTDAbilitySystemBPLibrary::GetClosestTargets(int32 MaxTargets, const TArray<AActor*>& InActors, TArray<AActor*>& OutClosestTargets, const FVector& InOrigin)
+{
+	if (InActors.Num() <= MaxTargets) // 인식된 적들의 수 <= 최대 인식 가능한 적 수
+	{
+		OutClosestTargets = InActors; // 인식된 적들(=InActors)를 모두 OutClosestTargets에 담음.
+		return;
+	}
+
+	// 인식된 적들의 수 > 최대 인식 가능한 적 수
+	// 가까운 순서로 OutClosestTargets에 담음.
+	TArray<AActor*> ActorsToCheck = InActors;
+	int32 NumOfTargetsFound = 0;
+
+	while (NumOfTargetsFound < MaxTargets)
+	{
+		if (ActorsToCheck.Num() == 0) break;
+
+		double ClosestDistance = TNumericLimits<double>::Max(); // 최대값으로 시작.
+		AActor* ClosestActor;
+
+		for (AActor* PotentialTarget : ActorsToCheck)
+		{
+			const double Distance = (PotentialTarget->GetActorLocation() - InOrigin).Length(); // 타겟과 플레이어 사이의 거리
+
+			if (Distance < ClosestDistance) // 가장 가까운 거리 업데이트
+			{
+				ClosestDistance = Distance;
+				ClosestActor = PotentialTarget;
+			}
+		}
+
+		ActorsToCheck.Remove(ClosestActor);
+		OutClosestTargets.AddUnique(ClosestActor);
+		NumOfTargetsFound++;
+	}
+}
+
 bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondActor)
 {
 	if (FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player") || 

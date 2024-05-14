@@ -94,9 +94,6 @@ public:
 	static bool IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
 	//********************************************************
 
-	UFUNCTION(BlueprintCallable)
-	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
-
 	UFUNCTION(BlueprintPure)
 	static bool IsSameTeam(AActor* FirstActor, AActor* SecondActor);
 
@@ -105,6 +102,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
+
+	//********************************************************
+	//** 스킬 공격 관련
+	UFUNCTION(BlueprintCallable)
+	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin); // 플레이어 기준에서 특정 반경 내의 살아있는 모든 적들 OutOverlappingActors에 업데이트
+
+	UFUNCTION(BlueprintCallable)
+	static void GetClosestTargets(int32 MaxTargets, const TArray<AActor*>& InActors, TArray<AActor*>& OutClosestTargets, const FVector& InOrigin);
+	//********************************************************
 
 	//********************************************************
 	//** 테스트용. 아래의 BP 버젼은 추후에 삭제할 예정.

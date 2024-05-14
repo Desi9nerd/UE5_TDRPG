@@ -30,7 +30,7 @@ private:
 	FName SocketName = FName(TEXT("TipSocket"));
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowAbstract))
-	FString BeamEnd = FString("Beam End"); // NiagaraSystem 내에 선언한 변수명과 일치시켜야 함. 다른 에셋 사용시 변수 생성 후 변수명을 Beam End로 만들어주어야 한다.
+	FName BeamEnd = FName(TEXT("Beam End")); // NiagaraSystem 내에 선언한 변수명과 일치시켜야 함. 다른 에셋 사용시 변수 생성 후 변수명을 Beam End로 만들어주어야 한다.
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAudioComponent> LoopSound;
