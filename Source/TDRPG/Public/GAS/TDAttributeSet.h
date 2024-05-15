@@ -80,12 +80,15 @@ public:
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, Soul);
-	ATTRIBUTE_ACCESSORS(UTDAttributeSet, FireballResistance);
-	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeteorResistance);
-	ATTRIBUTE_ACCESSORS(UTDAttributeSet, MeleeResistance);
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, IncomingDamage);
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, IncomingExp);
 	ATTRIBUTE_ACCESSORS(UTDAttributeSet, HitReact);
+
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, PhysicalResistance);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, FireResistance);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, IceResistance);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, ElectronicResistance);
+	ATTRIBUTE_ACCESSORS(UTDAttributeSet, UltimateResistance);
 
 	
 	//** Stat Attributes
@@ -129,12 +132,16 @@ public:
 	FGameplayAttributeData Soul;
 
 	//** Resistance Attributes
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireballResistance, Category = "Resistance Attributes")
-	FGameplayAttributeData FireballResistance;
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeteorResistance, Category = "Resistance Attributes")
-	FGameplayAttributeData MeteorResistance;
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeResistance, Category = "Resistance Attributes")
-	FGameplayAttributeData MeleeResistance;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IceResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData IceResistance;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ElectronicResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData ElectronicResistance;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_UltimateResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData UltimateResistance;
 
 
 	//** Meta Attributes (Attribute와 상호 작용할 임시 값. Replicated X)
@@ -186,11 +193,15 @@ public:
 
 	//** Resistance Attributes
 	UFUNCTION()
-	void OnRep_FireballResistance(const FGameplayAttributeData& OldFireballResistance) const;
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
 	UFUNCTION()
-	void OnRep_MeteorResistance(const FGameplayAttributeData& OldMeteorResistance) const;
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
 	UFUNCTION()
-	void OnRep_MeleeResistance(const FGameplayAttributeData& OldMeleeResistance) const;
+	void OnRep_IceResistance(const FGameplayAttributeData& OldIceResistance) const;
+	UFUNCTION()
+	void OnRep_ElectronicResistance(const FGameplayAttributeData& OldElectronicResistance) const;
+	UFUNCTION()
+	void OnRep_UltimateResistance(const FGameplayAttributeData& OldUltimateResistance) const;
 
 private:
 	void ApplyIncomingDamage(const FEffectProperties& Props);

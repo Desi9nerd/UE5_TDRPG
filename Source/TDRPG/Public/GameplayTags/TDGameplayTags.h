@@ -29,10 +29,13 @@ public:
 	FGameplayTag Attributes_Secondary_MaxMana;
 
 	// Resistance
-	FGameplayTag Attributes_Resistance_Fireball;
-	FGameplayTag Attributes_Resistance_Meteor;
+	FGameplayTag Attributes_Resistance_None;
+	FGameplayTag Attributes_Resistance_Physical;
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Ice;
+	FGameplayTag Attributes_Resistance_Electronic;
+	FGameplayTag Attributes_Resistance_Ultimate;
 
-	FGameplayTag Attributes_Resistance_Melee;
 
 	FGameplayTag Debuff_DotDamage;
 	FGameplayTag Debuff_Slow;
@@ -67,7 +70,8 @@ public:
 	FGameplayTag Abilities_Skill_MagicArrow;
 	FGameplayTag Abilities_Skill_ComboFlameShooting;
 	FGameplayTag Abilities_Skill_EnergyLance;
-	FGameplayTag Abilities_Skill_FrozenField;
+	FGameplayTag Abilities_Skill_Ice_FrozenField;
+	FGameplayTag Abilities_Skill_Fire_PillarOfFlame;
 	FGameplayTag Abilities_Skill_StoneEdge;
 	FGameplayTag Abilities_Skill_Meteor;
 
@@ -80,6 +84,7 @@ public:
 	FGameplayTag Cooldown_Skill_ComboFlameShooting;
 	FGameplayTag Cooldown_Skill_EnergyLance;
 	FGameplayTag Cooldown_Skill_FrozenField;
+	FGameplayTag Cooldown_Skill_PillarOfFlame;
 	FGameplayTag Cooldown_Skill_StoneEdge;
 	FGameplayTag Cooldown_Skill_Meteor;
 	FGameplayTag Cooldown_Skill_Flash;
@@ -88,13 +93,13 @@ public:
 	//** Meta ************************************************
 	// Damage Type
 	FGameplayTag DamageType;
-	FGameplayTag DamageType_Fireball;
+	FGameplayTag DamageType_None;
+	FGameplayTag DamageType_Physical;
+	FGameplayTag DamageType_Fire;
 	FGameplayTag DamageType_Ice;
 	FGameplayTag DamageType_Electronic;
 	FGameplayTag DamageType_Ultimate;
 
-	FGameplayTag DamageType_Melee;
-	FGameplayTag DamageType_None;
 
 	// TMap. key: DamageType, value: Resistance
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
@@ -109,6 +114,7 @@ public:
 	FGameplayTag Event_Montage_ComboFlameShooting;
 	FGameplayTag Event_Montage_EnergyLance;
 	FGameplayTag Event_Montage_FrozenField;
+	FGameplayTag Event_Montage_PillarOfFlame;
 	FGameplayTag Event_Montage_StoneEdge;
 	FGameplayTag Event_Montage_Meteor;
 	FGameplayTag Event_Montage_Flash;
@@ -156,6 +162,7 @@ public:
 	FGameplayTag GameplayCue_Burst; // EnergyLance 스킬에 사용.
 	FGameplayTag GameplayCue_Loop; // EnergyLance 스킬에 사용.
 	FGameplayTag GameplayCue_FrozenField;
+	FGameplayTag GameplayCue_PillarOfFlame;
 
 	//********************************************************
 	// Inventory + Item

@@ -15,7 +15,7 @@ ATDProjectile::ATDProjectile()
 	bReplicates = true; // 액터가 replicated될 수 있도록 true 설정
 	SetActorTickInterval(0.1f);
 
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
 	Sphere->SetCollisionObjectType(ECC_Projectile); // Custom으로 지정한 ECollisionChannel
 	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -24,7 +24,7 @@ ATDProjectile::ATDProjectile()
 	Sphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->InitialSpeed = 550.f;
 	ProjectileMovement->MaxSpeed = 550.f;
 	ProjectileMovement->ProjectileGravityScale = 0.f;

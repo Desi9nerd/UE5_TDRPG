@@ -36,9 +36,11 @@ UTDAttributeSet::UTDAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	
 	// Resistance Attributes
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fireball, GetFireballResistanceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Meteor, GetMeteorResistanceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Melee, GetMeleeResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Ice, GetIceResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Electronic, GetElectronicResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Ultimate, GetElectronicResistanceAttribute);
 }
 
 void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -66,9 +68,11 @@ void UTDAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, Soul, COND_None, REPNOTIFY_Always);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, FireballResistance, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeteorResistance, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, MeleeResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, PhysicalResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, IceResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, ElectronicResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTDAttributeSet, UltimateResistance, COND_None, REPNOTIFY_Always);
 }
 
 /** Called just before modifying the value of an attribute. AttributeSet can make additional modifications here. Return true to continue, or false to throw out the modification.*/
@@ -444,17 +448,27 @@ void UTDAttributeSet::OnRep_Soul(const FGameplayAttributeData& OldSoul) const
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, Soul, OldSoul);
 }
 
-void UTDAttributeSet::OnRep_FireballResistance(const FGameplayAttributeData& OldFireballResistance) const
+void UTDAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, FireballResistance, OldFireballResistance);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, PhysicalResistance, OldPhysicalResistance);
 }
 
-void UTDAttributeSet::OnRep_MeteorResistance(const FGameplayAttributeData& OldMeteorResistance) const
+void UTDAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, MeteorResistance, OldMeteorResistance);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, FireResistance, OldFireResistance);
 }
 
-void UTDAttributeSet::OnRep_MeleeResistance(const FGameplayAttributeData& OldMeleeResistance) const
+void UTDAttributeSet::OnRep_IceResistance(const FGameplayAttributeData& OldIceResistance) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, MeleeResistance, OldMeleeResistance);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, IceResistance, OldIceResistance);
+}
+
+void UTDAttributeSet::OnRep_ElectronicResistance(const FGameplayAttributeData& OldElectronicResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, ElectronicResistance, OldElectronicResistance);
+}
+
+void UTDAttributeSet::OnRep_UltimateResistance(const FGameplayAttributeData& OldUltimateResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTDAttributeSet, UltimateResistance, OldUltimateResistance);
 }

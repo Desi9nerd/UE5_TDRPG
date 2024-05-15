@@ -16,9 +16,11 @@ struct TDDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 
-	DECLARE_ATTRIBUTE_CAPTUREDEF(FireballResistance);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(MeteorResistance);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(MeleeResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(IceResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ElectronicResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(UltimateResistance);
 
 	//**
 	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
@@ -33,9 +35,11 @@ struct TDDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, CriticalHitResistance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, CriticalHitDamage, Source, false);
 
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, FireballResistance, Target, false);
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, MeteorResistance, Target, false);
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, MeleeResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, PhysicalResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, FireResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, IceResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, ElectronicResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UTDAttributeSet, UltimateResistance, Target, false);
 
 		const FTDGameplayTags& Tags = FTDGameplayTags::GetTDGameplayTags();
 
@@ -45,10 +49,12 @@ struct TDDamageStatics
 		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitChance, CriticalHitChanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitResistance, CriticalHitResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitDamage, CriticalHitDamageDef);
-
-		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fireball, FireballResistanceDef);
-		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Meteor, MeteorResistanceDef);
-		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Melee, MeleeResistanceDef);
+		
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Physical, PhysicalResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fire, FireResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Ice, IceResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Electronic, ElectronicResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Ultimate, UltimateResistanceDef);
 		// TODO: Resistance 추가 시 등록
 	}
 };
@@ -71,9 +77,11 @@ UTDGEEC_Damage::UTDGEEC_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
 
-	RelevantAttributesToCapture.Add(DamageStatics().FireballResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().MeteorResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().MeleeResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().PhysicalResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().IceResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ElectronicResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().UltimateResistanceDef);
 }
 
 void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -105,7 +113,7 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 	for (TTuple<FGameplayTag, FGameplayTag> Pair : TDGameplayTags.DamageTypesToDebuffs) // TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs을 순회
 	{
-		const FGameplayTag& DamageType = Pair.Key;   // DamageType: Fireball, Meteor, Ice, Melee, ...
+		const FGameplayTag& DamageType = Pair.Key;   // DamageType: Physical, Fire, Ice, Electronic, ...
 		const FGameplayTag& DebuffType = Pair.Value; // DebuffType: DotDamage, Slow, Stun, ...
 		const float TypeDamage = Spec.GetSetByCallerMagnitude(DamageType, false, -1.f); // DamageType태그로 magnitude를 찾음. 못 찾을시 -1.
 

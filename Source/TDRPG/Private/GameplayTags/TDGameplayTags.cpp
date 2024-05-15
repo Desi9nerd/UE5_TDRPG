@@ -42,7 +42,8 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Skill_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.MagicArrow"), FString("Abilities: 매직 애로우"));
 	GameplayTags.Abilities_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.ComboFlameShooting"), FString("Abilities: 화염 난사"));
 	GameplayTags.Abilities_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.EnergyLance"), FString("Abilities: 에너르기파"));
-	GameplayTags.Abilities_Skill_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.FrozenField"), FString("Abilities: 얼음 장판"));
+	GameplayTags.Abilities_Skill_Ice_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Ice.FrozenField"), FString("Abilities: 얼음 장판"));
+	GameplayTags.Abilities_Skill_Fire_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fire.PillarOfFlame"), FString("Abilities: 불기둥"));
 	GameplayTags.Abilities_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.StoneEdge"), FString("Abilities: 스톤엣지"));
 	GameplayTags.Abilities_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Meteor"), FString("Abilities: 메테오"));
 	GameplayTags.Abilities_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Flash"), FString("Abilities: 대쉬"));
@@ -54,6 +55,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Cooldown_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.ComboFlameShooting"), FString("Cooldown: 화염 난사"));
 	GameplayTags.Cooldown_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.EnergyLance"), FString("Cooldown: 에너르기파"));
 	GameplayTags.Cooldown_Skill_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.FrozenField"), FString("Cooldown: 얼음 장판"));
+	GameplayTags.Cooldown_Skill_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.PillarOfFlame"), FString("Cooldown: 불기둥"));
 	GameplayTags.Cooldown_Skill_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.StoneEdge"), FString("Cooldown: 스톤엣지"));
 	GameplayTags.Cooldown_Skill_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Meteor"), FString("Cooldown: 메테오"));
 	GameplayTags.Cooldown_Skill_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Flash"), FString("Cooldown: 대쉬"));
@@ -63,16 +65,19 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	// Damage Type
 	GameplayTags.DamageType = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType"), FString("데미지 타입"));
 	GameplayTags.DamageType_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.None"), FString("데미지 타입 없음"));
-	GameplayTags.DamageType_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Melee"), FString("근접공격 데미지 타입"));
-	GameplayTags.DamageType_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Fireball"), FString("불 공격 데미지 타입"));
+	GameplayTags.DamageType_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Physical"), FString("물리공격 데미지 타입"));
+	GameplayTags.DamageType_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Fire"), FString("불 공격 데미지 타입"));
 	GameplayTags.DamageType_Ice = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Ice"), FString("얼음 데미지 타입"));
 	GameplayTags.DamageType_Electronic = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Electronic"), FString("전기/에너지 데미지 타입"));
 	GameplayTags.DamageType_Ultimate = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("DamageType.Ultimate"), FString("궁극기 데미지 타입"));
 
 	// Resistance
-	GameplayTags.Attributes_Resistance_Fireball = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fireball"), FString("파이어볼 데미지 저항"));
-	GameplayTags.Attributes_Resistance_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Meteor"), FString("메테오 데미지 저항"));
-	GameplayTags.Attributes_Resistance_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Melee"), FString("근접공격 데미지 저항"));
+	GameplayTags.Attributes_Resistance_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.None"), FString("데미지 저항 없음"));
+	GameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Physical"), FString("물리공격 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fire"), FString("불 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Ice = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Ice"), FString("얼음 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Electronic = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Electronic"), FString("전기/에너지 데미지 저항"));
+	GameplayTags.Attributes_Resistance_Ultimate = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Ultimate"), FString("궁극기 데미지 저항"));
 
 	// Debuffs
 	GameplayTags.Debuff_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.None"), FString("디버프: 없음"));
@@ -90,14 +95,16 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 
 	//**************************************************************************************
 	// TMap 등록. DamageTypesToResistances
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Fireball, GameplayTags.Attributes_Resistance_Fireball);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Melee, GameplayTags.Attributes_Resistance_Melee);
-	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Ultimate, GameplayTags.Attributes_Resistance_Meteor);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Physical, GameplayTags.Attributes_Resistance_Physical);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Fire, GameplayTags.Attributes_Resistance_Fire);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Ice, GameplayTags.Attributes_Resistance_Ice);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Electronic, GameplayTags.Attributes_Resistance_Electronic);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.DamageType_Ultimate, GameplayTags.Attributes_Resistance_Ultimate);
 
 	// TMap 등록. DamageTypes To Debuff
 	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_None, GameplayTags.Debuff_None);
-	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Melee, GameplayTags.Debuff_None);
-	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Fireball, GameplayTags.Debuff_DotDamage);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Physical, GameplayTags.Debuff_None);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Fire, GameplayTags.Debuff_DotDamage);
 	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Ice, GameplayTags.Debuff_Slow);
 	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Electronic, GameplayTags.Debuff_Stun);
 	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.DamageType_Ultimate, GameplayTags.Debuff_Stun);
@@ -112,6 +119,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Event_Montage_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.ComboFlameShooting"), FString("화염 난사"));
 	GameplayTags.Event_Montage_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.EnergyLance"), FString("에너르기파"));
 	GameplayTags.Event_Montage_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.FrozenField"), FString("얼음 장판"));
+	GameplayTags.Event_Montage_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.PillarOfFlame"), FString("불기둥"));
 	GameplayTags.Event_Montage_StoneEdge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.StoneEdge"), FString("스톤엣지"));
 	GameplayTags.Event_Montage_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Meteor"), FString("메테오"));
 	GameplayTags.Event_Montage_Flash = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Flash"), FString("점멸"));
@@ -160,6 +168,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.GameplayCue_Burst = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Burst"), FString("Burst 사운드"));
 	GameplayTags.GameplayCue_Loop = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Loop"), FString("Loop 사운드"));
 	GameplayTags.GameplayCue_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FrozenField"), FString("FrozenField 스킬 이펙트"));
+	GameplayTags.GameplayCue_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.PillarOfFlame"), FString("불기둥 스킬 이펙트"));
 
 	// Inventory + Item
 	GameplayTags.Item_Equip = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Equip"), FString("아이템 장착"));
