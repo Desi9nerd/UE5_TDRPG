@@ -20,5 +20,5 @@ void ATDDecalActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// 데칼 돌리기
-	DecalCircle->AddLocalRotation(FRotator(0.f, 0.f, 2.f));
+	DecalCircle->AddLocalRotation(FRotator(0.f, 0.f, 0.2f));
 }

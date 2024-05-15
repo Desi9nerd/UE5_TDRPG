@@ -153,8 +153,9 @@ public:
 
 	// Gameplay Cues
 	FGameplayTag GameplayCue_MeleeImpact;
-	FGameplayTag GameplayCue_Burst;
-	FGameplayTag GameplayCue_Loop;
+	FGameplayTag GameplayCue_Burst; // EnergyLance 스킬에 사용.
+	FGameplayTag GameplayCue_Loop; // EnergyLance 스킬에 사용.
+	FGameplayTag GameplayCue_FrozenField;
 
 	//********************************************************
 	// Inventory + Item

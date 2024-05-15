@@ -159,6 +159,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.GameplayCue_MeleeImpact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.MeleeImpact"), FString("MeleeAttack 피격 시 이펙트"));
 	GameplayTags.GameplayCue_Burst = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Burst"), FString("Burst 사운드"));
 	GameplayTags.GameplayCue_Loop = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Loop"), FString("Loop 사운드"));
+	GameplayTags.GameplayCue_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FrozenField"), FString("FrozenField 스킬 이펙트"));
 
 	// Inventory + Item
 	GameplayTags.Item_Equip = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Equip"), FString("아이템 장착"));
