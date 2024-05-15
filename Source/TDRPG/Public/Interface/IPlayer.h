@@ -61,7 +61,13 @@ public:
 	void LevelUp();
 	virtual void LevelUpCPP();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ShowDecalBP(); // 추후에 제거
+	virtual void ShowDecal() = 0;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HideDecalBP();
+	virtual void HideDecal() = 0;
 
 	//TDPlayerController* GetTDPlayerControllerRef(APlayerController* InPlayerController);
 };

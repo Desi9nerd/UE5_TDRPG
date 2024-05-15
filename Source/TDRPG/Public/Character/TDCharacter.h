@@ -4,6 +4,7 @@
 #include "Interface/IPlayer.h"
 #include "TDCharacter.generated.h"
 
+class ATDPlayerController;
 class ATDPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
@@ -25,6 +26,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
 	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
+	TObjectPtr<ATDPlayerController> GetTDPlayerController();
 
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;
@@ -55,6 +57,10 @@ public:
 	virtual int32 GetAttributePointsBP_Implementation() const override;
 	virtual int32 GetSkillPoints() const override;
 	virtual int32 GetSkillPointsBP_Implementation() const override;
+	virtual void ShowDecalBP_Implementation() override;
+	virtual void ShowDecal() override;
+	virtual void HideDecalBP_Implementation() override;
+	virtual void HideDecal() override;
 	//********************************************************
 
 	virtual void OnRep_Stunned() override;
@@ -82,4 +88,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerState> TDPlayerState;
+
+	UPROPERTY()
+	TObjectPtr<ATDPlayerController> TDPlayerController;
 };

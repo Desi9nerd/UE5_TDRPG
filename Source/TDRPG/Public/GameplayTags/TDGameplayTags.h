@@ -67,6 +67,7 @@ public:
 	FGameplayTag Abilities_Skill_MagicArrow;
 	FGameplayTag Abilities_Skill_ComboFlameShooting;
 	FGameplayTag Abilities_Skill_EnergyLance;
+	FGameplayTag Abilities_Skill_FrozenField;
 	FGameplayTag Abilities_Skill_StoneEdge;
 	FGameplayTag Abilities_Skill_Meteor;
 
@@ -78,6 +79,7 @@ public:
 	FGameplayTag Cooldown_Skill_MagicArrow;
 	FGameplayTag Cooldown_Skill_ComboFlameShooting;
 	FGameplayTag Cooldown_Skill_EnergyLance;
+	FGameplayTag Cooldown_Skill_FrozenField;
 	FGameplayTag Cooldown_Skill_StoneEdge;
 	FGameplayTag Cooldown_Skill_Meteor;
 	FGameplayTag Cooldown_Skill_Flash;
@@ -87,8 +89,9 @@ public:
 	// Damage Type
 	FGameplayTag DamageType;
 	FGameplayTag DamageType_Fireball;
-	FGameplayTag DamageType_Meteor;
 	FGameplayTag DamageType_Ice;
+	FGameplayTag DamageType_Electronic;
+	FGameplayTag DamageType_Ultimate;
 
 	FGameplayTag DamageType_Melee;
 	FGameplayTag DamageType_None;
@@ -105,6 +108,7 @@ public:
 	FGameplayTag Event_Montage_MagicArrow;
 	FGameplayTag Event_Montage_ComboFlameShooting;
 	FGameplayTag Event_Montage_EnergyLance;
+	FGameplayTag Event_Montage_FrozenField;
 	FGameplayTag Event_Montage_StoneEdge;
 	FGameplayTag Event_Montage_Meteor;
 	FGameplayTag Event_Montage_Flash;

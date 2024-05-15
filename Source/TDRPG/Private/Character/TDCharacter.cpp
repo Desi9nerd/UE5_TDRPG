@@ -80,6 +80,14 @@ TObjectPtr<UTDInventoryComponent> ATDCharacter::GetInventoryComponent()
 	return TDInventoryComponent;
 }
 
+TObjectPtr<ATDPlayerController> ATDCharacter::GetTDPlayerController()
+{
+	if (IsValid(TDPlayerController)) return TDPlayerController;
+
+	TDPlayerController = Cast<ATDPlayerController>(GetController());
+	return TDPlayerController;
+}
+
 //int32 ATDCharacter::GetPlayerLevelBP_Implementation()
 //{
 //	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevelBP_Implementation()"));
@@ -223,6 +231,42 @@ int32 ATDCharacter::GetSkillPointsBP_Implementation() const
 	return TDPlayerState->GetSkillPoints();
 }
 
+void ATDCharacter::ShowDecalBP_Implementation()
+{
+	if (GetTDPlayerController())
+	{
+		GetTDPlayerController()->ShowDecal();
+		GetTDPlayerController()->bShowMouseCursor = false;
+	}
+}
+
+void ATDCharacter::ShowDecal()
+{
+	if (GetTDPlayerController())
+	{
+		GetTDPlayerController()->ShowDecal();
+		GetTDPlayerController()->bShowMouseCursor = false;
+	}
+}
+
+void ATDCharacter::HideDecalBP_Implementation()
+{
+	if (GetTDPlayerController())
+	{
+		GetTDPlayerController()->HideDecal();
+		GetTDPlayerController()->bShowMouseCursor = true;
+	}
+}
+
+void ATDCharacter::HideDecal()
+{
+	if (GetTDPlayerController())
+	{
+		GetTDPlayerController()->HideDecal();
+		GetTDPlayerController()->bShowMouseCursor = true;
+	}
+}
+
 void ATDCharacter::OnRep_Stunned()
 {
 	if (GetTDASC())
@@ -289,7 +333,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 	// 서버는 모든 PlayerController를 소유.
 	// 하지만 각각의 클라이언트는 하나의 PlayerController만 소유하고 나머진 Proxy로 가지고 있다
 	// 그렇기 때문에 Assert로 체크하면 안 된다.
-	if (ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(GetController()))
+	if (GetTDPlayerController())
 	{
 		if (ATDHUD* TDHUD = Cast<ATDHUD>(TDPlayerController->GetHUD()))
 		{
