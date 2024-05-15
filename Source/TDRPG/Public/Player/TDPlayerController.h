@@ -5,6 +5,7 @@
 #include "TDPlayerController.generated.h"
 
 class ATDItemActor;
+class ATDDecalActor;
 class ATDHUD;
 class UInputMappingContext;
 class UInputAction;
@@ -48,6 +49,10 @@ private:
 	void AutoRun();
 	void ShiftPressed() { bShiftKeyDown = true; };
 	void ShiftReleased() { bShiftKeyDown = false; };
+	void UpdateDecalLocation();
+	
+	void ShowDecal();
+	void HideDecal();
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> RPGContext;
@@ -90,7 +95,11 @@ private:
 	IIEnemy* LastActor;
 	IIEnemy* ThisActor;
 
-
+	//** Decal
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ATDDecalActor> DecalClass;
+	UPROPERTY()
+	TObjectPtr<ATDDecalActor> Decal;
 
 
 	////////////////////////////////////////////////////////////

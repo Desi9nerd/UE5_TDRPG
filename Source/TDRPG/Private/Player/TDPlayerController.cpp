@@ -12,6 +12,7 @@
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
 #include "Components/VerticalBox.h"
+#include "Actor/TDDecalActor.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/HUD.h"
 #include "Library/TDItemLibrary.h"
@@ -33,6 +34,7 @@ void ATDPlayerController::PlayerTick(float DeltaTime)
 
 	CursorTrace();
 	AutoRun();
+	UpdateDecalLocation();
 }
 
 ATDHUD* ATDPlayerController::GetTDHUD()
@@ -287,6 +289,30 @@ void ATDPlayerController::AutoRun()
 		{
 			bAutoRunning = false;
 		}
+	}
+}
+
+void ATDPlayerController::UpdateDecalLocation()
+{
+	if (IsValid(Decal))
+	{
+		Decal->SetActorLocation(CursorHit.ImpactPoint);
+	}
+}
+
+void ATDPlayerController::ShowDecal()
+{
+	if (false == IsValid(Decal))
+	{
+		Decal = GetWorld()->SpawnActor<ATDDecalActor>(DecalClass);
+	}
+}
+
+void ATDPlayerController::HideDecal()
+{
+	if (IsValid(Decal))
+	{
+		Decal->Destroy();
 	}
 }
 
