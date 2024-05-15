@@ -236,12 +236,12 @@ void ATDCharacter::OnRep_Stunned()
 		if (bStunned)
 		{
 			GetTDASC()->AddLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Activate();
+			StunDebuffComponent->Activate(); // Stun디버프 활성화.
 		}
 		else
 		{
 			GetTDASC()->RemoveLooseGameplayTags(BlockedTags);
-			StunDebuffComponent->Deactivate();
+			StunDebuffComponent->Deactivate(); // Stun디버프 비활성화.
 		}
 	}
 }

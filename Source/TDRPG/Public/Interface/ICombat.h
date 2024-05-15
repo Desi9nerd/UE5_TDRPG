@@ -106,6 +106,14 @@ public:
 	virtual void SetInShockLoop(bool bInLoop) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool BeingShockedBP() const;
+	virtual bool BeingShocked() const = 0;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetBeingShockedBP(bool bInShock);
+	virtual void SetBeingShocked(bool bInShock) = 0;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	USkeletalMeshComponent* GetWeaponBP();
 	virtual USkeletalMeshComponent* GetWeapon() = 0;
 

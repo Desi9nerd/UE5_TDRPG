@@ -37,6 +37,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void Destroyed() override;
 
 	UFUNCTION()
@@ -60,4 +61,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 
+	FVector LocationLastFrame;
+	FVector LocationThisFrame;
 };

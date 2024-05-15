@@ -13,11 +13,12 @@ ATDProjectile::ATDProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true; // 액터가 replicated될 수 있도록 true 설정
+	SetActorTickInterval(0.1f);
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
 	Sphere->SetCollisionObjectType(ECC_Projectile); // Custom으로 지정한 ECollisionChannel
-	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 	Sphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
@@ -34,10 +35,34 @@ void ATDProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	SetLifeSpan(LifeSpan);
+	SetReplicateMovement(true);
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
 
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent()); // LoopingSound 재생
+
+	FTimerHandle DelayTimer;
+
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]() {
+		Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		});
+
+	GetWorld()->GetTimerManager().SetTimer(DelayTimer, TimerDelegate, 0.1f, false); // 0.1초 지난 후 Sphere Collision을 QueryOnly로 변경.
+}
+
+void ATDProjectile::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	LocationLastFrame = LocationThisFrame;
+	LocationThisFrame = GetActorLocation();
+
+	if ((LocationThisFrame - LocationLastFrame).Length() < 10.f )
+	{
+		UGameplayStatics::SpawnSoundAtLocation(this, ImpactSound, LocationThisFrame, FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, LocationThisFrame);
+		Destroy();
+	}
 }
 
 void ATDProjectile::Destroyed()

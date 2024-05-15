@@ -169,11 +169,16 @@ void UTDAttributeSet::ApplyIncomingDamage(const FEffectProperties& Props)
 		}
 		else // 체력 0 초과
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
+			//* 데미지 적용하기  *//
+			IICombat* CombatInterface = Cast<IICombat>(Props.TargetCharacter);
+			if (CombatInterface && false == CombatInterface->BeingShocked()) // Shocked 상태가 아닌지 체크 (Shocked 상태 시 데미지 적용X)
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().Effect_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); // Effect_HitReact 태그가 있는 모든 GameplayAbility들을 활성화
+			}
 
-			// Knockback 적용하기
+			//* Knockback 적용하기 *//
 			const FVector& KnockbackImpulse = UTDAbilitySystemBPLibrary::GetKnockbackImpulse(Props.EffectContextHandle);
 			if (false == KnockbackImpulse.IsNearlyZero(1.f)) // 값이 0이 아니라면
 			{

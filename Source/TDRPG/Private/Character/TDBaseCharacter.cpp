@@ -26,7 +26,7 @@ ATDBaseCharacter::ATDBaseCharacter()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true); // Mesh에 Overlap 이벤트 발생 true로 설정
 
-	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	DebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DebuffComponent"));
 	DebuffComponent->SetupAttachment(GetRootComponent());
 	DebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTag의 기본값. 현재 테스트를 위해 DotDamage로 설정.
@@ -35,7 +35,7 @@ ATDBaseCharacter::ATDBaseCharacter()
 	StunDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_Stun;
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
-	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
+	Weapon->SetupAttachment(GetMesh(), FName(TEXT("WeaponHandSocket")));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -45,6 +45,7 @@ void ATDBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(ATDBaseCharacter, bStunned);
 	DOREPLIFETIME(ATDBaseCharacter, bBurned);
+	DOREPLIFETIME(ATDBaseCharacter, bBeingShocked);
 }
 
 UAbilitySystemComponent* ATDBaseCharacter::GetAbilitySystemComponent() const
@@ -315,6 +316,26 @@ FOnDeathSignature& ATDBaseCharacter::GetOnDeathDelegate()
 void ATDBaseCharacter::SetInShockLoop(bool bInLoop)
 {
 	return;
+}
+
+void ATDBaseCharacter::SetBeingShockedBP_Implementation(bool bInShock)
+{
+	bBeingShocked = bInShock;
+}
+
+void ATDBaseCharacter::SetBeingShocked(bool bInShock)
+{
+	bBeingShocked = bInShock;
+}
+
+bool ATDBaseCharacter::BeingShockedBP_Implementation() const
+{
+	return bBeingShocked;
+}
+
+bool ATDBaseCharacter::BeingShocked() const
+{
+	return bBeingShocked;
 }
 
 USkeletalMeshComponent* ATDBaseCharacter::GetWeaponBP_Implementation()
