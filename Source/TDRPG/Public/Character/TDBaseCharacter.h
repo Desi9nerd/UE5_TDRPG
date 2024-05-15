@@ -92,7 +92,7 @@ protected:
 
 	//********************************************************
 	//** 소켓
-	UPROPERTY(EditAnywhere, Category = "Combat") // 에디터에서 적음
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat") // 에디터에서 적음
 	FName WeaponTipSocketName; // 무기 소켓 이름
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName HeadSocketName;
