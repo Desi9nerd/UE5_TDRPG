@@ -94,12 +94,28 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		{
 			RepBits |= 1 << 15;
 		}
+		if (bRadialDamage) // 반경 데미지
+		{
+			RepBits |= 1 << 16;
 
+			if (RadialDamageInnerRadius > 0.f)
+			{
+				RepBits |= 1 << 17;
+			}
+			if (RadialDamageOuterRadius > 0.f)
+			{
+				RepBits |= 1 << 18;
+			}
+			if (RadialDamageOrigin != FVector::ZeroVector)
+			{
+				RepBits |= 1 << 19;
+			}
+		}
 		//***************************************************************************
 	}
 
 	//** 변경된 RepBits값을 바탕으로 Serialize를 해야되는 것들을 Serialize 해준다.
-	Ar.SerializeBits(&RepBits, 15); // 추가하면 LengthBits도 변경!!
+	Ar.SerializeBits(&RepBits, 19); // 추가하면 LengthBits도 변경!!
 
 	if (RepBits & (1 << 0))
 	{
@@ -186,6 +202,23 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 	if (RepBits & (1 << 15))
 	{
 		KnockbackImpulse.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 16))
+	{
+		Ar << bRadialDamage;
+
+		if (RepBits & (1 << 17))
+		{
+			Ar << RadialDamageInnerRadius;
+		}
+		if (RepBits & (1 << 18))
+		{
+			Ar << RadialDamageOuterRadius;
+		}
+		if (RepBits & (1 << 19))
+		{
+			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
+		}
 	}
 
 	//****************************************************************************

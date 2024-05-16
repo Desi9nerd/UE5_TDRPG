@@ -22,6 +22,9 @@ public:
 	FORCEINLINE float GetDebuffFrequency() const { return DebuffFrequency; }
 	FORCEINLINE FVector GetRagdollImpulse() const { return RagdollImpulse; }
 	FORCEINLINE FVector GetKnockbackImpulse() const { return KnockbackImpulse; }
+	FORCEINLINE float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
+	FORCEINLINE float GetRadialDamageOuterRadius() const { return RadialDamageOuterRadius; }
+	FORCEINLINE FVector GetRadialDamageOrigin() const { return RadialDamageOrigin; }
 
 	FORCEINLINE void SetCriticalHit(bool bInCriticalHit) { bCriticalHit = bInCriticalHit; }
 	FORCEINLINE void SetBlockedHit(bool bInBlockedHit) { bBlockedHit = bInBlockedHit; }
@@ -32,10 +35,15 @@ public:
 	FORCEINLINE void SetDamageType(TSharedPtr<FGameplayTag> InDamageType) { DamageType = InDamageType; }
 	FORCEINLINE void SetRagdollImpulse(const FVector& InRagdollImpulse) { RagdollImpulse = InRagdollImpulse; }
 	FORCEINLINE void SetKnockbackImpulse(const FVector& InKnockbackImpulse) { KnockbackImpulse = InKnockbackImpulse; }
+	FORCEINLINE void SetIsRadialDamage(bool InbRadialDamage) { bRadialDamage = InbRadialDamage; }
+	FORCEINLINE void SetRadialDamageInnerRadius(float InRadialDamageInnerRadius) { RadialDamageInnerRadius = InRadialDamageInnerRadius; }
+	FORCEINLINE void SetRadialDamageOuterRadius(float InRadialDamageOuterRadius) { RadialDamageOuterRadius = InRadialDamageOuterRadius; }
+	FORCEINLINE void SetRadialDamageOrigin(const FVector& InRadialDamageOrigin) { RadialDamageOrigin = InRadialDamageOrigin; }
 
 	FORCEINLINE bool IsCriticalHit() const { return bCriticalHit; }
 	FORCEINLINE bool IsBlockedHit() const { return bBlockedHit; }
 	FORCEINLINE bool IsDebuff() const { return bDebuff; }
+	FORCEINLINE bool IsRadialDamage() const { return bRadialDamage; }
 
 	//** FGameplayEffectContext 함수 재정의
 	virtual UScriptStruct* GetScriptStruct() const;
@@ -64,6 +72,15 @@ protected:
 
 	UPROPERTY()
 	FVector KnockbackImpulse = FVector::ZeroVector;
+
+	UPROPERTY()
+	bool bRadialDamage = false;
+	UPROPERTY()
+	float RadialDamageInnerRadius = 0.f;
+	UPROPERTY()
+	float RadialDamageOuterRadius = 0.f;
+	UPROPERTY()
+	FVector RadialDamageOrigin = FVector::ZeroVector;
 };
 
 template<>
