@@ -27,6 +27,8 @@ class TDRPG_API UTDAbilitySystemBPLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	//********************************************************
+	//* Widget Controller
 	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static bool MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& ResultWCParams, ATDHUD*& OutTDHUD);
 
@@ -38,7 +40,10 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))
 	static UTDWidgetControllerSkillMenu* GetTDWidgetControllerSKillMenu(const UObject* WorldContextObject);
+	//********************************************************
 
+	//********************************************************
+	//* Gameplay Ability System
 	UFUNCTION(BlueprintCallable)
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
@@ -50,10 +55,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static UTDDA_Ability* GetTDDA_Ability(const UObject* WorldContextObject);
+	//********************************************************
 
 	//********************************************************
-	//*  TDAbilityType.h.cpp와 연동.
-	//** Block Hit, Critical Hit, Debuff
+	//*  Effect Context
+	//** TDAbilityType.h.cpp와 연동. Block Hit, Critical Hit, Debuff, Ragdoll, Knockback
 	UFUNCTION(BlueprintCallable)
 	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
 	UFUNCTION(BlueprintCallable)
@@ -66,6 +72,14 @@ public:
 	static FVector GetRagdollImpulse(const FGameplayEffectContextHandle& EffectContextHandle);
 	UFUNCTION(BlueprintPure)
 	static FVector GetKnockbackImpulse(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure)
+	static float GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure)
+	static float GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure)
+	static FVector GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintCallable)
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
@@ -85,6 +99,18 @@ public:
 	static void SetRagdollImpulse(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InRagdollImpulse);
 	UFUNCTION(BlueprintCallable)
 	static void SetKnockbackImpulse(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InKnockbackImpulse);
+	UFUNCTION(BlueprintCallable)
+	static void SetIsRadialDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool InbRadialDamage);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetRadialDamageInnerRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InInnerRadius);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetRadialDamageOuterRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InOuterRadius);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetRadialDamageOrigin(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InOrigin);
+
 
 	UFUNCTION(BlueprintPure)
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
@@ -92,6 +118,8 @@ public:
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 	UFUNCTION(BlueprintPure)
 	static bool IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure)
+	static bool IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle);
 	//********************************************************
 
 	UFUNCTION(BlueprintPure)

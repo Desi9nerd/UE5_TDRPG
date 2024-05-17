@@ -39,6 +39,13 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) con
 		DamageEffectParams.RagdollImpulse = ToTarget * RagdollImpulseMagnitude;
 		DamageEffectParams.KnockbackImpulse = ToTarget * KnockbackImpulseMagnitude;
 	}
+	if (bRadialDamage) // 반경 데미지
+	{
+		DamageEffectParams.bRadialDamage = bRadialDamage;
+		DamageEffectParams.RadialDamageOrigin = RadialDamageOrigin;
+		DamageEffectParams.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		DamageEffectParams.RadialDamageOuterRadius = RadialDamageOuterRadius;
+	}
 
 	return DamageEffectParams;
 }

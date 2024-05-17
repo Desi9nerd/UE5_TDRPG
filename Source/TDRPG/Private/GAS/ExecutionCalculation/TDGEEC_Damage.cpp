@@ -6,6 +6,7 @@
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GAS/Data/TDDA_CharacterClass.h"
 #include "Interface/ICombat.h"
+#include "Kismet/GameplayStatics.h"
 
 struct TDDamageStatics
 {
@@ -98,6 +99,7 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	IICombat* TargetCombatInterface = Cast<IICombat>(TargetAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 
 	// Source와 Target의 Tag들을 모은다.
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
@@ -153,7 +155,8 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	//**************************************************************************//
 
 
-
+	//**************************************************************************//
+	//* 처음 들어오는 데미지
 	// 데미지 변수에 담기. GetSetByCallerMagnitude는 SetByCaller modifier의 magnitude값을 가져옴
 	// DamageType과 Resistance를 고려하여 데미지 계산 후 데미지 변수(=Damage)에 담기.
 	float Damage = 0.f;
@@ -173,9 +176,42 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
 
+		//*-- Radial Damage 적용하기 -----------------------------------------------*/
+		if (UTDAbilitySystemBPLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			// 1. TDBaseCharacter 내의 TakeDamage를 override.
+			// 2. TDBaseCharacter 내에 FOnDamageSignature OnDamageDelegate를 생성하고, TakeDamage함수(=데미지를 받았을때) 내에 델리게이트를 Broadcast한다.
+			// 3. 람다식으로 피격자에게 OnDamageDelegate를 등록시켜 묶어줌.
+			// 4. UGameplayStatics::ApplyRadialDamageWithFalloff 함수를 사용하여 데미지를 전달 (이렇게하면 피격자(=적)캐릭터에서 TakeDamage함수가 호출되고 OnDamageDelegate 델리게이트가 Broadcast됨)
+			// 5. 람다식에서 DamageAmount을 매개변수로 받기 때문에 DamageTypeValue를 Broadcast로 받은 DamageAmount(데미지양)으로 설정.
+
+			if (IICombat* CombatInterface = Cast<IICombat>(TargetAvatar))
+			{
+				// 델리게이트 등록. OnDamageDelegate가 Broadcast되면 DamageAmount가 넘어와 DamageTypeValue를 설정할 수 있다.
+				CombatInterface->GetOnDamageSignature().AddLambda([&](float DamageAmount)
+					{
+						DamageTypeValue = DamageAmount; // 데미지 값 설정
+					});
+			}
+			UGameplayStatics::ApplyRadialDamageWithFalloff( // Radial Damage 적용하기
+				TargetAvatar,
+				DamageTypeValue, // 데미지 값
+				0.f,
+				UTDAbilitySystemBPLibrary::GetRadialDamageOrigin(EffectContextHandle),
+				UTDAbilitySystemBPLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+				UTDAbilitySystemBPLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+				1.f,
+				UDamageType::StaticClass(),
+				TArray<AActor*>(),
+				SourceAvatar,
+				nullptr);
+		}
+		/*-------------------------------------------------------------------------*/
 
 		Damage += DamageTypeValue;
 	}
+	//**************************************************************************//
+
 
 	//**************************************************************************//
 	//* Block
@@ -187,8 +223,7 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance; // Block 성공 여부 판단
 
 	// UTDAbilitySystemBPLibrary에 Block Hit 성공 여부를 넘김
-	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
-	UTDAbilitySystemBPLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
+	UTDAbilitySystemBPLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked); // 초반에 선언한 EffectContextHandle 사용.
 
 	//* 데미지 계산. Block 성공: Damage 절반, Block 실패: Damage
 	Damage = bBlocked ? Damage / 2.f : Damage;

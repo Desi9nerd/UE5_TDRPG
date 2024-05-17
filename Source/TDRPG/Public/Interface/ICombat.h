@@ -10,6 +10,7 @@ class UNiagaraSystem;
 class UAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /* DamageAmount */);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
 
 //** Attack Montage와 해당 몽타주에 대응하는 GameplayTag을 같이 사용하기 위해 구조체를 만들어 사용*/
@@ -123,5 +124,6 @@ public:
 	
 
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
+	virtual FOnDamageSignature& GetOnDamageSignature() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // 인터페이스를 사용하는 캐릭터에서 원본에 접근하도록 레퍼런스(&) 사용.
 };

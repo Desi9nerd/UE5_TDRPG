@@ -162,6 +162,14 @@ void ATDBaseCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 NewC
 	}
 }
 
+float ATDBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	OnDamageDelegate.Broadcast(DamageTaken); // OnDamageDelegate 브로드캐스팅.
+
+	return DamageTaken;
+}
+
 void ATDBaseCharacter::OnRep_Stunned()
 {
 }
