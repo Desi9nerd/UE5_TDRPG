@@ -19,7 +19,7 @@ public:
 	void CauseDamage(AActor* TargetActor);
 
 	UFUNCTION(BlueprintPure)
-	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr) const;
+	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr, FVector InRadialDamageOrigin = FVector::ZeroVector) const;
 
 	UFUNCTION(BlueprintPure)
 	float GetDamageAtCurrentAbilityLevel() const;
@@ -54,11 +54,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bRadialDamage = false;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float RadialDamageInnerRadius = 0.f;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float RadialDamageOuterRadius = 0.f;
-	UPROPERTY(EditDefaultsOnly)
-	FVector RadialDamageOrigin = FVector::ZeroVector;
 	//*******************************************
 };

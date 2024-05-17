@@ -12,7 +12,7 @@ void UTDGA_Damage::CauseDamage(AActor* TargetActor)
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 }
 
-FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) const
+FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVector InRadialDamageOrigin) const
 {
 	// FDamageEffectParams 을 설정한다. TDGA_Damage 자식 클래스에서 '충돌체, 발사체'의 DamageEffectParams 값에 해당 값이 들어가도록 여기의 SetDamageEffectParams()함수를 호출한다.
 
@@ -42,7 +42,7 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor) con
 	if (bRadialDamage) // 반경 데미지
 	{
 		DamageEffectParams.bRadialDamage = bRadialDamage;
-		DamageEffectParams.RadialDamageOrigin = RadialDamageOrigin;
+		DamageEffectParams.RadialDamageOrigin = InRadialDamageOrigin;
 		DamageEffectParams.RadialDamageInnerRadius = RadialDamageInnerRadius;
 		DamageEffectParams.RadialDamageOuterRadius = RadialDamageOuterRadius;
 	}
