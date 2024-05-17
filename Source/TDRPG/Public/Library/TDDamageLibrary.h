@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "TDDamageLibrary.generated.h"
@@ -6,8 +6,8 @@
 class UAbilitySystemComponent;
 class UGameplayEffect;
 
-/**
- * 
+/** GAS에 활용할 데미지 관련정보를 묶은 구조체
+ *  TDGA_Damage의 FDamageEffectParams SetDamageEffectParams()함수로 데미지 정보를 설정.
  */
 
 USTRUCT(BlueprintType)

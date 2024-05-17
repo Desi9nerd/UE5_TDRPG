@@ -13,5 +13,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTDRPG, Log, All);
 #define TDGAS_LOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("%s %s"), LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
 #define CUSTOM_DEPTH_RED 250
+#define CUSTOM_DEPTH_YELLOW 250
 #define ECC_Projectile ECollisionChannel::ECC_GameTraceChannel1
 #define ECC_Target ECollisionChannel::ECC_GameTraceChannel2
+#define ECC_ExcludingCharacters ECollisionChannel::ECC_GameTraceChannel3

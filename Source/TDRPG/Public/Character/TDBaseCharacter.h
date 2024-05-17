@@ -28,6 +28,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	virtual FOnDamageSignature& GetOnDamageSignature() override { return OnDamageDelegate; };
 
 	//** ICombat *********************************************
 
@@ -76,6 +77,7 @@ public:
 	//********************************************************
 	//** Delegate
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;
+	FOnDamageSignature OnDamageDelegate;
 	FOnDeathSignature OnDeathDelegate;
 	//********************************************************
 
@@ -86,6 +88,8 @@ protected:
 	virtual void InitializeDefaultAttributes() const; // Attributes 초기값 설정
 	void AddCharacterAbilities();
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 
 	UPROPERTY(EditAnywhere, Category = "Combat| Team")
 	uint8 TeamID;
