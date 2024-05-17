@@ -170,6 +170,9 @@ void UTDGEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecution
 
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // 해당 DamageType의 데미지 값
 
+		if (DamageTypeValue <= 0.f) continue; // 데미지가 0이하로 들어오는 경우 계산하지 않도록 continue.
+		
+
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance); // 저항력값 
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
