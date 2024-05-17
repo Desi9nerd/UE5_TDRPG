@@ -11,13 +11,10 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
-#include "Components/VerticalBox.h"
 #include "Actor/TDDecalActor.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/HUD.h"
-#include "Library/TDItemLibrary.h"
+#include "TDRPG/TDRPG.h"
 #include "UI/HUD/TDHUD.h"
-#include "UI/Widget/Inventory/TDUW_InventoryCategory.h"
 #include "UI/WidgetComponent/TDWidgetComponent.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
 
@@ -77,7 +74,10 @@ void ATDPlayerController::CursorTrace() // 마우스 커서 Trace
 	}
 	//**************************************************************************************
 
-	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	// 캐릭터를 가리키는 경우, decal이 적용안되도록 ECC를 설정.
+	const ECollisionChannel ECC_TraceChannel = IsValid(Decal) ? ECC_ExcludingCharacters : ECC_Visibility;
+	GetHitResultUnderCursor(ECC_TraceChannel, false, CursorHit);
+
 	if (false == CursorHit.bBlockingHit) return;
 
 	// 마우스로 가리킨 Enemy 외곽선 효과

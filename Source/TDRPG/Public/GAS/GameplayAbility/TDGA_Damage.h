@@ -19,7 +19,7 @@ public:
 	void CauseDamage(AActor* TargetActor);
 
 	UFUNCTION(BlueprintPure)
-	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr, FVector InRadialDamageOrigin = FVector::ZeroVector) const;
+	FDamageEffectParams SetDamageEffectParams(AActor* TargetActor = nullptr, FVector InRadialDamageOrigin = FVector::ZeroVector, bool bOverrideKnockbackDirection = false, FVector KnockbackDirectionOverride = FVector::ZeroVector, bool bOverrideRagdollImpulse = false, FVector RagdollImpulseDirectionOverride = FVector::ZeroVector, bool bOverridePitch = false, float PitchOverride = 0.f) const;
 
 	UFUNCTION(BlueprintPure)
 	float GetDamageAtCurrentAbilityLevel() const;
