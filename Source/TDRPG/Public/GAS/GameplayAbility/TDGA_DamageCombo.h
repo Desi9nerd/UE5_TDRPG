@@ -4,7 +4,7 @@
 #include "TDGA_DamageCombo.generated.h"
 
 class UAnimMontage;
-
+class ATDPlayerController;
 /**
  * 
  */
@@ -21,6 +21,9 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 protected:
+	UFUNCTION()
+	void OnAction(FGameplayEventData Data);
+
 	UFUNCTION()
 	void OnCompleteCallback();
 
@@ -41,11 +44,25 @@ protected:
 	uint8 MaxComboCount;
 	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
 	float InputThreashold = 0.1f;
+
+
+	//UPROPERTY(EditAnywhere, Category = Name)
+	//float FrameRate;
+	//UPROPERTY(EditAnywhere, Category = ComboData)
+	//TArray<float> EffectiveFrameCount;
 	//********************************************************
 
 	uint8 CurrentCombo = 0;
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboInput = false;
 
+
 	bool bFirstCombo = true;
+	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
+	FGameplayTag EventTag;
+
+	uint8 PreviousCombo = 0;
+
+	UPROPERTY()
+	TObjectPtr<ATDPlayerController> TDPlayerController;
 };

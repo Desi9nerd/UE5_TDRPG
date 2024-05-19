@@ -96,15 +96,19 @@ protected:
 
 	//********************************************************
 	//** 소켓
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat") // 에디터에서 적음
-	FName WeaponTipSocketName; // 무기 소켓 이름
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName HeadSocketName;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName LeftHandSocketName;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName RightHandSocketName;
-	UPROPERTY(EditAnywhere, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Socket") // 에디터에서 적음
+	FName WeaponTipSocketName = FName(TEXT("TipSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
+	FName HeadSocketName = FName(TEXT("HeadSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
+	FName LeftHandSocketName = FName(TEXT("LeftHandSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
+	FName RightHandSocketName = FName(TEXT("RightHandSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
+	FName LeftLegSocketName = FName(TEXT("LeftLegSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
+	FName RightLegSocketName = FName(TEXT("RightLegSocket"));
+	UPROPERTY(EditAnywhere, Category = "Socket")
 	FName TrailSocketName;
 	//********************************************************
 
