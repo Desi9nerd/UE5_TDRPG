@@ -61,4 +61,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDCharacter> TDCharacter;
+
+
 };

@@ -3,6 +3,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TDGameModeBase.generated.h"
 
+class ATDItemActor;
 class UTDDA_CharacterClass;
 class UTDDA_Ability;
 
@@ -15,6 +16,8 @@ class TDRPG_API ATDGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	void RequestDropItem(APlayerController* InPlayerController, TSubclassOf<ATDItemActor> ItemActor, int32 ItemQuantity, FTransform SpawnTransform);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;
 

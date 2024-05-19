@@ -4,7 +4,7 @@
 #include "Components/Button.h"
 #include "Components/GridPanel.h"
 #include "Components/Image.h"
-#include "Player/TDPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 TSharedRef<SWidget> UTDUW_Inventory::RebuildWidget()
@@ -120,6 +120,8 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 	}
 }
 
+//***************************************************************************************
+//** 카테고리 버튼 누르기
 void UTDUW_Inventory::OnWeaponButtonClicked()
 {
 	if (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory() == EItemCategory::Weapon) return;
@@ -155,3 +157,4 @@ void UTDUW_Inventory::OnFoodButtonClicked()
 
 	DisplayInventorySlotWidgets();
 }
+//***************************************************************************************

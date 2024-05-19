@@ -33,6 +33,11 @@ public:
 	UFUNCTION(Server, Reliable)
 	void Server_RelootItem();
 
+
+	void DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform);
+	UFUNCTION(Server, Reliable)
+	void Server_DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform);
+
 protected:
 	virtual void BeginPlay() override;
 

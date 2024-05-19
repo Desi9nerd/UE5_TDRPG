@@ -266,3 +266,23 @@ void UTDInventoryComponent::Server_DestroyPickupItem_Implementation(ATDItemActor
 	InItem->DestroyItem();
 }
 //******************************************************************************
+
+//******************************************************************************
+// 아이템 드랍
+void UTDInventoryComponent::DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform)
+{
+	if (false == IsValid(DropItemClass)) return;
+
+	Server_DropItem(DropItemClass, ItemQuantity, SpawnTransform);
+}
+
+void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform)
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	ATDItemActor* SpawnedItem = GetWorld()->SpawnActor<ATDItemActor>(DropItemClass, SpawnTransform, SpawnParams);
+
+	SpawnedItem->SetItemQuantity(ItemQuantity);
+}
+//******************************************************************************
