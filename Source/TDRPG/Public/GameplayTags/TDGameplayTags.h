@@ -70,6 +70,7 @@ public:
 	FGameplayTag Abilities_Skill_MagicArrow;
 	FGameplayTag Abilities_Skill_ComboFlameShooting;
 	FGameplayTag Abilities_Skill_Physical_Pummel;
+	FGameplayTag Abilities_Skill_Physical_FlyingKick;
 	FGameplayTag Abilities_Skill_EnergyLance;
 	FGameplayTag Abilities_Skill_Ice_FrozenField;
 	FGameplayTag Abilities_Skill_Fire_PillarOfFlame;
@@ -84,6 +85,7 @@ public:
 	FGameplayTag Cooldown_Skill_MagicArrow;
 	FGameplayTag Cooldown_Skill_ComboFlameShooting;
 	FGameplayTag Cooldown_Skill_Pummel;
+	FGameplayTag Cooldown_Skill_FlyingKick;
 	FGameplayTag Cooldown_Skill_EnergyLance;
 	FGameplayTag Cooldown_Skill_FrozenField;
 	FGameplayTag Cooldown_Skill_PillarOfFlame;
@@ -115,6 +117,7 @@ public:
 	FGameplayTag Event_Montage_MagicArrow;
 	FGameplayTag Event_Montage_ComboFlameShooting;
 	FGameplayTag Event_Montage_Pummel;
+	FGameplayTag Event_Montage_FlyingKick;
 	FGameplayTag Event_Montage_EnergyLance;
 	FGameplayTag Event_Montage_FrozenField;
 	FGameplayTag Event_Montage_PillarOfFlame;

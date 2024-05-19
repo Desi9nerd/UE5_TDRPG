@@ -42,6 +42,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Skill_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.MagicArrow"), FString("Abilities: 매직 애로우"));
 	GameplayTags.Abilities_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.ComboFlameShooting"), FString("Abilities: 화염 난사"));
 	GameplayTags.Abilities_Skill_Physical_Pummel = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Physical.Pummel"), FString("Abilities: 난화격"));
+	GameplayTags.Abilities_Skill_Physical_FlyingKick = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Physical.FlyingKick"), FString("Abilities: 날라차기"));
 	GameplayTags.Abilities_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.EnergyLance"), FString("Abilities: 에너르기파"));
 	GameplayTags.Abilities_Skill_Ice_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Ice.FrozenField"), FString("Abilities: 얼음 장판"));
 	GameplayTags.Abilities_Skill_Fire_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Skill.Fire.PillarOfFlame"), FString("Abilities: 불기둥"));
@@ -55,6 +56,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Cooldown_Skill_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.MagicArrow"), FString("Cooldown: 매직 애로우"));
 	GameplayTags.Cooldown_Skill_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.ComboFlameShooting"), FString("Cooldown: 화염 난사"));
 	GameplayTags.Cooldown_Skill_Pummel = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.Pummel"), FString("Cooldown: 난화격"));
+	GameplayTags.Cooldown_Skill_FlyingKick = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.FlyingKick"), FString("Cooldown: 날라차기"));
 	GameplayTags.Cooldown_Skill_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.EnergyLance"), FString("Cooldown: 에너르기파"));
 	GameplayTags.Cooldown_Skill_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.FrozenField"), FString("Cooldown: 얼음 장판"));
 	GameplayTags.Cooldown_Skill_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Skill.PillarOfFlame"), FString("Cooldown: 불기둥"));
@@ -120,6 +122,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Event_Montage_MagicArrow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.MagicArrow"), FString("매직 애로우"));
 	GameplayTags.Event_Montage_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.ComboFlameShooting"), FString("화염 난사"));
 	GameplayTags.Event_Montage_Pummel = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.Pummel"), FString("난화격"));
+	GameplayTags.Event_Montage_FlyingKick = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.FlyingKick"), FString("날라차기"));
 	GameplayTags.Event_Montage_EnergyLance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.EnergyLance"), FString("에너르기파"));
 	GameplayTags.Event_Montage_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.FrozenField"), FString("얼음 장판"));
 	GameplayTags.Event_Montage_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.Montage.PillarOfFlame"), FString("불기둥"));

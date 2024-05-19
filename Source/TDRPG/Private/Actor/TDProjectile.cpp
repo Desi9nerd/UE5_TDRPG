@@ -70,7 +70,15 @@ void ATDProjectile::Destroyed()
 	if (false == bHit && false == HasAuthority()) // 피격X && Client
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		if (IsValid(ImpactEffect))
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		}
+		else
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(this, ImpactEffect_ParticleSystem, GetActorLocation());
+		}
+
 		if (IsValid(LoopingSoundComponent))
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
@@ -104,8 +112,18 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("%s spawned"), *GetName()); // 스폰되는 Projectile 개수 확인용
 
+		//* Hit Sound
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		//* Hit Effect
+		if (IsValid(ImpactEffect)) // Niagara
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		}
+		else // ParticleSystem
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(this, ImpactEffect_ParticleSystem, GetActorLocation());
+		}
+		//* Looping  Sound Turning Off
 		if (IsValid(LoopingSoundComponent))
 		{
 			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
