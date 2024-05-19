@@ -34,17 +34,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAnimMontage> ComboActionMontage;
 
+	//********************************************************
 	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
 	FString MontageSectionNamePrefix;
 	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
 	uint8 MaxComboCount;
 	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
-	float FrameRate;
-	UPROPERTY(EditDefaultsOnly, Category = "Combo", Meta = (AllowPrivateAccess = "true"))
-	TArray<float> EffectiveFrameCount;
+	float InputThreashold = 0.1f;
+	//********************************************************
 
 	uint8 CurrentCombo = 0;
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboInput = false;
 
+	bool bFirstCombo = true;
 };
