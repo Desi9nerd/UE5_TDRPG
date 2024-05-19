@@ -38,7 +38,8 @@ void UTDGA_DamageProjectile_Arrow::SpawnProjectiles(const FVector& ProjectileTar
 	const FVector Forward = Rotation.Vector();
 
 	const int32 EffectiveNumProjectiles = FMath::Min(NumProjectiles, GetAbilityLevel());
-	TArray<FRotator> Rotations = EvenlySpacedRotators(Forward, FVector::UpVector, ArrowSpread, EffectiveNumProjectiles);
+	TArray<FRotator> Rotations = EvenlySpacedRotators(Forward, FVector::UpVector, ArrowSpread, NumOfArrowsForTesting);
+	//TArray<FRotator> Rotations = EvenlySpacedRotators(Forward, FVector::UpVector, ArrowSpread, EffectiveNumProjectiles);
 
 	for (const FRotator& Rot : Rotations)
 	{

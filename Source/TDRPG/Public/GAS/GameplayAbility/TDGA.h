@@ -13,7 +13,8 @@ class TDRPG_API UTDGA : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	//virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	//virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	virtual FString GetDescription(int32 AbilityLevel);
 	virtual FString GetNextAbilityLevelDescription(int32 AbilityLevel);
@@ -26,6 +27,14 @@ public:
 protected:
 	float GetManaCost(float InAbilityLevel = 1.f) const;
 	float GetCooldown(float InAbilityLevel = 1.f) const;
+
+	UFUNCTION()
+	void SpawnWeapon();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<USkeletalMeshComponent> WeaponMeshClass;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
 	TObjectPtr<UTDAT_TargetData> TargetDataAbilityTask;
 };

@@ -55,6 +55,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> ImpactEffect_ParticleSystem;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> LoopingSound;

@@ -86,11 +86,11 @@ bool FTDGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool
 		{
 			RepBits |= 1 << 13;
 		}
-		if (RagdollImpulse != FVector::ZeroVector)
+		if (false == RagdollImpulse.IsNearlyZero())
 		{
 			RepBits |= 1 << 14;
 		}
-		if (KnockbackImpulse != FVector::ZeroVector)
+		if (false == KnockbackImpulse.IsNearlyZero())
 		{
 			RepBits |= 1 << 15;
 		}

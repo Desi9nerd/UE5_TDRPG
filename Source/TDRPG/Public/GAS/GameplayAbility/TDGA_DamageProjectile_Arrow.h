@@ -23,6 +23,8 @@ protected:
 	float ArrowSpread = 45.f;
 
 	UPROPERTY(EditDefaultsOnly)
+	int32 NumOfArrowsForTesting = 5;
+	UPROPERTY(EditDefaultsOnly)
 	int32 MaxNumArrows = 5;
 
 	UPROPERTY(EditDefaultsOnly)
