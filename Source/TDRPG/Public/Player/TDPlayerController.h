@@ -115,11 +115,7 @@ private:
 
 	void OnOpenInventoryTriggered(const FInputActionValue& Value);
 	void OnPickupItemTriggered(const FInputActionValue& Value);
-
-	void InitializeWidget();
-	UFUNCTION(Client, Reliable) // Client RPC
-	void Client_InitializeWidget();
-
+	
 	void OpenCloseInventoryWidget(bool bOpen);
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
@@ -129,11 +125,7 @@ private:
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> PickUpItemInputAction;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> MainWidgetClass; 
-	UPROPERTY()
-	TObjectPtr<UUserWidget> TDMainWidget;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass; 
 	UPROPERTY()

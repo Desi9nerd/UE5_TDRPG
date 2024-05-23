@@ -1,6 +1,7 @@
 ﻿#include "UI/HUD/TDHUD.h"
 #include "UI/Widget/TDUW.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventoryMenu.h"
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
@@ -59,6 +60,9 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	WidgetController->BroadcastInitialValues(); // TDOverlayWidgetController에 Dynamic Broadcast된 데이터를 불러옴
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
+
+	//** TDInventoryMenu
+	GetInventoryMenuWidget();
 }
 
 TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
@@ -70,4 +74,15 @@ TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
 	InventoryWidget->AddToViewport();
 
 	return InventoryWidget;
+}
+
+TObjectPtr<UTDUW_InventoryMenu> ATDHUD::GetInventoryMenuWidget()
+{
+	if (IsValid(InventoryMenuWidget)) return InventoryMenuWidget;
+
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryMenuWidgetClass);
+	InventoryMenuWidget = Cast<UTDUW_InventoryMenu>(Widget);
+	InventoryMenuWidget->AddToViewport();
+
+	return InventoryMenuWidget;
 }

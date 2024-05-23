@@ -116,7 +116,6 @@ void ATDPlayerController::BeginPlay()
 
 
 	//****************************************************************************
-	InitializeWidget(); // 인벤토리 생성.
 }
 
 void ATDPlayerController::SetupInputComponent()
@@ -381,22 +380,6 @@ void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
 	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetCharacter());
 	checkf(TDCharacter, TEXT("No TDCharacter. Check  ATDPlayerController::OnPickupItemTriggered"));
 	TDCharacter->GetInventoryComponent()->PickupItem();
-}
-
-void ATDPlayerController::InitializeWidget()
-{
-	if (IsLocalController())
-	{
-		Client_InitializeWidget();		
-	}
-}
-
-void ATDPlayerController::Client_InitializeWidget_Implementation() // 인벤토리 위젯 생성.
-{
-	TDMainWidget = CreateWidget<UUserWidget>(this, MainWidgetClass);
-	TDMainWidget->AddToViewport();
-	checkf(TDMainWidget, TEXT("No TDMainWidget. Check ATDPlayerController::Client_InitializeWidget_Implementation() "));
-	
 }
 
 void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.
