@@ -109,11 +109,11 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 	}
 }
 
-void UTDInventoryComponent::AddItemToInventory(FItem Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>& OutInventory)
+void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>* OutInventory)
 {
 	if (Item.ItemCategory == SelectedInventoryCategory)
 	{
-		OutInventory[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+		(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
 	}
 }
 
@@ -152,7 +152,7 @@ void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 				// 인벤토리에 아이템 추가
-				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
 
 				if (RemainingQuantity == 0)
 					break;
@@ -206,7 +206,7 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
 					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
 					bRelootItem = true;
 
 					if (RemainingQuantity == 0)
@@ -215,7 +215,7 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 				else
 				{
 					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
 				}
 			}
 		}
@@ -235,7 +235,7 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 			if (bInventoryIsFull)
 			{
 				// 인벤토리에 아이템 추가
-				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, *CategoryArray);
+				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
 			}
 		}
 	}
