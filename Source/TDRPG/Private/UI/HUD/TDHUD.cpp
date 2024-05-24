@@ -62,7 +62,7 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
 
 	//** TDInventoryMenu
-	GetInventoryMenuWidget();
+	//GetInventoryMenuWidget();
 }
 
 TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()

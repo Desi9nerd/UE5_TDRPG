@@ -111,9 +111,17 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 
 void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>* OutInventory)
 {
-	if (Item.ItemCategory == SelectedInventoryCategory)
+	//if (Item.ItemCategory == SelectedInventoryCategory)
 	{
 		(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+		UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
+
+		for (int8 i = 0; i < (*OutInventory).Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].InventorySlot->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), *(*OutInventory)[i].ItemQuantity);
+			//UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].Item.Thumbnail->GetName());
+		}
 	}
 }
 
