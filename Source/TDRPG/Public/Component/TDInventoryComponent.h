@@ -52,7 +52,7 @@ private:
 
 	void AddItemToInventory(const FItem& Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>* OutInventory);
 
-	void FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
+	bool FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 
 	void SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);

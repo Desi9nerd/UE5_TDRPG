@@ -42,6 +42,6 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	FString ItemName;
 
-	UPROPERTY(EditDefaultsOnly, Replicated)
-	int32 ItemQuantity;
+	UPROPERTY(EditAnywhere, Replicated)
+	int32 ItemQuantity = 1;
 };

@@ -43,7 +43,3 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 		UE_LOG(LogTemp, Warning, TEXT("Item Overlapped! "));
 	}
 }
-
-// 오대성님, 
-// 얕은 복사
-// Destroy

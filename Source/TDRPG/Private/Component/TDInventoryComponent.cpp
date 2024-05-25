@@ -97,8 +97,10 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 		
 		if (ItemToAddInfo.bStackable) // 인벤토리 내에 해당 아이템이 있는지 찾음.
 		{
-			//FindPartialStack(InItem, ItemToAddInfo);
-			CreateNewStack(InItem, ItemToAddInfo);
+			if (false == FindPartialStack(InItem, ItemToAddInfo))
+			{
+				CreateNewStack(InItem, ItemToAddInfo);
+			}
 		}
 		else
 		{
@@ -129,7 +131,8 @@ void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity
 }
 
 // 인벤토리 내 해당 아이템이 있는지 확인. Stack 여부 검사 후 쌓기.
-void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
+// '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우 true, 아닌 경우 false 리턴.
+bool UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
 	TArray<FInventorySlot>* CategoryArray = nullptr;
 
@@ -156,25 +159,36 @@ void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 		for (int i = 0; i < CategoryArray->Num() - 1; i++)
 		{
 			if (UKismetTextLibrary::EqualEqual_TextText((*CategoryArray)[i].Item.Name, ItemToAddInfo.Name) &&
-				(*CategoryArray)[i].ItemQuantity < ItemToAddInfo.MaxStackSize)
+				(*CategoryArray)[i].ItemQuantity < ItemToAddInfo.MaxStackSize) // '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우
 			{
-				// 아이템 수량 갱신
-				int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - (*CategoryArray)[i].ItemQuantity));
-				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
-				// 인벤토리에 아이템 추가
-				AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
+				if ((*CategoryArray)[i].ItemQuantity + ItemToAdd->GetItemQuantity() <= ItemToAddInfo.MaxStackSize)
+				{
+					// 인벤토리에 아이템 추가
+					AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, i, CategoryArray);
 
-				if (RemainingQuantity == 0)
-					break;
-			}
+				}
+				else
+				{
+					// 아이템 수량 갱신
+					int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - (*CategoryArray)[i].ItemQuantity));
+					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
-			if (i >= AmountOfSlots)
-			{
-				break;
+					// 인벤토리에 아이템 추가
+					AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), (*CategoryArray)[i].InventorySlot, i, CategoryArray);
+
+					if (i < CategoryArray->Num() - 1 && RemainingQuantity > 0)
+					{
+						CreateNewStack(ItemToAdd, ItemToAddInfo);
+					}
+				}
+				
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 // Stack 새로 만들기 또는 Stack 불가능한 아이템 채우기.
