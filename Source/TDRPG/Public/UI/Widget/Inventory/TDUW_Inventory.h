@@ -28,6 +28,8 @@ public:
 
 	void DisplayInventorySlotWidgets();
 
+	int32 DraggedSlotIndex;
+
 private:
 	UFUNCTION()
 	void OnWeaponButtonClicked();

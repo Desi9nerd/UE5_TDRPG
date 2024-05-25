@@ -12,8 +12,14 @@ class TDRPG_API UTDUW_InventoryMenu : public UTDUW
 {
 	GENERATED_BODY()
 
-private:
+public:
+	virtual void NativeConstruct() override;
+
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+private:
+	UFUNCTION()
+	void OnOpenInventory();
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UButton> Button_InventoryMenu;

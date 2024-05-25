@@ -15,6 +15,9 @@ class TDRPG_API UTDUW_InventorySlot : public UTDUW
 	GENERATED_BODY()
 
 public:
+	UPROPERTY()
+	int32 SlotIndex;
+
 	void NativeConstruct() override;
 	void UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity);
 

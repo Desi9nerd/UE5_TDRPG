@@ -34,9 +34,9 @@ public:
 	void Server_RelootItem();
 
 
-	void DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform);
+	void DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FVector Location);
 	UFUNCTION(Server, Reliable)
-	void Server_DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform);
+	void Server_DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FVector Location);
 
 protected:
 	virtual void BeginPlay() override;

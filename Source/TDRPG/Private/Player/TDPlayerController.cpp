@@ -113,9 +113,7 @@ void ATDPlayerController::BeginPlay()
 	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Viewport에 마우스 락X
 	InputModeData.SetHideCursorDuringCapture(false); // Cursor 숨기지 않기
 	SetInputMode(InputModeData);
-
-
-	//****************************************************************************
+	
 }
 
 void ATDPlayerController::SetupInputComponent()

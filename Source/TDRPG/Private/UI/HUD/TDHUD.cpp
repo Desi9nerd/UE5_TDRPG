@@ -44,7 +44,6 @@ TObjectPtr<UTDWidgetControllerSkillMenu> ATDHUD::GetTDWidgetControllerSkillMenu(
 
 void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
-	//** checkf는 데이터 null체크 후 crash가 나면 작성한 TEXT를 출력한다.
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
 	checkf(TDWidgetController_OverlayClass, TEXT("Overlay Widget Controller Class가 초기화되지 않았습니다. BP_TDHUD에 데이터를 넣어주세요."));
 
@@ -60,10 +59,16 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 
 	WidgetController->BroadcastInitialValues(); // TDOverlayWidgetController에 Dynamic Broadcast된 데이터를 불러옴
 	Widget->AddToViewport(); // 위젯을 Viewport에 추가
-
-	//** TDInventoryMenu
-	//GetInventoryMenuWidget();
 }
+
+//void ATDHUD::InitInventory(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+//{
+//	checkf(InventoryWidgetClass, TEXT("Inventory Widget Class가 초기화되지 않았습니다.BP_TDHUD에 데이터를 넣어주세요."));
+//	checkf(InventoryMenuWidgetClass, TEXT("Inventory Menu Widget Class가 초기화되지 않았습니다. BP_TDHUD에 데이터를 넣어주세요."));
+//
+//	GetInventoryWidget();
+//	GetInventoryMenuWidget();
+//}
 
 TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
 {

@@ -32,6 +32,16 @@ void UTDInventoryComponent::InitializeInventory()
 	}
 }
 
+void UTDInventoryComponent::Client_InitializeInventory_Implementation()
+{
+	// AmountOfSlots 만큼 슬롯을 만들기위해 TArray 사이즈를 맞춰줌. 
+	WeaponCategory.SetNum(AmountOfSlots);
+	ArmorCategory.SetNum(AmountOfSlots);
+	PotionCategory.SetNum(AmountOfSlots);
+	FoodCategory.SetNum(AmountOfSlots);
+
+}
+
 void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory)
 {
 	if (TDPlayerController->IsLocalController())
@@ -73,16 +83,6 @@ void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(c
 	SelectedInventoryCategory = InSelectedInventoryCategory;
 }
 
-void UTDInventoryComponent::Client_InitializeInventory_Implementation()
-{
-	// AmountOfSlots 만큼 슬롯을 만들기위해 TArray 사이즈를 맞춰줌. 
-	WeaponCategory.SetNum(AmountOfSlots);
-	ArmorCategory.SetNum(AmountOfSlots);
-	PotionCategory.SetNum(AmountOfSlots);
-	FoodCategory.SetNum(AmountOfSlots);
-	
-}
-
 void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 {
 	Client_AddtoInventory(InItem);
@@ -121,12 +121,12 @@ void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity
 		(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
 		UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
 
-		for (int8 i = 0; i < (*OutInventory).Num(); i++)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].InventorySlot->GetName());
-			//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), *(*OutInventory)[i].ItemQuantity);
-			//UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].Item.Thumbnail->GetName());
-		}
+		//for (int8 i = 0; i < (*OutInventory).Num(); i++)
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].InventorySlot->GetName());
+		//	//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), *(*OutInventory)[i].ItemQuantity);
+		//	//UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].Item.Thumbnail->GetName());
+		//}
 	}
 }
 
@@ -220,6 +220,11 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 		int32 i = 0; // 루프 외부에서 i를 선언.
 		for (; i < CategoryArray->Num() - 1; i++)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("ItemSlot = %s"), *(*CategoryArray)[i].InventorySlot->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("ItemActor = %s"), *(*CategoryArray)[i].Item.ItemClass->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("SlotIndex = %d"), (*CategoryArray)[i].SlotIndex);
+			UE_LOG(LogTemp, Warning, TEXT("Item Quantity = %d"), (*CategoryArray)[i].ItemQuantity);
+
 			if ((*CategoryArray)[i].ItemQuantity == 0)
 			{
 				bInventoryIsFull = false;
@@ -296,19 +301,19 @@ void UTDInventoryComponent::Server_DestroyPickupItem_Implementation(ATDItemActor
 
 //******************************************************************************
 // 아이템 드랍
-void UTDInventoryComponent::DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform)
+void UTDInventoryComponent::DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FVector Location)
 {
 	if (false == IsValid(DropItemClass)) return;
 
-	Server_DropItem(DropItemClass, ItemQuantity, SpawnTransform);
+	Server_DropItem(DropItemClass, ItemQuantity, Location);
 }
 
-void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FTransform SpawnTransform)
+void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FVector Location)
 {
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	ATDItemActor* SpawnedItem = GetWorld()->SpawnActor<ATDItemActor>(DropItemClass, SpawnTransform, SpawnParams);
+	ATDItemActor* SpawnedItem = GetWorld()->SpawnActor<ATDItemActor>(DropItemClass, FTransform(Location), SpawnParams);
 
 	SpawnedItem->SetItemQuantity(ItemQuantity);
 }

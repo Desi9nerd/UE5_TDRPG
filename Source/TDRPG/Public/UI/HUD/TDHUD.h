@@ -23,6 +23,7 @@ class TDRPG_API ATDHUD : public AHUD
 
 public:
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	//void InitInventory(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 	TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
 	TObjectPtr<UTDUW_InventoryMenu> GetInventoryMenuWidget();

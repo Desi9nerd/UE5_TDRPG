@@ -4,7 +4,12 @@
 #include "Component/TDInventoryComponent.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/TDPlayerController.h"
 #include "UI/DragDropOperation/TDDragDropOperation.h"
+#include "UI/HUD/TDHUD.h"
+#include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventoryMenu.h"
 
 void UTDUW_InventorySlot::NativeConstruct()
 {
@@ -58,10 +63,45 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 	UE_LOG(LogTemp, Warning, TEXT("Inventory Slot NativeOn Drag Detected!! "));
 
-	UTDDragDropOperation* DragItemOperation = NewObject<UTDDragDropOperation>();
-	DragItemOperation->DefaultDragVisual = Image_Item;
+	//****************************************************************************
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(PlayerController);
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
+	
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
 
-	OutOperation = DragItemOperation;
+	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		break;
+	}
+
+	//****************************************************************************
+
+	if ((*SelectedCategoryItems)[SlotIndex].ItemQuantity != 0)
+	{
+		UTDDragDropOperation* DragItemOperation = NewObject<UTDDragDropOperation>();
+		DragItemOperation->DefaultDragVisual = Image_Item;
+
+		OutOperation = DragItemOperation;
+
+		TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex = SlotIndex;
+		TDPlayerController->GetTDHUD()->GetInventoryMenuWidget()->SetVisibility(ESlateVisibility::Visible);
+
+	}
+
 }
 
 bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)

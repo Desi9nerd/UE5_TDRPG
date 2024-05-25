@@ -80,6 +80,7 @@ void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems,
 
 		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
 		InventorySlotWidget->UpdateInventorySlotUI((*CategoryItems)[i].Item, (*CategoryItems)[i].ItemQuantity);
+		InventorySlotWidget->SlotIndex = i;
 
 		(*CategoryItems)[i].InventorySlot = InventorySlotWidget;
 		(*CategoryItems)[i].SlotIndex = i;
