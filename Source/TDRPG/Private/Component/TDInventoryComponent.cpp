@@ -113,6 +113,9 @@ void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity
 {
 	//if (Item.ItemCategory == SelectedInventoryCategory)
 	{
+		(*OutInventory)[SlotIdx].Item = Item;
+		(*OutInventory)[SlotIdx].ItemQuantity = Quantity;
+
 		(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
 		UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
 
@@ -200,7 +203,7 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 	if (CategoryArray)
 	{
 		bool bRelootItem = false;
-		int32 i = 0; // 루프 외부에서 i를 선언하여 사용합니다.
+		int32 i = 0; // 루프 외부에서 i를 선언.
 		for (; i < CategoryArray->Num() - 1; i++)
 		{
 			if ((*CategoryArray)[i].ItemQuantity == 0)
@@ -223,8 +226,10 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 				else
 				{
 					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, (*CategoryArray)[i].SlotIndex, CategoryArray);
+					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, i, CategoryArray);
 				}
+
+				break;
 			}
 		}
 
