@@ -61,19 +61,19 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 	TArray<FInventorySlot>* FoodCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
 
 	// 무기, 방어구, 포션, 음식 InventorySlot 생성
-	UpdateCategoryItems(WeaponCategoryItems, AmountOfSlots, 0);
-	UpdateCategoryItems(ArmorCategoryItems, AmountOfSlots, 1);
-	UpdateCategoryItems(PotionCategoryItems, AmountOfSlots, 2);
-	UpdateCategoryItems(FoodCategoryItems, AmountOfSlots, 3);
+	UpdateCategoryItems(WeaponCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(ArmorCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(PotionCategoryItems, AmountOfSlots);
+	UpdateCategoryItems(FoodCategoryItems, AmountOfSlots);
 
 	// SelectedInventoryCategory의 기준으로 Inventory 보이게 하기
 	DisplayInventorySlotWidgets();
 	
 }
 
-void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots, int32 CategoryType)
+void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots)
 {
-	for (int32 i = CategoryType * AmountOfSlots; i < (CategoryType + 1) * AmountOfSlots; i++)
+	for (int32 i = 0; i < AmountOfSlots; i++)
 	{
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
 		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
@@ -83,6 +83,7 @@ void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems,
 
 		(*CategoryItems)[i].InventorySlot = InventorySlotWidget;
 		(*CategoryItems)[i].SlotIndex = i;
+		UE_LOG(LogTemp, Warning, TEXT("TDUW_Inventory:  SlotIndex = %d"), i);
 	}
 }
 
@@ -95,32 +96,26 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 
 	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
 
-	int32 CategoryType;
 	switch (SelectedCategory)
 	{
 	case EItemCategory::Weapon:
 		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
-		CategoryType = 0;
 		break;
 	case EItemCategory::Armor:
 		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
-		CategoryType = 1;
 		break;
 	case EItemCategory::Potion:
 		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
-		CategoryType = 2;
 		break;
 	case EItemCategory::Food:
 		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
-		CategoryType = 3;
 		break;
 	default:
 		checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
-		CategoryType = -1;
 		break;
 	}
 	
-	for (int32 i = CategoryType * AmountOfSlots; i < (CategoryType + 1) * AmountOfSlots; i++)
+	for (int32 i = 0; i < AmountOfSlots; i++)
 	{
 		// Grid_Inventory에 선택된 카테고리 아이템들이 보이게 하기.
 		Grid_Inventory->AddChildToGrid((*SelectedCategoryItems)[i].InventorySlot, i / 4, i % 4);
