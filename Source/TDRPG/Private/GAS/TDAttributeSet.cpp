@@ -10,6 +10,7 @@
 #include "Interface/IPlayer.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/TDPlayerController.h"
+#include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 
 UTDAttributeSet::UTDAttributeSet()
 {

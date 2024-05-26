@@ -16,7 +16,7 @@ class TDRPG_API ATDGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	void RequestDropItem(APlayerController* InPlayerController, TSubclassOf<ATDItemActor> ItemActor, int32 ItemQuantity, FTransform SpawnTransform);
+	void RequestDropItem(APlayerController* InPlayerController, TSubclassOf<ATDItemActor> ItemActor, int32 ItemQuantity, FVector SpawnLocation);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class")
 	TObjectPtr<UTDDA_CharacterClass> TDDACharacterClass;

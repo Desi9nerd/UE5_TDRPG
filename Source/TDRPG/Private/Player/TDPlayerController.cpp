@@ -17,6 +17,7 @@
 #include "UI/HUD/TDHUD.h"
 #include "UI/WidgetComponent/TDWidgetComponent.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventoryMenuUI.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -405,5 +406,11 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
 			bInventoryIsOpen = false;
 		}
+	}
+
+	if (false == bTemp)
+	{
+		GetTDHUD()->GetInventoryMenuWidget();
+		bTemp = true;
 	}
 }

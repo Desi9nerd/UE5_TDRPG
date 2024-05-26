@@ -141,4 +141,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> OverlappingItem;
+
+
+	bool bTemp = false;
 };
