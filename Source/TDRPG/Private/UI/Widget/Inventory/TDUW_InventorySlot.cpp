@@ -11,6 +11,19 @@
 #include "UI/HUD/TDHUD.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
 #include "UI/Widget/Inventory/TDUW_InventoryMenuUI.h"
+#include "UI/Widget/Inventory/TDUW_InventoryToolTip.h"
+
+void UTDUW_InventorySlot::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	if (IsValid(ToolTipClass))
+	{
+		UTDUW_InventoryToolTip* ToolTip = CreateWidget<UTDUW_InventoryToolTip>(this, ToolTipClass);
+		ToolTip->InventorySlotBeingHovered = this;
+		SetToolTip(ToolTip);
+	}
+}
 
 void UTDUW_InventorySlot::NativeConstruct()
 {
@@ -26,6 +39,8 @@ void UTDUW_InventorySlot::NativeConstruct()
 
 void UTDUW_InventorySlot::UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity)
 {
+	ItemReference = InItem;
+
 	if (InItemQuantity == 0)
 	{
 		Image_Item->SetVisibility(ESlateVisibility::Hidden);
@@ -48,15 +63,17 @@ void UTDUW_InventorySlot::UpdateInventorySlotUI(const FItem& InItem, int32 InIte
 
 FReply UTDUW_InventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Native On Mouse Button Down!! "));
 
 		// FReply::Handled()를 반환하여 이벤트 처리를 했음을 시스템에 알림.
-		return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
+		return Reply.Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
 	}
 
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent); // 다른 마우스 버튼 클릭은 기본 처리를 사용
+	return Reply.Unhandled();
 }
 
 void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
@@ -107,6 +124,8 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 
 bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+
 	UE_LOG(LogTemp, Warning, TEXT("Hello! OnDrop Test at TDUW_InventorySlot!!"));
 
 	bool bZeroNstackable = GetNewSlot().ItemQuantity == 0 && GetDraggedSlot().Item.bStackable;

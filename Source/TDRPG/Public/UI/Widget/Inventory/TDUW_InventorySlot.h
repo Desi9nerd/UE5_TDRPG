@@ -6,6 +6,7 @@
 
 class UImage;
 class UTextBlock;
+class UTDUW_InventoryToolTip;
 /**
  * 
  */
@@ -16,10 +17,16 @@ class TDRPG_API UTDUW_InventorySlot : public UTDUW
 
 public:
 	UPROPERTY()
-	int32 SlotIndex;
+	FItem ItemReference;
 
+	FORCEINLINE FItem GetFItemReference() const { return ItemReference; }
+	void NativeOnInitialized() override; 
 	void NativeConstruct() override;
 	void UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity);
+
+	UPROPERTY()
+	int32 SlotIndex;
+
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UImage> Image_Slot;
@@ -45,4 +52,7 @@ private:
 	void UpdateInventorySlots();
 
 	bool bIsStackable;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
+	TSubclassOf<UTDUW_InventoryToolTip> ToolTipClass;
 };

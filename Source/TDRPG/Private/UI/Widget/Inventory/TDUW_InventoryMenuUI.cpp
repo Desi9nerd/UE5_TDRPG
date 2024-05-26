@@ -11,8 +11,8 @@
 void UTDUW_InventoryMenuUI::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	//Button_InventoryMenu->OnClicked.AddDynamic(this, &ThisClass::OnOpenInventory);
+	
+	Button_InventoryMenu->OnClicked.AddDynamic(this, &ThisClass::OnOpenInventory);
 }
 
 bool UTDUW_InventoryMenuUI::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
