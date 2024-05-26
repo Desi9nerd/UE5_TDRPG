@@ -5,6 +5,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetTextLibrary.h"
 #include "Player/TDPlayerController.h"
 #include "UI/DragDropOperation/TDDragDropOperation.h"
 #include "UI/HUD/TDHUD.h"
@@ -33,11 +34,11 @@ void UTDUW_InventorySlot::UpdateInventorySlotUI(const FItem& InItem, int32 InIte
 	}
 
 	Image_Item->SetBrushFromTexture(InItem.Thumbnail);
-	Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible); // 보이지만 활성화X
+	Image_Item->SetVisibility(ESlateVisibility::HitTestInvisible);
 	Text_ItemQuantity->SetText(FText::AsNumber(InItemQuantity));
 	if (InItemQuantity > 1)
 	{
-		Text_ItemQuantity->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		Text_ItemQuantity->SetVisibility(ESlateVisibility::HitTestInvisible);
 	}
 	else
 	{
@@ -106,5 +107,189 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 
 bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+	UE_LOG(LogTemp, Warning, TEXT("Hello! OnDrop Test at TDUW_InventorySlot!!"));
+
+	bool bZeroNstackable = GetNewSlot().ItemQuantity == 0 && GetDraggedSlot().Item.bStackable;
+	bool bSameNameNstackable = GetNewSlot().Item.Name.EqualTo(GetDraggedSlot().Item.Name) && GetNewSlot().Item.bStackable && GetDraggedSlot().Item.bStackable;
+
+	if (bZeroNstackable || bSameNameNstackable)
+	{
+		bIsStackable = true;
+	}
+	else
+	{
+		bIsStackable = false;
+	}
+
+	UpdateInventorySlots();
+
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	TDPlayerController->GetTDHUD()->GetInventoryMenuWidget()->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	return true;
+}
+
+FInventorySlot& UTDUW_InventorySlot::GetDraggedSlot() const
+{
+	//****************************************************************************
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
+
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
+
+	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		break;
+	}
+	//****************************************************************************
+
+
+	return (*SelectedCategoryItems)[TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex];
+}
+
+FInventorySlot& UTDUW_InventorySlot::GetNewSlot() const
+{
+	//****************************************************************************
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
+
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
+
+	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		break;
+	}
+	//****************************************************************************
+
+
+	return (*SelectedCategoryItems)[SlotIndex];
+}
+
+void UTDUW_InventorySlot::UpdateDraggedSlot(const FItem& DraggedSlotItem, int32 NewItemQuantity)
+{
+	//****************************************************************************
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
+
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
+
+	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		break;
+	}
+	//****************************************************************************
+
+
+	int32 DraggedSlotIdx = TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex;
+
+	// Slot 업데이트
+	(*SelectedCategoryItems)[DraggedSlotIdx].Item = DraggedSlotItem;
+	(*SelectedCategoryItems)[DraggedSlotIdx].ItemQuantity = NewItemQuantity;
+
+	(*SelectedCategoryItems)[DraggedSlotIdx].InventorySlot->UpdateInventorySlotUI(DraggedSlotItem, NewItemQuantity);
+}
+
+void UTDUW_InventorySlot::UpdateNewSlot(const FItem& DraggedSlotItem, int32 NewItemQuantity)
+{
+	//****************************************************************************
+	ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
+
+	TArray<FInventorySlot>* SelectedCategoryItems = nullptr;
+
+	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
+	{
+	case EItemCategory::Weapon:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		break;
+	case EItemCategory::Armor:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		break;
+	case EItemCategory::Potion:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		break;
+	case EItemCategory::Food:
+		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		break;
+	default:
+		break;
+	}
+	//****************************************************************************
+	
+
+	// Slot 업데이트
+	(*SelectedCategoryItems)[SlotIndex].Item = DraggedSlotItem;
+	(*SelectedCategoryItems)[SlotIndex].ItemQuantity = NewItemQuantity;
+
+	(*SelectedCategoryItems)[SlotIndex].InventorySlot->UpdateInventorySlotUI(DraggedSlotItem, NewItemQuantity);
+}
+
+void UTDUW_InventorySlot::UpdateInventorySlots()
+{
+	if (GetNewSlot().SlotIndex == GetDraggedSlot().SlotIndex) return;
+
+
+	int32 L_NewSlotItemQuantity;
+	if (bIsStackable) // 쌓는게 가능한 아이템이라면
+	{
+		L_NewSlotItemQuantity = GetNewSlot().ItemQuantity + GetDraggedSlot().ItemQuantity;
+
+		if (L_NewSlotItemQuantity > GetDraggedSlot().Item.MaxStackSize) // MaxStackSize보다 큰 경우
+		{
+			UpdateNewSlot(GetDraggedSlot().Item, GetDraggedSlot().Item.MaxStackSize);
+			UpdateDraggedSlot(GetDraggedSlot().Item, L_NewSlotItemQuantity - GetDraggedSlot().Item.MaxStackSize);
+		}
+		else
+		{
+			UpdateNewSlot(GetDraggedSlot().Item, L_NewSlotItemQuantity);
+			UpdateDraggedSlot(FItem(), 0);
+		}
+	}
+	else
+	{
+		FItem L_NewSlotItem = GetNewSlot().Item;
+		L_NewSlotItemQuantity = GetNewSlot().ItemQuantity;
+
+		UpdateNewSlot(GetDraggedSlot().Item, GetDraggedSlot().ItemQuantity);
+		UpdateDraggedSlot(L_NewSlotItem, L_NewSlotItemQuantity);
+	}
 }
