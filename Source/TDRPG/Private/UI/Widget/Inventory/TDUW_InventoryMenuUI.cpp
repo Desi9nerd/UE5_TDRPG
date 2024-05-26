@@ -58,6 +58,8 @@ bool UTDUW_InventoryMenuUI::NativeOnDrop(const FGeometry& InGeometry, const FDra
 
 	// ºóÄ­À¸·Î ¾÷µ¥ÀÌÆ®
 	(*SelectedCategoryItems)[SlotIdx].InventorySlot->UpdateInventorySlotUI(FItem(), 0);
+	(*SelectedCategoryItems)[SlotIdx].Item = FItem();
+	(*SelectedCategoryItems)[SlotIdx].ItemQuantity = 0;
 
 	UGameplayStatics::PlaySoundAtLocation(this, Sound_DropItem, GetOwningPlayer()->K2_GetActorLocation());
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
