@@ -12,7 +12,6 @@
 #include "NiagaraComponent.h"
 #include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
-#include "Components/SphereComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 

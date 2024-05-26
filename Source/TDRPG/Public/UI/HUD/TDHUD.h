@@ -10,7 +10,7 @@ class UTDWidgetControllerAttributeMenu;
 class UTDWidgetControllerSkillMenu;
 class UTDUW;
 class UTDUW_Inventory;
-class UTDUW_InventoryMenu;
+class UTDUW_InventoryMenuUI;
 struct FWidgetControllerParams;
 
 /**
@@ -26,7 +26,7 @@ public:
 	//void InitInventory(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 	TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
-	TObjectPtr<UTDUW_InventoryMenu> GetInventoryMenuWidget();
+	TObjectPtr<UTDUW_InventoryMenuUI> GetInventoryMenuWidget();
 	TObjectPtr<UTDWidgetControllerOverlay> GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams);
 	TObjectPtr<UTDWidgetControllerAttributeMenu> GetTDWidgetControllerAttributeMenu(const FWidgetControllerParams& WCParams);
 	TObjectPtr<UTDWidgetControllerSkillMenu> GetTDWidgetControllerSkillMenu(const FWidgetControllerParams& WCParams);
@@ -42,9 +42,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass;
 	UPROPERTY()
-	TObjectPtr<UTDUW_InventoryMenu>  InventoryMenuWidget;
+	TObjectPtr<UTDUW_InventoryMenuUI>  InventoryMenuWidget;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UTDUW_InventoryMenu> InventoryMenuWidgetClass;
+	TSubclassOf<UTDUW_InventoryMenuUI> InventoryMenuWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<UTDWidgetControllerOverlay> TDWidgetController_Overlay;

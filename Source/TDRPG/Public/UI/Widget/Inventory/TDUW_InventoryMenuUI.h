@@ -1,14 +1,14 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "UI/Widget/TDUW.h"
-#include "TDUW_InventoryMenu.generated.h"
+#include "TDUW_InventoryMenuUI.generated.h"
 
 class UButton;
 /**
  * 
  */
 UCLASS()
-class TDRPG_API UTDUW_InventoryMenu : public UTDUW
+class TDRPG_API UTDUW_InventoryMenuUI : public UTDUW
 {
 	GENERATED_BODY()
 
