@@ -9,7 +9,7 @@
 #include "UI/DragDropOperation/TDDragDropOperation.h"
 #include "UI/HUD/TDHUD.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
-#include "UI/Widget/Inventory/TDUW_InventoryMenu.h"
+#include "UI/Widget/Inventory/TDUW_InventoryMenuUI.h"
 
 void UTDUW_InventorySlot::NativeConstruct()
 {
