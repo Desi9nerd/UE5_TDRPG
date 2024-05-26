@@ -13,6 +13,7 @@
 #include "Component/TDInventoryComponent.h"
 #include "Actor/TDDecalActor.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "TDRPG/TDRPG.h"
 #include "UI/HUD/TDHUD.h"
 #include "UI/WidgetComponent/TDWidgetComponent.h"
@@ -396,6 +397,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 		if (IsValid(GetTDHUD()->GetInventoryWidget()))
 		{
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
+			UGameplayStatics::PlaySound2D(this, Sound_OpenInventory);
 			bInventoryIsOpen = true;
 		}
 	}
@@ -404,6 +406,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 		if (IsValid(GetTDHUD()->GetInventoryWidget()))
 		{
 			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
+			UGameplayStatics::PlaySound2D(this, Sound_CloseInventory);
 			bInventoryIsOpen = false;
 		}
 	}

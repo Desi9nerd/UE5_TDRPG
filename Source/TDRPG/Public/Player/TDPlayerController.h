@@ -142,6 +142,10 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> OverlappingItem;
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> Sound_OpenInventory;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> Sound_CloseInventory;
 
 	bool bTemp = false;
 };

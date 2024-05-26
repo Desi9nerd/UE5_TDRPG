@@ -84,7 +84,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<UDataTable> ItemDataTable;
-	
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TObjectPtr<USoundBase> Sound_DestroyLootedItem;
+
 	bool HasToCreateStack;
 	//bool bRelootItem = false;
 	bool bInventoryIsFull = false;

@@ -108,6 +108,8 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 		}
 
 		DestroyPickupItem(InItem, true);
+
+		UGameplayStatics::PlaySound2D(this, Sound_DestroyLootedItem);
 	}
 }
 
