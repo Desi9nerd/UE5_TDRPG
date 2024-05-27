@@ -37,8 +37,6 @@ protected:
 
 
 private:
-	void OnDestroyRootItem(bool InbDestroyItem);
-
 	UPROPERTY(EditDefaultsOnly)
 	FString ItemName;
 

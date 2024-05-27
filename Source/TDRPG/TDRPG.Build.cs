@@ -10,6 +10,6 @@ public class TDRPG : ModuleRules
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "UMG", "Slate", "SlateCore", "AIModule", "NetCore" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "DatasmithCore", "NavigationSystem", "MotionWarping", "Niagara", "AIModule" }); // Game Ability System(GAS)
+        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "DatasmithCore", "NavigationSystem", "MotionWarping", "Niagara" }); // Game Ability System(GAS)
     }
 }
