@@ -33,6 +33,7 @@ class TDRPG_API ATDEffectActor : public ATDItemActor
 	
 public:	
 	ATDEffectActor();
+	void ConsumeItem(AActor* TargetActor);
 
 protected:
 	virtual void BeginPlay() override;

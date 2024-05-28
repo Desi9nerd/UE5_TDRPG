@@ -38,6 +38,11 @@ public:
 	UFUNCTION(Server, Reliable)
 	void Server_DropItem(TSubclassOf<ATDItemActor> DropItemClass, int32 ItemQuantity, FVector Location);
 
+	void ConsumeItem(const FText& ItemName);
+	UFUNCTION(Server, Reliable)
+	void Server_ConsumeItem();
+
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -8,6 +8,24 @@ ATDEffectActor::ATDEffectActor()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+void ATDEffectActor::ConsumeItem(AActor* TargetActor)
+{
+	if (TargetActor->ActorHasTag(FName("Enemy")) && false == bApplyEffectsToEnemies) return; // 예외처리.
+
+	if (IsValid(InstantGameplayEffectClass))
+	{
+		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+	}
+	else if (IsValid(DurationGameplayEffectClass))
+	{
+		ApplyEffectToTarget(TargetActor, DurationGameplayEffectClass);
+	}
+	else if (IsValid(InfiniteGameplayEffectClass))
+	{
+		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+	}
+}
+
 void ATDEffectActor::BeginPlay()
 {
 	Super::BeginPlay();

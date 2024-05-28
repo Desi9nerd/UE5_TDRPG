@@ -1,4 +1,7 @@
 ﻿#include "UI/Widget/Inventory/TDUW_InventorySlot.h"
+
+#include "Actor/TDEffectActor.h"
+#include "Actor/TDItemActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
@@ -72,6 +75,22 @@ FReply UTDUW_InventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 		// FReply::Handled()를 반환하여 이벤트 처리를 했음을 시스템에 알림.
 		return Reply.Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
 	}
+	else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Native On Mouse Button Down - Right Click "));
+
+		if (ItemReference.bConsumable && IsValid(ItemReference.ItemClass))
+		{
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+			ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(PlayerController);
+			ATDCharacter* TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
+
+			//ATDEffectActor* ConsumableItem = Cast<ATDEffectActor>(ItemReference.ItemClass);
+			//ConsumableItem->ConsumeItem(TDCharacter);
+
+			TDCharacter->GetInventoryComponent()->ConsumeItem(ItemReference.Name);
+		}
+	}
 
 	return Reply.Unhandled();
 }
@@ -80,6 +99,8 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 	UE_LOG(LogTemp, Warning, TEXT("Inventory Slot NativeOn Drag Detected!! "));
+
+	if (IsValid(OutOperation)) return;
 
 	//****************************************************************************
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
@@ -117,15 +138,15 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 
 		TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex = SlotIndex;
 		TDPlayerController->GetTDHUD()->GetInventoryMenuWidget()->SetVisibility(ESlateVisibility::Visible);
-
 	}
+	
 
 }
 
 bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
-
+	
 	UE_LOG(LogTemp, Warning, TEXT("Hello! OnDrop Test at TDUW_InventorySlot!!"));
 
 	bool bZeroNstackable = GetNewSlot().ItemQuantity == 0 && GetDraggedSlot().Item.bStackable;

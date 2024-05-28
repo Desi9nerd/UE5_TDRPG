@@ -320,3 +320,19 @@ void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemAc
 	SpawnedItem->SetItemQuantity(ItemQuantity);
 }
 //******************************************************************************
+
+//******************************************************************************
+// 아이템 소모 (포션, 음식)
+void UTDInventoryComponent::ConsumeItem(const FText& ItemName)
+{
+	if (ItemDataTable)
+	{
+		//FItem ItemToAddInfo = *(ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString("")));
+	}
+}
+
+void UTDInventoryComponent::Server_ConsumeItem_Implementation()
+{
+
+}
+//******************************************************************************
