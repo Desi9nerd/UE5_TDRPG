@@ -223,19 +223,25 @@ void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
 	GE->Period = DebuffFrequency;
 	GE->DurationMagnitude = FScalableFloat(DebuffDuration);
 
-	// TODO: 여기 체크
+	// Set the target tags using UTargetTagsGameplayEffectComponent
+	UTargetTagsGameplayEffectComponent* TargetTagsComponent = NewObject<UTargetTagsGameplayEffectComponent>(GE);
+	FGameplayTagContainer TagContainer;
+
+	// Add debuff tag
 	// DamageType태크 key에 대응하는 value(=Debuff 태그)를 담음.
 	const FGameplayTag DebuffTag = FTDGameplayTags::GetTDGameplayTags().DamageTypesToDebuffs[DamageType];
-	GE->InheritableOwnedTagsContainer.AddTag(DebuffTag);
+
+	TagContainer.AddTag(DebuffTag);
 	if (DebuffTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun))
 	{
-		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_CursorTrace);
-		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputHeld);
-		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputPressed);
-		GE->InheritableOwnedTagsContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputReleased);
+		TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_CursorTrace);
+		TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputHeld);
+		TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputPressed);
+		TagContainer.AddTag(FTDGameplayTags::GetTDGameplayTags().BlockTag_InputReleased);
 	}
+	TagContainer.AddTag(TDGameplayTags.DamageTypesToDebuffs[DamageType]);
 
-	GE->InheritableOwnedTagsContainer.AddTag(TDGameplayTags.DamageTypesToDebuffs[DamageType]); 
+	TargetTagsComponent->GetConfiguredTargetTagChanges().ApplyTo(TagContainer);
 
 	GE->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	GE->StackLimitCount = 1;

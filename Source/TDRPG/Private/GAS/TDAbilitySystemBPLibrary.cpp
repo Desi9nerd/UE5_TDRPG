@@ -445,8 +445,7 @@ void UTDAbilitySystemBPLibrary::GetClosestTargets(int32 MaxTargets, const TArray
 
 bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondActor)
 {
-	if (FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player") || 
-		FirstActor->ActorHasTag("Enemy") && SecondActor->ActorHasTag("Enemy"))
+	if ( (FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player")) || (FirstActor->ActorHasTag("Enemy") && SecondActor->ActorHasTag("Enemy")) )
 	{
 		return true;
 	}

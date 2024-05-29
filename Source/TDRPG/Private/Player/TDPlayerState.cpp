@@ -5,11 +5,11 @@
 
 ATDPlayerState::ATDPlayerState()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent = CreateDefaultSubobject<UTDAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
-	AttributeSet = CreateDefaultSubobject<UTDAttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UTDAttributeSet>(TEXT("AttributeSet"));
 
 	NetUpdateFrequency = 100.f;
 }
@@ -24,8 +24,24 @@ void ATDPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATDPlayerState, SkillPoints);
 }
 
+void ATDPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Ability System Component 초기화가 완료되면 델리게이트 호출
+	if (AbilitySystemComponent)
+	{
+		OnAbilitySystemComponentInitialized.Broadcast();
+	}
+}
+
 UAbilitySystemComponent* ATDPlayerState::GetAbilitySystemComponent() const
 {
+	if(false == IsValid(AbilitySystemComponent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AbilitySystemComponent NULL!  Check UAbilitySystemComponent* ATDPlayerState::GetAbilitySystemComponent()"));
+	}
+
 	return AbilitySystemComponent;
 }
 
