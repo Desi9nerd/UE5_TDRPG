@@ -3,16 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class TDRPGServerTarget : TargetRules
+public class TDRPGClientTarget : TargetRules
 {
-	public TDRPGServerTarget(TargetInfo Target) : base(Target)
+	public TDRPGClientTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Server;
+		Type = TargetType.Client;
 		DefaultBuildSettings = BuildSettingsVersion.V4;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
 		ExtraModuleNames.Add("TDRPG");
-
-        bUseChecksInShipping = true;
-        bUseLoggingInShipping = true;
     }
 }

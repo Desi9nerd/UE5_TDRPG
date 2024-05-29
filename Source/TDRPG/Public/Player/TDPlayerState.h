@@ -9,6 +9,7 @@ class UAttributeSet;
 class UTDDA_LevelUp;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /* StatValue */)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAbilitySystemComponentInitialized);
 
 /**
  * 
@@ -22,6 +23,7 @@ class TDRPG_API ATDPlayerState : public APlayerState, public IAbilitySystemInter
 public:
 	ATDPlayerState();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -44,6 +46,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UTDDA_LevelUp> TDDA_LevelUpInfo;
+
+	UPROPERTY(BlueprintAssignable, Category = "Abilities")
+	FOnAbilitySystemComponentInitialized OnAbilitySystemComponentInitialized;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -71,3 +76,4 @@ private:
 	UFUNCTION()
 	void OnRep_SkillPoints();
 };
+
