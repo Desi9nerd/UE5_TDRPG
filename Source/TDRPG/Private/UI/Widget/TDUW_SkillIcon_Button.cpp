@@ -1,5 +1,4 @@
 #include "UI/Widget/TDUW_SkillIcon_Button.h"
-
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
@@ -31,9 +30,9 @@ void UTDUW_SkillIcon_Button::NativeDestruct()
 
 	if(TDWidgetControllerSkillMenu)
 	{
-		// TODO : Unbind all Event
-		TDWidgetControllerSkillMenu->DA_AbilityInfoDelegate.RemoveAll(this);
-		TDWidgetControllerSkillMenu->SkillIconReassignedDelegate.RemoveAll(this);
+		// Unbind all Event
+		TDWidgetControllerSkillMenu->DA_AbilityInfoDelegate.Clear();
+		TDWidgetControllerSkillMenu->SkillIconReassignedDelegate.Clear();
 	}
 }
 

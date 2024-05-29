@@ -29,7 +29,7 @@ void UTDUW_SkillIcon_EquippedRowButton::NativeDestruct()
 
 	if (IsValid(TDWidgetControllerSkillMenu))
 	{
-		TDWidgetControllerSkillMenu->DA_AbilityInfoDelegate.RemoveAll(this);
+		TDWidgetControllerSkillMenu->DA_AbilityInfoDelegate.Clear();
 	}
 }
 
