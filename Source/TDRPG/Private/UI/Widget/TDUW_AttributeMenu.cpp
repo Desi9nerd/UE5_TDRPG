@@ -16,9 +16,9 @@ void UTDUW_AttributeMenu::NativeConstruct()
 		if (ATDHUD* tdHUD = Cast<ATDHUD>(PlayerController->GetHUD()))
 		{
 			ATDPlayerState* PS = PlayerController->GetPlayerState<ATDPlayerState>();
-			UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
+			UAbilitySystemComponent* ASC_Temp = PS->GetAbilitySystemComponent();
 			UAttributeSet* AS = PS->GetAttributeSet();
-			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC, AS);
+			const FWidgetControllerParams WidgetControllerParams(PlayerController, PS, ASC_Temp, AS);
 
 			WidgetControllerAttributeMenu = tdHUD->GetTDWidgetControllerAttributeMenu(WidgetControllerParams);
 		}

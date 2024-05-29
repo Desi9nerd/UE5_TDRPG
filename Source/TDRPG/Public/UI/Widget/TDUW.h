@@ -10,6 +10,7 @@ class UTDWidgetController;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
 class UTDWidgetControllerSkillMenu;
+class UAbilitySystemComponent;
 
 /**
  * 
@@ -36,12 +37,12 @@ public:
 	/////////////////////////////////////////////////
 
 	//** TDAbilitySystemBPLibrary 함수 옮기기
-	UFUNCTION(Category = "WidgetController")
-	static UTDWidgetControllerOverlay* GetWidgetControllerOverlay(const UObject* WorldContextObject);
-	UFUNCTION(Category = "WidgetController")
-	static UTDWidgetControllerAttributeMenu* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
-	UFUNCTION(Category = "WidgetController")
-	static UTDWidgetControllerSkillMenu* GetWidgetControllerSkillMenu(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintCallable, Category = "WidgetController")
+	UTDWidgetControllerOverlay* GetWidgetControllerOverlay(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintCallable, Category = "WidgetController")
+	UTDWidgetControllerAttributeMenu* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintCallable, Category = "WidgetController")
+	UTDWidgetControllerSkillMenu* GetWidgetControllerSkillMenu(const UObject* WorldContextObject);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent) // BP에서 실행
@@ -54,6 +55,7 @@ protected:
 	//********************************************************
 
 
-
-
+private:
+	UFUNCTION()
+	void OnAbilitySystemComponentInitialized();
 };

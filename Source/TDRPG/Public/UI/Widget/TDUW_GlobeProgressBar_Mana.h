@@ -16,12 +16,14 @@ class TDRPG_API UTDUW_GlobeProgressBar_Mana : public UTDUW_GlobeProgressBar
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	FOnManaChanged OnManaChanged;
 	FOnMaxManaChanged OnMaxManaChanged;
 
 private:
+	UFUNCTION()
+	void BindingDelegates();
+
 	UFUNCTION()
 	void OnManaChanged_Event(float InValue);
 	UFUNCTION()

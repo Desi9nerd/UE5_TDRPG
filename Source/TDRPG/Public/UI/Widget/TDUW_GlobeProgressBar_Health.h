@@ -16,12 +16,14 @@ class TDRPG_API UTDUW_GlobeProgressBar_Health : public UTDUW_GlobeProgressBar
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	FOnHealthChanged OnHealthChanged;
 	FOnMaxHealthChanged OnMaxHealthChanged;
 
 private:
+	UFUNCTION()
+	void BindingDelegates();
+
 	UFUNCTION()
 	void OnHealthChanged_Event(float InValue);
 	UFUNCTION()

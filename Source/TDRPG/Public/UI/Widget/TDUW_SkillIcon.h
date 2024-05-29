@@ -22,17 +22,16 @@ public:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
-protected:
-	UPROPERTY(meta = (BindWidget))
+	
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	USizeBox* SizeBox_Root;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UImage* Image_Background;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UImage* Image_SkillIcon;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UImage* Image_Ring;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* Text_Cooldown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill Icon")

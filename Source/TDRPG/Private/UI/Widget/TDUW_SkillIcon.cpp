@@ -1,12 +1,10 @@
 #include "UI/Widget/TDUW_SkillIcon.h"
-
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Kismet/KismetTextLibrary.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 
 void UTDUW_SkillIcon::NativePreConstruct()
@@ -14,7 +12,7 @@ void UTDUW_SkillIcon::NativePreConstruct()
 	UpdateBoxSize(SizeBox_Root, BoxWidth, BoxHeight);
 	//UpdateBrush(Image_Background, BackgroundBrush);
 	//UpdateBrush(Image_Ring, RingBrush);
-	//UpdateBrush(Image_SkillIcon, SkillIconBrush);
+	UpdateBrush(Image_SkillIcon, SkillIconBrush);
 	Image_Background->SetBrush(TransparentBrush);
 	Image_SkillIcon->SetBrush(TransparentBrush);
 	Image_Ring->SetBrush(TransparentBrush);
@@ -40,9 +38,8 @@ void UTDUW_SkillIcon::NativeDestruct()
 
 	if (IsValid(TDWidgetControllerOverlay))
 	{
-		// TODO : Unbind all Event from DA_AbilityInfo Delegate
-
-		//TDWidgetControllerOverlay->OnHealthChanged.Clear();
+		// Unbind all Event from DA_AbilityInfo Delegate
+		GetWidgetControllerOverlay(this)->DA_AbilityInfoDelegate.Clear();
 	}
 }
 

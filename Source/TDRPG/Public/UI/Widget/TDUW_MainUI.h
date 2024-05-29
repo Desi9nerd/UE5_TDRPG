@@ -14,7 +14,6 @@ class TDRPG_API UTDUW_MainUI : public UTDUW_Overlay
 public:
 	void NativePreConstruct() override;
 
-
 private:
 	void SetSkillIconInputTag();
 };

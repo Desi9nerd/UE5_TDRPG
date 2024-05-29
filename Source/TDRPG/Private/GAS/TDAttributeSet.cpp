@@ -86,7 +86,6 @@ void UTDAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
-		//UE_LOG(LogTemp, Warning, TEXT("Health: %f"), NewValue);
 	}
 	if (Attribute == GetManaAttribute())
 	{

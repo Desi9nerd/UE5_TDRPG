@@ -6,10 +6,10 @@ void UTDUW_GlobeProgressBar_Soul::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TDWidgetControllerOverlay = GetWidgetControllerOverlay(GetWorld());
-	check(TDWidgetControllerOverlay);
-
-	TDWidgetControllerOverlay->OnSoulChanged.AddDynamic(this, &ThisClass::OnSoulChanged_Event);
+	//TDWidgetControllerOverlay = GetWidgetControllerOverlay(GetWorld());
+	//check(TDWidgetControllerOverlay);
+	//
+	//TDWidgetControllerOverlay->OnSoulChanged.AddDynamic(this, &ThisClass::OnSoulChanged_Event);
 }
 
 void UTDUW_GlobeProgressBar_Soul::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
