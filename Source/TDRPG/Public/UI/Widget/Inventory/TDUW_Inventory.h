@@ -18,8 +18,6 @@ class TDRPG_API UTDUW_Inventory : public UTDUW
 	GENERATED_BODY()
 
 public:
-	virtual TSharedRef<SWidget> RebuildWidget() override;
-	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -55,14 +53,11 @@ private:
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UGridPanel> Grid_Inventory;
 
-	// Test용
-	TObjectPtr<UListView> VerticalListView;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
 	TSubclassOf<UTDUW_InventorySlot> InventorySlotWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<ATDCharacter> TDCharacter;
-
 
 };

@@ -132,15 +132,13 @@ void UTDUW_InventorySlot::NativeOnDragDetected(const FGeometry& InGeometry, cons
 	if ((*SelectedCategoryItems)[SlotIndex].ItemQuantity != 0)
 	{
 		UTDDragDropOperation* DragItemOperation = NewObject<UTDDragDropOperation>();
-		DragItemOperation->DefaultDragVisual = Image_Item;
+		DragItemOperation->DefaultDragVisual = this;
+		DragItemOperation->Payload = this;
 
 		OutOperation = DragItemOperation;
 
 		TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex = SlotIndex;
-		TDPlayerController->GetTDHUD()->GetInventoryMenuWidget()->SetVisibility(ESlateVisibility::Visible);
 	}
-	
-
 }
 
 bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -148,6 +146,9 @@ bool UTDUW_InventorySlot::NativeOnDrop(const FGeometry& InGeometry, const FDragD
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 	
 	UE_LOG(LogTemp, Warning, TEXT("Hello! OnDrop Test at TDUW_InventorySlot!!"));
+
+	UTDDragDropOperation* DragOperation = Cast<UTDDragDropOperation>(InOperation);
+	if (false == IsValid(DragOperation)) return false;
 
 	bool bZeroNstackable = GetNewSlot().ItemQuantity == 0 && GetDraggedSlot().Item.bStackable;
 	bool bSameNameNstackable = GetNewSlot().Item.Name.EqualTo(GetDraggedSlot().Item.Name) && GetNewSlot().Item.bStackable && GetDraggedSlot().Item.bStackable;

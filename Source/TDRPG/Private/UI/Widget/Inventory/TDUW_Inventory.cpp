@@ -7,23 +7,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
-TSharedRef<SWidget> UTDUW_Inventory::RebuildWidget()
-{
-	return Super::RebuildWidget();
-}
-
-void UTDUW_Inventory::ReleaseSlateResources(bool bReleaseChildren)
-{
-	//if (ChildWidget)
-	//{
-	//	ChildWidget->ReleaseSlateResource(bReleaseChildren);
-	//	ChildWidget = nullptr;
-	//}
-
-	// GC에서 파괴될 때 호출되는 함수.
-	Super::ReleaseSlateResources(bReleaseChildren);
-}
-
 void UTDUW_Inventory::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -68,7 +51,8 @@ void UTDUW_Inventory::CreateInventorySlotWidgets()
 
 	// SelectedInventoryCategory의 기준으로 Inventory 보이게 하기
 	DisplayInventorySlotWidgets();
-	
+
+	Grid_Inventory->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots)
@@ -77,6 +61,8 @@ void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems,
 	{
 		UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
 		UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+		InventorySlotWidget->SetVisibility(ESlateVisibility::Visible);
+		InventorySlotWidget->SetIsEnabled(true);
 
 		// 선택된 카테고리에 따라서 'Item'와 'ItemQuantity'를 업데이트.
 		InventorySlotWidget->UpdateInventorySlotUI((*CategoryItems)[i].Item, (*CategoryItems)[i].ItemQuantity);
@@ -84,7 +70,7 @@ void UTDUW_Inventory::UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems,
 
 		(*CategoryItems)[i].InventorySlot = InventorySlotWidget;
 		(*CategoryItems)[i].SlotIndex = i;
-		UE_LOG(LogTemp, Warning, TEXT("TDUW_Inventory:  SlotIndex = %d"), i);
+		//UE_LOG(LogTemp, Warning, TEXT("TDUW_Inventory:  SlotIndex = %d"), i);
 	}
 }
 
