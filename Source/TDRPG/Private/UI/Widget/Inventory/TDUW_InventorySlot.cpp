@@ -85,9 +85,11 @@ FReply UTDUW_InventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 			ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(PlayerController);
 			ATDCharacter* TDCharacter = Cast<ATDCharacter>(PlayerController->GetCharacter());
 
+			// 삭제된 액터이기 때문에 아래와 같이 하면 안 된다.
 			//ATDEffectActor* ConsumableItem = Cast<ATDEffectActor>(ItemReference.ItemClass);
 			//ConsumableItem->ConsumeItem(TDCharacter);
 
+			// InventoryComponent에서 DataTable로 해당 이름을 찾은 후 아이템 효과 적용.
 			TDCharacter->GetInventoryComponent()->ConsumeItem(ItemReference.Name);
 		}
 	}

@@ -155,7 +155,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
 	TObjectPtr<UTDDebuffComponent> DebuffComponent;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
 	TObjectPtr<UTDDebuffComponent> StunDebuffComponent;
 	//********************************************************
 
