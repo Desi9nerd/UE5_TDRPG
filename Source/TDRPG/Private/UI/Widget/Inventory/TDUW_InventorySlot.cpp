@@ -329,10 +329,10 @@ void UTDUW_InventorySlot::UpdateInventorySlots()
 	}
 	else
 	{
-		FItem L_NewSlotItem = GetNewSlot().Item;
-		L_NewSlotItemQuantity = GetNewSlot().ItemQuantity;
+		FItem PrevSlotNetItem = GetNewSlot().Item;
+		int32 PrevSlotNewQuantity = GetNewSlot().ItemQuantity;
 
 		UpdateNewSlot(GetDraggedSlot().Item, GetDraggedSlot().ItemQuantity);
-		UpdateDraggedSlot(L_NewSlotItem, L_NewSlotItemQuantity);
+		UpdateDraggedSlot(PrevSlotNetItem, PrevSlotNewQuantity);
 	}
 }
