@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "TDItemLibrary.generated.h"
 
+class UTDUW_InventoryEntry;
 class UTDUW_InventorySlot;
 class ATDItemActor;
 
@@ -64,6 +65,9 @@ struct FInventorySlot
 	UTDUW_InventorySlot* InventorySlot = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
+	UTDUW_InventoryEntry* InventoryEntry = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
 	int32 SlotIndex = 0;
 };
 
@@ -77,4 +81,14 @@ struct FInventoryCategory : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UTexture2D> CategoryIcon = nullptr;
+};
+
+UCLASS(Blueprintable)
+class TDRPG_API UTDInventorySlot : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
+	FInventorySlot InventorySlot;
 };

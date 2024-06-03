@@ -2,6 +2,7 @@
 #include "UI/Widget/TDUW.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
 #include "UI/Widget/Inventory/TDUW_InventoryMenuUI.h"
+#include "UI/Widget/Inventory/TDUW_InventoryPanel.h"
 #include "UI/WidgetController/TDWidgetControllerAttributeMenu.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "UI/WidgetController/TDWidgetControllerSkillMenu.h"
@@ -79,6 +80,17 @@ TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
 	InventoryWidget->AddToViewport();
 
 	return InventoryWidget;
+}
+
+TObjectPtr<UTDUW_InventoryPanel> ATDHUD::GetInventoryPanelWidget()
+{
+	if (IsValid(InventoryPanelWidget)) return InventoryPanelWidget;
+
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryPanelWidgetClass);
+	InventoryPanelWidget = Cast<UTDUW_InventoryPanel>(Widget);
+	InventoryPanelWidget->AddToViewport();
+
+	return InventoryPanelWidget;
 }
 
 TObjectPtr<UTDUW_InventoryMenuUI> ATDHUD::GetInventoryMenuWidget()

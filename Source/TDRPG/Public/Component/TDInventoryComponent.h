@@ -13,14 +13,25 @@ class TDRPG_API UTDInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventorySlot*> WeaponInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventorySlot*> ArmorInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventorySlot*> PotionInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventorySlot*> FoodInventoryCategory;
+
 	UTDInventoryComponent();
 	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
+	FORCEINLINE int32 GetAmountOfTotalSlots() { return AmountOfTotalSlots; }
 	FORCEINLINE EItemCategory& GetSelectedInventoryCategory() { return SelectedInventoryCategory; }
 	FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
 	FORCEINLINE TArray<FInventorySlot>& GetArmorCategory() { return ArmorCategory; }
 	FORCEINLINE TArray<FInventorySlot>& GetPotionCategory() { return PotionCategory; }
 	FORCEINLINE TArray<FInventorySlot>& GetFoodCategory() { return FoodCategory; }
+	FORCEINLINE TMap<int32, FInventorySlot>& GetAllItems() { return AllItems; }
 
 	void SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 	UFUNCTION(Client, Reliable) // Client RPC
@@ -74,6 +85,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	int32 AmountOfSlots = 16;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	int32 AmountOfTotalSlots = 64;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	EItemCategory SelectedInventoryCategory;
@@ -86,6 +99,9 @@ private:
 	TArray<FInventorySlot> PotionCategory;
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TArray<FInventorySlot> FoodCategory;
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TMap<int32, FInventorySlot> AllItems;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<UDataTable> ItemDataTable;

@@ -19,6 +19,7 @@
 #include "UI/WidgetComponent/TDWidgetComponent.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
 #include "UI/Widget/Inventory/TDUW_InventoryMenuUI.h"
+#include "UI/Widget/Inventory/TDUW_InventoryPanel.h"
 
 ATDPlayerController::ATDPlayerController()
 {
@@ -365,18 +366,20 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 {
 	if (bOpen) // 열기
 	{
-		if (IsValid(GetTDHUD()->GetInventoryWidget()))
+		if (IsValid(GetTDHUD()->GetInventoryPanelWidget()))
 		{
-			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
+			//GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
+			GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Visible);
 			UGameplayStatics::PlaySound2D(this, Sound_OpenInventory);
 			bInventoryIsOpen = true;
 		}
 	}
 	else // 닫기
 	{
-		if (IsValid(GetTDHUD()->GetInventoryWidget()))
+		if (IsValid(GetTDHUD()->GetInventoryPanelWidget()))
 		{
-			GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
+			//GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
+			GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Hidden);
 			UGameplayStatics::PlaySound2D(this, Sound_CloseInventory);
 			bInventoryIsOpen = false;
 		}

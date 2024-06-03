@@ -6,6 +6,7 @@
 #include "Kismet/KismetTextLibrary.h"
 #include "Player/TDPlayerController.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventoryEntry.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 UTDInventoryComponent::UTDInventoryComponent()
@@ -40,6 +41,10 @@ void UTDInventoryComponent::Client_InitializeInventory_Implementation()
 	PotionCategory.SetNum(AmountOfSlots);
 	FoodCategory.SetNum(AmountOfSlots);
 
+	WeaponInventoryCategory.SetNum(AmountOfSlots);
+	ArmorInventoryCategory.SetNum(AmountOfSlots);
+	PotionInventoryCategory.SetNum(AmountOfSlots);
+	FoodInventoryCategory.SetNum(AmountOfSlots);
 }
 
 void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory)
@@ -119,9 +124,14 @@ void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity
 	{
 		(*OutInventory)[SlotIdx].Item = Item;
 		(*OutInventory)[SlotIdx].ItemQuantity = Quantity;
+		
+		WeaponInventoryCategory[SlotIdx]->InventorySlot = (*OutInventory)[SlotIdx];
 
-		(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
-		UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
+		//(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+
+		//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
+
+		//AllItems.Add(SlotIdx, (*OutInventory)[SlotIdx]);
 
 		//for (int8 i = 0; i < (*OutInventory).Num(); i++)
 		//{
@@ -168,7 +178,6 @@ bool UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 				{
 					// 인벤토리에 아이템 추가
 					AddItemToInventory(ItemToAddInfo, (*CategoryArray)[i].ItemQuantity + ItemToAdd->GetItemQuantity(), (*CategoryArray)[i].InventorySlot, i, CategoryArray);
-
 				}
 				else
 				{
