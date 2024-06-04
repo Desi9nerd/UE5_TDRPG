@@ -7,7 +7,6 @@
 class ATDCharacter;
 class UHorizontalBox;
 class UButton;
-class UListView;
 class UVerticalBox;
 class UGridPanel;
 class UTDUW_InventorySlot;
@@ -25,6 +24,7 @@ public:
 	void UpdateCategoryItems(TArray<FInventorySlot>* CategoryItems, int32 AmountOfSlots);
 
 	void DisplayInventorySlotWidgets();
+	void DisplayAllInventoryItems();
 
 	int32 DraggedSlotIndex;
 
@@ -37,6 +37,8 @@ private:
 	void OnPotionButtonClicked();
 	UFUNCTION()
 	void OnFoodButtonClicked();
+	UFUNCTION()
+	void OnAllButtonClicked();
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UHorizontalBox> HB_Categories;
@@ -49,6 +51,8 @@ private:
 	TObjectPtr<UButton> Button_Category_Potion;
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UButton> Button_Category_Food;
+	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
+	TObjectPtr<UButton> Button_Category_All;
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UGridPanel> Grid_Inventory;

@@ -23,6 +23,7 @@ void UTDUW_Inventory::NativeConstruct()
 	Button_Category_Armor->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnArmorButtonClicked);
 	Button_Category_Potion->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnPotionButtonClicked);
 	Button_Category_Food->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnFoodButtonClicked);
+	Button_Category_All->OnClicked.AddDynamic(this, &UTDUW_Inventory::OnAllButtonClicked);
 }
 
 void UTDUW_Inventory::NativeDestruct()
@@ -109,6 +110,34 @@ void UTDUW_Inventory::DisplayInventorySlotWidgets()
 	}
 }
 
+void UTDUW_Inventory::DisplayAllInventoryItems()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DisplayAllInventoryItems!!"));
+
+	Grid_Inventory->ClearChildren();
+
+	int32 AmountOfTotalSlots = TDCharacter->GetInventoryComponent()->GetAmountOfTotalSlots();
+	TMap<int32, FInventorySlot>* AllItems = &TDCharacter->GetInventoryComponent()->GetAllItems();
+	int32 AmountOfCurrentItems = (*AllItems).GetMaxIndex();
+
+	for (int32 i = 0; i < AmountOfTotalSlots; i++)
+	{
+		if (i < 3)
+		{
+			Grid_Inventory->AddChildToGrid((*AllItems)[i].InventorySlot, i / 4, i % 4);
+		}
+		else
+		{
+			UUserWidget* Widget = CreateWidget(GetWorld(), InventorySlotWidgetClass);
+			UTDUW_InventorySlot* InventorySlotWidget = Cast<UTDUW_InventorySlot>(Widget);
+			InventorySlotWidget->SetVisibility(ESlateVisibility::Visible);
+			InventorySlotWidget->SetIsEnabled(true);
+			
+			Grid_Inventory->AddChildToGrid(Widget, i / 4, i % 4);
+		}
+	}
+}
+
 //***************************************************************************************
 //** 카테고리 버튼 누르기
 void UTDUW_Inventory::OnWeaponButtonClicked()
@@ -146,4 +175,10 @@ void UTDUW_Inventory::OnFoodButtonClicked()
 
 	DisplayInventorySlotWidgets();
 }
+
+void UTDUW_Inventory::OnAllButtonClicked()
+{
+	DisplayAllInventoryItems();
+}
+
 //***************************************************************************************
