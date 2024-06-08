@@ -16,7 +16,8 @@
 				"EnhancedInput",
 				"AIModule",
 				"GameplayTags",
-				"Niagara"
+				"Niagara",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -38,6 +39,10 @@
 		},
 		{
 			"Name": "NetworkPredictionInsights",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelViewViewModel",
 			"Enabled": true
 		}
 	]
