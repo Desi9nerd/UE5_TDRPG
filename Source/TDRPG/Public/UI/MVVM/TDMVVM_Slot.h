@@ -19,22 +19,31 @@ class TDRPG_API UTDMVVM_Slot : public UMVVMViewModelBase
 public:
 	void InitializeSlot();
 	FString GetPlayerName() const { return PlayerName; }
+	FString GetMapName() const { return MapName; }
+	FString GetLoadSlotName() const { return LoadSlotName; }
 	void SetPlayerName(FString InPlayerName);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
-	FString PlayerName; // 플레이어 이름. Field Notifies.
+	void SetMapName(FString InLevelMapName);
+	void SetLoadSlotName(FString InLoadSlotName);
 
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndex SetWidgetSwitcherIdx;
 	UPROPERTY(BlueprintAssignable)
 	FEnableSelectSlotButton EnableSelectSlotButton;
 
-	UPROPERTY()
-	FString LoadSlotName;
 
 	UPROPERTY()
-	FString SlotIndex;
+	int32 SlotIndex;
 
 	UPROPERTY() // TDMVVM_StartMenu의 LoadData()에서 설정.
 	TEnumAsByte<ESG_SaveSlotStatus> SlotStatus; // 슬롯상태.
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString PlayerName; // 플레이어 이름. Field Notifies.
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString MapName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString LoadSlotName;
 };

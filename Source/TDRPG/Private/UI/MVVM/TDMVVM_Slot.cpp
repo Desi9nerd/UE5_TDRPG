@@ -12,3 +12,13 @@ void UTDMVVM_Slot::SetPlayerName(FString InPlayerName)
 	// MVVM 시스템 매크로. PlayerName을 InPlayerName로 설정.
 	UE_MVVM_SET_PROPERTY_VALUE(PlayerName, InPlayerName);
 }
+
+void UTDMVVM_Slot::SetMapName(FString InMapName)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(MapName, InMapName);
+}
+
+void UTDMVVM_Slot::SetLoadSlotName(FString InLoadSlotName)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(LoadSlotName, InLoadSlotName);
+}

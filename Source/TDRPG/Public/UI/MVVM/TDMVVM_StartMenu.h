@@ -19,6 +19,9 @@ class TDRPG_API UTDMVVM_StartMenu : public UMVVMViewModelBase
 public:
 	void InitializeLoadSlots();
 
+	int32 GetNumLoadSlots() const { return NumLoadSlots; }
+	void SetNumLoadSlots(int32 InNumLoadSlots);
+
 	UPROPERTY(BlueprintAssignable)
 	FSlotSelected SlotSelected;
 
@@ -37,6 +40,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(int32 Slot);
 
+	UFUNCTION(BlueprintCallable)
+	void DeleteButtonPressed();
+
+	UFUNCTION(BlueprintCallable)
+	void PlayButtonPressed();
+
 	void LoadData();
 
 private:
@@ -50,4 +59,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UTDMVVM_Slot> LoadSlot_2;
 
+	UPROPERTY()
+	TObjectPtr<UTDMVVM_Slot> SelectedSlot; // 선택한 슬롯.
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	int32 NumLoadSlots;
 };
