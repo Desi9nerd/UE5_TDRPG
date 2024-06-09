@@ -5,10 +5,45 @@
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GAS/Data/TDDA_Ability.h"
 #include "Interface/IPlayer.h"
+#include "SaveGame/TDSaveGame_Load.h"
 
 void UTDAbilitySystemComponent::AbilityActorInfoSet()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UTDAbilitySystemComponent::ClientEffectApplied); // Delegate에 바인딩. Delegate가 서버에서 broadcast되면 서버에서 콜 되어 클라이언트에서 실행된다.
+}
+
+// SaveGame에 저장된 Abilities들을 추가할 때 불려진다.
+void UTDAbilitySystemComponent::AddCharacterAbilitiesFromSaveData(UTDSaveGame_Load* SaveData)
+{
+	for (const FSavedAbility& Data : SaveData->SavedAbilities)
+	{
+		const TSubclassOf<UGameplayAbility> LoadedAbilityClass = Data.GameplayAbility;
+
+		FGameplayAbilitySpec LoadedAbilitySpec = FGameplayAbilitySpec(LoadedAbilityClass, Data.AbilityLevel);
+
+		LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilitySlot);
+		LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilityStatus);
+
+		if (Data.AbilityType == FTDGameplayTags::GetTDGameplayTags().Abilities_Type_Active) // Active
+		{
+			GiveAbility(LoadedAbilitySpec); // Abilities 할당.
+		}
+		else if (Data.AbilityType == FTDGameplayTags::GetTDGameplayTags().Abilities_Type_Passive) // Passive
+		{
+			if (Data.AbilityStatus.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped))
+			{
+				GiveAbilityAndActivateOnce(LoadedAbilitySpec);
+				//MulticastActivatePassiveEffect(Data.AbilityTag, true);
+			}
+			else
+			{
+				GiveAbility(LoadedAbilitySpec); // Abilities 할당.
+			}
+		}
+	}
+
+	bStartGivenASC = true;
+	GivenASCDelegate.Broadcast();
 }
 
 // AddCharacterAbilities()함수는 서버에서만 불려진다.
@@ -39,7 +74,8 @@ void UTDAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubcl
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		GiveAbilityAndActivateOnce(AbilitySpec); // Activate 
+		AbilitySpec.DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped); // Abilities 장착 상태로 설정.
+		GiveAbilityAndActivateOnce(AbilitySpec); // Activate
 	}
 }
 
@@ -301,6 +337,8 @@ void UTDAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamepla
 		if (StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped ||
 			StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked)
 		{
+			// TODO : ServerEquipAbility_Implementation 수정하기
+
 			SkillMenuClearAbilitiesOfSlot(SlotTag); // SlotTag 모두 없애기
 			SkillMenuClearSlot(AbilitySpec);		// 
 			AbilitySpec->DynamicAbilityTags.AddTag(SlotTag); // 해당 SlotTag를 담기.
@@ -313,6 +351,9 @@ void UTDAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamepla
 			}
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
+
+		//AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusFromSpec(*AbilitySpec));
+		//AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
 
 		// Client들에게도 실행.
 		EquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
@@ -354,7 +395,7 @@ FGameplayTag UTDAbilitySystemComponent::GetStatusTagFromAbilityTag(const FGamepl
 	return FGameplayTag();
 }
 
-FGameplayTag UTDAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag)
+FGameplayTag UTDAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag) // Input, Slot 동일
 {
 	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
 	{

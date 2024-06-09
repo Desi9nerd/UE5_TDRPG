@@ -18,6 +18,7 @@
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GAS/TDAttributeSet.h"
+#include "GAS/Data/TDDA_Ability.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -91,7 +92,10 @@ void ATDCharacter::LoadProgress()
 		}
 		else // 처음이 아니라면
 		{
-			//TODO: 디스크에서 Abilities 로드하기.
+			if (GetTDASC()) // SaveData에서 Abilities 로드하기.
+			{
+				GetTDASC()->AddCharacterAbilitiesFromSaveData(SaveData);
+			}
 
 			if (GetTDPlayerState()) // PlayerState의 데이터를 저장된 게임의 데이터값으로 초기화.
 			{
@@ -380,10 +384,58 @@ void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 		SaveData->Resilience = UTDAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
 		SaveData->Vigor = UTDAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
 
-		//* 게임 저장.
 		SaveData->bFirstTimeLoadIn = false; // 다음 번에 게임시작 시 처음 시작이 되지 않고 데이터를 불러오도록 false 설정.
+
+
+		if (false == HasAuthority()) return; // 서버에서만 저장. 서버가 아니면 return;
+
+		FForEachAbility SaveAbilityDelegate;
+		SaveData->SavedAbilities.Empty();
+
+		//SaveAbilityDelegate.BindUFunction(this, &ThisClass::SaveGameSaveAbilities);
+		SaveAbilityDelegate.BindLambda([this, SaveData](const FGameplayAbilitySpec& AbilitySpec)
+			{
+				const FGameplayTag AbilityTag = GetTDASC()->GetAbilityTagFromSpec(AbilitySpec);
+				UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(this);
+				FDA_Ability Info = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
+
+				FSavedAbility SavedAbility;
+				SavedAbility.GameplayAbility = Info.Ability;
+				SavedAbility.AbilityLevel = AbilitySpec.Level;
+				SavedAbility.AbilitySlot = GetTDASC()->GetInputTagFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityStatus = GetTDASC()->GetStatusTagFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityTag = AbilityTag;
+				SavedAbility.AbilityType = Info.AbilityType;
+
+				SaveData->SavedAbilities.AddUnique(SavedAbility);
+
+			});
+
+		GetTDASC()->ForEachAbility(SaveAbilityDelegate);
+
+
+		//* 게임 저장.
 		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
 	}
+}
+
+void ATDCharacter::SaveGameSaveAbilities(const FGameplayAbilitySpec& AbilitySpec)
+{
+	/*
+	const FGameplayTag AbilityTag = TDASC->GetAbilityTagFromSpec(AbilitySpec);
+	UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(this);
+	FDA_Ability Info = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
+
+	FSavedAbility SavedAbility;
+	SavedAbility.GameplayAbility = Info.Ability;
+	SavedAbility.AbilityLevel = AbilitySpec.Level;
+	SavedAbility.AbilitySlot = TDASC->GetInputTagFromAbilityTag(AbilityTag);
+	SavedAbility.AbilityStatus = TDASC->GetStatusTagFromAbilityTag(AbilityTag);
+	SavedAbility.AbilityTag = AbilityTag;
+	SavedAbility.AbilityType = Info.AbilityType;
+
+	SaveData->SavedAbilities.AddUnique(SavedAbility);
+	*/
 }
 
 void ATDCharacter::OnRep_Stunned()

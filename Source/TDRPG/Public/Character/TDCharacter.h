@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "GameplayAbilitySpec.h"
 #include "TDBaseCharacter.h"
 #include "Interface/IPlayer.h"
 #include "TDCharacter.generated.h"
@@ -68,6 +69,7 @@ public:
 	virtual void SaveProgressBP_Implementation(const FName& CheckpointTag) override;
 	virtual void SaveProgress(const FName& CheckpointTag) override;
 	//********************************************************
+	void SaveGameSaveAbilities(const FGameplayAbilitySpec& AbilitySpec);
 
 	virtual void OnRep_Stunned() override;
 	virtual void OnRep_Burned() override;

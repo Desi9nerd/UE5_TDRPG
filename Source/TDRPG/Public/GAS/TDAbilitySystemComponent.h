@@ -3,8 +3,10 @@
 #include "AbilitySystemComponent.h"
 #include "TDAbilitySystemComponent.generated.h"
 
-/**
- * 
+class UTDSaveGame_Load;
+
+/** AbilitySystemComponent
+ *  Abilities, InputTag 관리.
  */
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer& /*AssetTags*/);
@@ -20,6 +22,7 @@ class TDRPG_API UTDAbilitySystemComponent : public UAbilitySystemComponent
 
 public:
 	void AbilityActorInfoSet();
+	void AddCharacterAbilitiesFromSaveData(UTDSaveGame_Load* SaveData);
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
 	void InputTagPressed(const FGameplayTag& InputTag);
@@ -47,7 +50,7 @@ public:
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayTag GetStatusTagFromAbilityTag(const FGameplayTag& AbilityTag);
-	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag); // Input, Slot
 
 	FEffectAssetTagsSignature EffectAssetTagsDelegate;
 	FGivenASCSignature GivenASCDelegate;
