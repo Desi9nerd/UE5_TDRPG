@@ -325,15 +325,35 @@ void ATDCharacter::HideDecal()
 
 void ATDCharacter::SaveProgressBP_Implementation(const FName& CheckpointTag)
 {
+	UE_LOG(LogTemp, Warning, TEXT("BP Version is Called. Check ATDCharacter::SaveProgressBP_Implementation()"));
+	/*
 	if (GetTDGameModeBase())
 	{
 		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
 		if (false == IsValid(SaveData)) return;
 
+		//* SaveData에 태그 기록.
 		SaveData->PlayerStartTag = CheckpointTag;
 
+		//* SaveData에 TDPlayerState 정보들(레벨, 경험치, 스탯 및 스킬 포인트) 기록.
+		if (GetTDPlayerState())
+		{
+			SaveData->PlayerLevel = GetTDPlayerState()->GetPlayerLevel();
+			SaveData->Exp = GetTDPlayerState()->GetExp();
+			SaveData->AttributePoints = GetTDPlayerState()->GetAttributePoints();
+			SaveData->SkillPoints = GetTDPlayerState()->GetSkillPoints();
+		}
+		//* SaveData에 기본스탯 기록.
+		SaveData->Strength = UTDAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Intelligence = UTDAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Resilience = UTDAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Vigor = UTDAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+		//* 게임 저장.
+		SaveData->bFirstTimeLoadIn = false; // 다음 번에 게임시작 시 처음 시작이 되지 않고 데이터를 불러오도록 false 설정.
 		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
 	}
+	*/
 }
 
 void ATDCharacter::SaveProgress(const FName& CheckpointTag)
@@ -361,6 +381,7 @@ void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 		SaveData->Vigor = UTDAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
 
 		//* 게임 저장.
+		SaveData->bFirstTimeLoadIn = false; // 다음 번에 게임시작 시 처음 시작이 되지 않고 데이터를 불러오도록 false 설정.
 		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
 	}
 }
