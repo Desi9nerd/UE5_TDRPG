@@ -4,6 +4,7 @@
 #include "Interface/IPlayer.h"
 #include "TDCharacter.generated.h"
 
+class ATDGameModeBase;
 class ATDPlayerController;
 class ATDPlayerState;
 class USpringArmComponent;
@@ -25,8 +26,9 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 	virtual void PossessedBy(AController* NewController) override; // Server
 	virtual void OnRep_PlayerState() override; // Client
-	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
-	TObjectPtr<ATDPlayerController> GetTDPlayerController();
+	FORCEINLINE TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
+	FORCEINLINE TObjectPtr<ATDPlayerController> GetTDPlayerController();
+	FORCEINLINE TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
 
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;
@@ -61,6 +63,8 @@ public:
 	virtual void ShowDecal() override;
 	virtual void HideDecalBP_Implementation() override;
 	virtual void HideDecal() override;
+	virtual void SaveProgressBP_Implementation(const FName& CheckpointTag) override;
+	virtual void SaveProgress(const FName& CheckpointTag) override;
 	//********************************************************
 
 	virtual void OnRep_Stunned() override;
@@ -85,6 +89,9 @@ private:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_LevelUpParticleEffect() const;
 
+
+	UPROPERTY()
+	TObjectPtr<ATDGameModeBase> TDGameModeBase;
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerState> TDPlayerState;

@@ -3,6 +3,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TDGameModeBase.generated.h"
 
+class UTDGameInstance;
 class UTDDA_CharacterClass;
 class UTDDA_Ability;
 class USaveGame;
@@ -19,9 +20,15 @@ class TDRPG_API ATDGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	FORCEINLINE TObjectPtr<UTDGameInstance> GetTDGameInstance();
+
 	void SaveSlotData(UTDMVVM_Slot* LoadSlot, int32 SlotIndex); // 게임 저장
 	UTDSaveGame_Load* GetSaveSlotData(const FString& SlotName, int32 SlotIdx) const;
 	static void DeleteSlot(const FString& SlotName, int32 SlotIndex);
+
+	UTDSaveGame_Load* RetrieveInGameSaveData();
+	void SaveInGameProgressData(UTDSaveGame_Load* SaveObject);
+
 	void TravelToMap(UTDMVVM_Slot* Slot);
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
@@ -54,4 +61,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UTDGameInstance> TDGameInstance;
 };

@@ -2,6 +2,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameMode/TDGameModeBase.h"
+#include "GameInstance//TDGameInstance.h"
+#include "SaveGame/TDSaveGame_Load.h"
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
 #include "Player/TDPlayerController.h"
@@ -13,6 +16,7 @@
 #include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 ATDCharacter::ATDCharacter()
@@ -88,6 +92,14 @@ TObjectPtr<ATDPlayerController> ATDCharacter::GetTDPlayerController()
 
 	TDPlayerController = Cast<ATDPlayerController>(GetController());
 	return TDPlayerController;
+}
+
+TObjectPtr<ATDGameModeBase> ATDCharacter::GetTDGameModeBase()
+{
+	if (IsValid(TDGameModeBase)) return TDGameModeBase;
+
+	TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	return TDGameModeBase;
 }
 
 //int32 ATDCharacter::GetPlayerLevelBP_Implementation()
@@ -266,6 +278,32 @@ void ATDCharacter::HideDecal()
 	{
 		GetTDPlayerController()->HideDecal();
 		GetTDPlayerController()->bShowMouseCursor = true;
+	}
+}
+
+void ATDCharacter::SaveProgressBP_Implementation(const FName& CheckpointTag)
+{
+	if (GetTDGameModeBase())
+	{
+		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
+		if (false == IsValid(SaveData)) return;
+
+		SaveData->PlayerStartTag = CheckpointTag;
+
+		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
+	}
+}
+
+void ATDCharacter::SaveProgress(const FName& CheckpointTag)
+{
+	if (GetTDGameModeBase())
+	{
+		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
+		if (false == IsValid(SaveData)) return;
+
+		SaveData->PlayerStartTag = CheckpointTag;
+
+		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
 	}
 }
 

@@ -95,8 +95,11 @@ void UTDMVVM_StartMenu::PlayButtonPressed()
 {
 	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
 
+	//* GameInstance의 값 넣어주기.
 	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(TDGameMode->GetGameInstance());
 	TDGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag; // GameInstance의 PlayerStartTag를 선택한 슬롯의 PlayerStartTag로 변경.
+	TDGameInstance->LoadSlotName = SelectedSlot->GetLoadSlotName();
+	TDGameInstance->LoadSlotIndex = SelectedSlot->SlotIndex;
 
 	if (IsValid(SelectedSlot))
 	{

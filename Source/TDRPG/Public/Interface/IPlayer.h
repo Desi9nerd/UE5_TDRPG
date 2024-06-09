@@ -69,5 +69,9 @@ public:
 	void HideDecalBP();
 	virtual void HideDecal() = 0;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SaveProgressBP(const FName& CheckpointTag);
+	virtual void SaveProgress(const FName& CheckpointTag) = 0;
+
 	//TDPlayerController* GetTDPlayerControllerRef(APlayerController* InPlayerController);
 };

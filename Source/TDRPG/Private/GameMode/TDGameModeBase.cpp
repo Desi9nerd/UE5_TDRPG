@@ -5,6 +5,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/MVVM/TDMVVM_Slot.h"
 
+TObjectPtr<UTDGameInstance> ATDGameModeBase::GetTDGameInstance()
+{
+	if (IsValid(TDGameInstance)) return TDGameInstance;
+
+	TDGameInstance = Cast<UTDGameInstance>(GetGameInstance());
+	return TDGameInstance;
+}
+
 void ATDGameModeBase::SaveSlotData(UTDMVVM_Slot* LoadSlot, int32 SlotIndex)
 {
 	if (UGameplayStatics::DoesSaveGameExist(LoadSlot->GetLoadSlotName(), SlotIndex)) // 이름이 같은 SaveGame이 있다면
@@ -48,6 +56,25 @@ void ATDGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
 	}
 }
 
+// 'LoadSlotName, LoadSlotIndex'가 일치하는 저장된 게임을 가져옴. 
+UTDSaveGame_Load* ATDGameModeBase::RetrieveInGameSaveData()
+{
+	const FString InGameLoadSlotName = GetTDGameInstance()->LoadSlotName;
+	const int32 InGameLoadSlotIndex = GetTDGameInstance()->LoadSlotIndex;
+
+	return GetSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
+// SaveObject를 'LoadSlotName, LoadSlotIndex, PlayerStartTag' 정보와 매칭시켜 저장.
+void ATDGameModeBase::SaveInGameProgressData(UTDSaveGame_Load* SaveObject)
+{
+	const FString InGameLoadSlotName = GetTDGameInstance()->LoadSlotName;
+	const int32 InGameLoadSlotIndex = GetTDGameInstance()->LoadSlotIndex;
+	GetTDGameInstance()->PlayerStartTag = SaveObject->PlayerStartTag;
+
+	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
 void ATDGameModeBase::TravelToMap(UTDMVVM_Slot* Slot)
 {
 	const FString SlotName = Slot->GetLoadSlotName();
@@ -59,8 +86,6 @@ void ATDGameModeBase::TravelToMap(UTDMVVM_Slot* Slot)
 
 AActor* ATDGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
-	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(GetGameInstance());
-
 	TArray<AActor*> StartActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), StartActors); // GetWorld()에 있는 PlayerStarts들을 StartActors 배열변수에 다 담는다.
 
@@ -71,7 +96,7 @@ AActor* ATDGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 		{
 			if (APlayerStart* PlayerStart = Cast<APlayerStart>(Actor))
 			{
-				if (PlayerStart->PlayerStartTag == TDGameInstance->PlayerStartTag) // PlayerStartTag 태그가 일치한다면
+				if (PlayerStart->PlayerStartTag == GetTDGameInstance()->PlayerStartTag) // PlayerStartTag 태그가 일치한다면
 				{
 					SelectedActor = PlayerStart;
 					break;
