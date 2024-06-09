@@ -16,6 +16,8 @@
 #include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "GAS/TDAbilitySystemBPLibrary.h"
+#include "GAS/TDAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -68,8 +70,38 @@ void ATDCharacter::PossessedBy(AController* NewController) // 서버
 	Super::PossessedBy(NewController);
 
 	// 서버에 Init Ability actor info 
-	InitAbilityActorInfo(); 
-	AddCharacterAbilities();
+	InitAbilityActorInfo();
+
+	// 게임 SaveData 확인 후 로드하여 데이터 초기화.
+	LoadProgress();
+}
+
+void ATDCharacter::LoadProgress()
+{
+	if (GetTDGameModeBase())
+	{
+		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
+		if (SaveData == nullptr) return;
+
+		//* SaveData가 처음인지 아닌지 기준으로 기본값/저장된값으로 초기화.
+		if (SaveData->bFirstTimeLoadIn) // SaveData가 생성되고 처음으로 로드 되는것이라면
+		{
+			InitializeDefaultAttributes(); // Attribute 초기화.
+			AddCharacterAbilities(); // Abilities 초기화.
+		}
+		else // 처음이 아니라면
+		{
+			//TODO: 디스크에서 Abilities 로드하기.
+
+			if (GetTDPlayerState()) // PlayerState의 데이터를 저장된 게임의 데이터값으로 초기화.
+			{
+				GetTDPlayerState()->SetPlayerLevel(SaveData->PlayerLevel);
+				GetTDPlayerState()->SetExp(SaveData->Exp);
+				GetTDPlayerState()->SetAttributePoints(SaveData->AttributePoints);
+				GetTDPlayerState()->SetSkillPoints(SaveData->SkillPoints);
+			}
+		}
+	}
 }
 
 void ATDCharacter::OnRep_PlayerState() // 클라이언트
@@ -100,6 +132,14 @@ TObjectPtr<ATDGameModeBase> ATDCharacter::GetTDGameModeBase()
 
 	TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
 	return TDGameModeBase;
+}
+
+TObjectPtr<ATDPlayerState> ATDCharacter::GetTDPlayerState()
+{
+	if (IsValid(TDPlayerState)) return TDPlayerState;
+
+	TDPlayerState = GetPlayerState<ATDPlayerState>();
+	return TDPlayerState;
 }
 
 //int32 ATDCharacter::GetPlayerLevelBP_Implementation()
@@ -301,8 +341,24 @@ void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
 		if (false == IsValid(SaveData)) return;
 
+		//* SaveData에 태그 기록.
 		SaveData->PlayerStartTag = CheckpointTag;
 
+		//* SaveData에 TDPlayerState 정보들(레벨, 경험치, 스탯 및 스킬 포인트) 기록.
+		if (GetTDPlayerState())
+		{
+			SaveData->PlayerLevel = GetTDPlayerState()->GetPlayerLevel();
+			SaveData->Exp = GetTDPlayerState()->GetExp();
+			SaveData->AttributePoints = GetTDPlayerState()->GetAttributePoints();
+			SaveData->SkillPoints = GetTDPlayerState()->GetSkillPoints();
+		}
+		//* SaveData에 기본스탯 기록.
+		SaveData->Strength = UTDAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Intelligence = UTDAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Resilience = UTDAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Vigor = UTDAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+		//* 게임 저장.
 		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
 	}
 }
@@ -367,9 +423,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 	AttributeSet = TDPlayerState->GetAttributeSet();
 	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 	AbilitySystemComponent->RegisterGameplayTagEvent(FTDGameplayTags::GetTDGameplayTags().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::StunTagChanged);
-
-	InitializeDefaultAttributes(); // Attibutes 초기값 설정하기
-
+	
 	// 서버는 모든 PlayerController를 소유.
 	// 하지만 각각의 클라이언트는 하나의 PlayerController만 소유하고 나머진 Proxy로 가지고 있다
 	// 그렇기 때문에 Assert로 체크하면 안 된다.

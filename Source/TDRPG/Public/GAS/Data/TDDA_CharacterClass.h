@@ -46,6 +46,8 @@ public:
 	TMap<ECharacterClass, FDA_CharacterClass> CharacterClassTMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
+	TSubclassOf<UGameplayEffect> StatAttributes_SetByCaller;
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> VitalAttributes;

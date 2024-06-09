@@ -9,7 +9,7 @@ class UIPlayer : public UInterface
 	GENERATED_BODY()
 };
 
-/**
+/** 플레이어 관련 인터페이스
  * 
  */
 class TDRPG_API IIPlayer

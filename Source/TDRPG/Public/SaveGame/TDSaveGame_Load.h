@@ -21,6 +21,8 @@ class TDRPG_API UTDSaveGame_Load : public USaveGame
 	GENERATED_BODY()
 	
 public:
+	//********************************************************
+	//** SaveGame 데이터.
 	UPROPERTY()
 	FString SlotName = FString();
 
@@ -37,4 +39,29 @@ public:
 
 	UPROPERTY()
 	TEnumAsByte<ESG_SaveSlotStatus> SaveSlotStatus = Vacant;
+
+	UPROPERTY()
+	bool bFirstTimeLoadIn = true; // SaveData 생성 후 처음 게임을 시작하는지/아닌지.
+	//********************************************************
+
+	//********************************************************
+	//** Player 정보.
+	UPROPERTY()
+	int32 PlayerLevel = 0;
+	UPROPERTY()
+	int32 Exp = 0;
+	UPROPERTY()
+	int32 SkillPoints = 0;
+	UPROPERTY()
+	int32 AttributePoints = 0;
+	UPROPERTY()
+	float Strength = 0;
+	UPROPERTY()
+	float Intelligence = 0;
+	UPROPERTY()
+	float Resilience = 0;
+	UPROPERTY()
+	float Vigor = 0;
+	//********************************************************
+
 };

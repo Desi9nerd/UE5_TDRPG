@@ -25,10 +25,12 @@ public:
 	ATDCharacter();
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 	virtual void PossessedBy(AController* NewController) override; // Server
+	void LoadProgress();
 	virtual void OnRep_PlayerState() override; // Client
 	FORCEINLINE TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
 	FORCEINLINE TObjectPtr<ATDPlayerController> GetTDPlayerController();
 	FORCEINLINE TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
+	FORCEINLINE TObjectPtr<ATDPlayerState> GetTDPlayerState();
 
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;
