@@ -48,7 +48,7 @@ UAbilitySystemComponent* ATDPlayerState::GetAbilitySystemComponent() const
 void ATDPlayerState::AddToPlayerLevel(int32 InPlayerLevel)
 {
 	PlayerLevel += InPlayerLevel;
-	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel);
+	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel, true);
 }
 
 void ATDPlayerState::AddToExp(int32 InExp)
@@ -72,7 +72,7 @@ void ATDPlayerState::AddToSkillPoints(int32 InNewSkillPoints)
 void ATDPlayerState::SetPlayerLevel(int32 InPlayerLevel)
 {
 	PlayerLevel = InPlayerLevel;
-	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel);
+	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel, false);
 }
 
 void ATDPlayerState::SetExp(int32 InExp)
@@ -95,7 +95,7 @@ void ATDPlayerState::SetSkillPoints(int32 InSkillPoints)
 
 void ATDPlayerState::OnRep_PlayerLevel()
 {
-	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel);
+	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel, true);
 }
 
 void ATDPlayerState::OnRep_Exp()

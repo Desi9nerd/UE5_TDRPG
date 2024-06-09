@@ -8,6 +8,7 @@
 
 struct FDamageEffectParams;
 struct FGameplayEffectContextHandle;
+class UTDSaveGame_Load;
 class UAbilitySystemComponent;
 class UTDWidgetControllerOverlay;
 class UTDWidgetControllerAttributeMenu;
@@ -27,6 +28,12 @@ class TDRPG_API UTDAbilitySystemBPLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	//********************************************************
+	//* SaveGame
+	UFUNCTION(BlueprintCallable)
+	static void InitializeDefaultAttributesFromSaveData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, UTDSaveGame_Load* SaveGame);
+	//********************************************************
+
 	//********************************************************
 	//* Widget Controller
 	UFUNCTION(BlueprintPure, meta = (DefaultToSelf = "WorldContextObject"))

@@ -1,5 +1,6 @@
 ﻿#include "GAS/TDAbilitySystemBPLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "SaveGame/TDSaveGame_Load.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/TDWidgetController.h"
 #include "Player/TDPlayerState.h"
@@ -10,6 +11,41 @@
 #include "Interface/ICombat.h"
 #include "Library/TDDamageLibrary.h"
 #include "Library/TDItemLibrary.h"
+
+void UTDAbilitySystemBPLibrary::InitializeDefaultAttributesFromSaveData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, UTDSaveGame_Load* SaveGame)
+{
+	UTDDA_CharacterClass* TDDA_CharacterClass = GetTDDA_CharacterClass(WorldContextObject);
+	if (false == IsValid(TDDA_CharacterClass)) return;
+
+
+	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
+	const AActor* SourceAvatarActor = ASC->GetAvatarActor();
+
+	FGameplayEffectContextHandle EffectContexthandle = ASC->MakeEffectContext();
+	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+
+	//* Stat Attributes
+	// Stat Attributes의 SpecHandle
+	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(TDDA_CharacterClass->StatAttributes_SetByCaller, 1.f, EffectContexthandle);
+	// Stat Attributes 할당하기
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Stat_Strength, SaveGame->Strength);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Stat_Intelligence, SaveGame->Intelligence);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Stat_Resilience, SaveGame->Resilience);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Stat_Vigor, SaveGame->Vigor);
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
+	//* Secondary Attributes
+	FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
+	SecondaryAttributesContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(TDDA_CharacterClass->SecondaryAttributes_Infinite, 1.f, SecondaryAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data.Get());
+
+	//* Vital Attributes
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(TDDA_CharacterClass->VitalAttributes, 1.f, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
+}
 
 bool UTDAbilitySystemBPLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& ResultWCParams, ATDHUD*& OutTDHUD)
 {

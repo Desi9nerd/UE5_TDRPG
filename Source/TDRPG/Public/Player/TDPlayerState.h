@@ -8,7 +8,8 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UTDDA_LevelUp;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /* StatValue */)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /* StatValue */);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPlayerLevelChanged, int32 /*StatValue*/, bool /*bLevelUp*/);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAbilitySystemComponentInitialized);
 
 /**
@@ -42,9 +43,9 @@ public:
 	FORCEINLINE void SetSkillPoints(int32 InSkillPoints);
 
 	FOnPlayerStatChanged OnExpChangedDelegate;
-	FOnPlayerStatChanged OnPlayerLevelChangedDelegate;
 	FOnPlayerStatChanged OnAttributePointsChangedDelegate;
 	FOnPlayerStatChanged OnSkillPointsChangedDelegate;
+	FOnPlayerLevelChanged OnPlayerLevelChangedDelegate; // true면 레벨업, false면 레벨업X
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UTDDA_LevelUp> TDDA_LevelUpInfo;
@@ -63,7 +64,7 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_PlayerLevel)
 	int32 PlayerLevel = 1;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Exp)
-	int32 Exp = 1;
+	int32 Exp = 0;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
 	int32 AttributePoints = 0;
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SkillPoints)

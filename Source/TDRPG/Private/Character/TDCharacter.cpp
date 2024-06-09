@@ -100,6 +100,8 @@ void ATDCharacter::LoadProgress()
 				GetTDPlayerState()->SetAttributePoints(SaveData->AttributePoints);
 				GetTDPlayerState()->SetSkillPoints(SaveData->SkillPoints);
 			}
+
+			UTDAbilitySystemBPLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
 		}
 	}
 }

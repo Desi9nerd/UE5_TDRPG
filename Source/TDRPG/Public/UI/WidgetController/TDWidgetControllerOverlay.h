@@ -32,6 +32,7 @@ struct FUIWidgetRow : public FTableRowBase
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerLevelChangedSignature, int32, NewPlayerLevel, bool, bLevelUp);
 
 UCLASS(BlueprintType, Blueprintable)
 class TDRPG_API UTDWidgetControllerOverlay : public UTDWidgetController
@@ -60,7 +61,7 @@ public:
 	FOnAttributeChangedSignature OnExpPercentChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|PlayerLevel")
-	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
+	FOnPlayerLevelChangedSignature OnPlayerLevelChangedDelegate;
 
 protected:
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
@@ -69,7 +70,7 @@ protected:
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SoulChanged(const FOnAttributeChangeData& Data) const;
 	void OnExpChanged(int32 InNewExp);
-	void OnPlayerLevelChanged(int32 InNewPlayerLevel) const;
+	void OnPlayerLevelChanged(int32 InNewPlayerLevel, bool bLevelUp) const;
 	void OnEquippedAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag) const;
 
 	void ReadDataTableRowByTag(const FGameplayTagContainer& AssetTags);

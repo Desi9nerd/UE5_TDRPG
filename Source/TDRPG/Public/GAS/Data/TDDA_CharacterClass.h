@@ -50,6 +50,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
+	TSubclassOf<UGameplayEffect> SecondaryAttributes_Infinite;
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Effect")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class | Gameplay Ability")
