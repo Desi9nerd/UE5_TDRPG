@@ -1,5 +1,7 @@
 ﻿#include "GameMode/TDGameModeBase.h"
+#include "GameInstance/TDGameInstance.h"
 #include "SaveGame/TDSaveGame_Load.h"
+#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/MVVM/TDMVVM_Slot.h"
 
@@ -52,6 +54,34 @@ void ATDGameModeBase::TravelToMap(UTDMVVM_Slot* Slot)
 
 	//* Maps변수에 해당 맵이 있는지 확인 후 있다면 맵을 연다.
 	UGameplayStatics::OpenLevelBySoftObjectPtr(Slot, Maps.FindChecked(Slot->GetMapName()));
+}
+
+AActor* ATDGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(GetGameInstance());
+
+	TArray<AActor*> StartActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), StartActors); // GetWorld()에 있는 PlayerStarts들을 StartActors 배열변수에 다 담는다.
+
+	if (StartActors.Num() > 0)
+	{
+		AActor* SelectedActor = StartActors[0];
+		for (AActor* Actor : StartActors)
+		{
+			if (APlayerStart* PlayerStart = Cast<APlayerStart>(Actor))
+			{
+				if (PlayerStart->PlayerStartTag == TDGameInstance->PlayerStartTag) // PlayerStartTag 태그가 일치한다면
+				{
+					SelectedActor = PlayerStart;
+					break;
+				}
+			}
+		}
+
+		return SelectedActor;
+	}
+
+	return nullptr;
 }
 
 void ATDGameModeBase::BeginPlay()

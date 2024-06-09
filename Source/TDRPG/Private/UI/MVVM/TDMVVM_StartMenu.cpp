@@ -1,4 +1,5 @@
 ﻿#include "UI/MVVM/TDMVVM_StartMenu.h"
+#include "GameInstance/TDGameInstance.h"
 #include "GameMode/TDGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/MVVM/TDMVVM_Slot.h"
@@ -36,6 +37,7 @@ UTDMVVM_Slot* UTDMVVM_StartMenu::GetLoadSlotViewModelByIndex(int32 Index) const
 
 void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
+	//* GameMode의 값 넣어주기.
 	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
 
 	LoadSlots[Slot]->SetPlayerName(EnteredName); // 플레이어 이름 설정.
@@ -44,6 +46,13 @@ void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredN
 
 	TDGameMode->SaveSlotData(LoadSlots[Slot], Slot); // SaveGame 생성 후 저장.
 	LoadSlots[Slot]->InitializeSlot();
+
+
+	//* GameInstance의 값 넣어주기.
+	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(TDGameMode->GetGameInstance());
+	TDGameInstance->LoadSlotName = LoadSlots[Slot]->GetLoadSlotName();
+	TDGameInstance->LoadSlotIndex = LoadSlots[Slot]->SlotIndex;
+	TDGameInstance->PlayerStartTag = TDGameMode->DefaultPlayerStartTag;
 }
 
 void UTDMVVM_StartMenu::NewGameButtonPressed(int32 Slot)
