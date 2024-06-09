@@ -16,6 +16,7 @@ void ATDGameModeBase::SaveSlotData(UTDMVVM_Slot* LoadSlot, int32 SlotIndex)
 	UTDSaveGame_Load* LoadScreenSaveGame = Cast<UTDSaveGame_Load>(SaveGameObject);
 	LoadScreenSaveGame->PlayerName = LoadSlot->GetPlayerName(); // 캐릭터 이름 설정.
 	LoadScreenSaveGame->MapName = LoadSlot->GetMapName(); // 맵 이름 설정.
+	LoadScreenSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag; // PlayerStartTag 설정.
 	LoadScreenSaveGame->SaveSlotStatus = Taken; // 슬롯상태를 Taken으로 설정.
 
 	//* 게임 저장

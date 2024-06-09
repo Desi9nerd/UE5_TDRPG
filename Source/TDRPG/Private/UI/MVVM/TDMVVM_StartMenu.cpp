@@ -42,6 +42,7 @@ void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredN
 
 	LoadSlots[Slot]->SetPlayerName(EnteredName); // 플레이어 이름 설정.
 	LoadSlots[Slot]->SetMapName(TDGameMode->DefaultMapName); // 맵 이름 설정.
+	LoadSlots[Slot]->PlayerStartTag = TDGameMode->DefaultPlayerStartTag; // PlayerStartTag 설정.
 	LoadSlots[Slot]->SlotStatus = Taken; // 슬롯상태 Taken으로 설정.
 
 	TDGameMode->SaveSlotData(LoadSlots[Slot], Slot); // SaveGame 생성 후 저장.
@@ -93,6 +94,10 @@ void UTDMVVM_StartMenu::DeleteButtonPressed()
 void UTDMVVM_StartMenu::PlayButtonPressed()
 {
 	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+
+	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(TDGameMode->GetGameInstance());
+	TDGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag; // GameInstance의 PlayerStartTag를 선택한 슬롯의 PlayerStartTag로 변경.
+
 	if (IsValid(SelectedSlot))
 	{
 		TDGameMode->TravelToMap(SelectedSlot); // 선택한 슬롯의 맵 열기.
@@ -108,9 +113,11 @@ void UTDMVVM_StartMenu::LoadData()
 		UTDSaveGame_Load* SaveObject = TDGameMode->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
 		
 		//* UTDMVVM_Slot 내의 SlotStatus, PlayerName 설정.
-		LoadSlot.Value->SlotStatus = SaveObject->SaveSlotStatus;; // 슬롯상태 설정.
 		LoadSlot.Value->SetPlayerName(SaveObject->PlayerName); // 플레이어 이름 설정.
 		LoadSlot.Value->SetMapName(SaveObject->MapName); // 맵 이름 설정.
+		LoadSlot.Value->PlayerStartTag = SaveObject->PlayerStartTag; // PlayerStartTag 설정.
+		LoadSlot.Value->SlotStatus = SaveObject->SaveSlotStatus;; // 슬롯상태 설정.
+
 		LoadSlot.Value->InitializeSlot(); // 슬롯 Broadcast.
 	}
 }

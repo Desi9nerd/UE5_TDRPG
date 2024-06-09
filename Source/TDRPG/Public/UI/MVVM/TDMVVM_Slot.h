@@ -37,6 +37,9 @@ public:
 	UPROPERTY() // TDMVVM_StartMenu의 LoadData()에서 설정.
 	TEnumAsByte<ESG_SaveSlotStatus> SlotStatus; // 슬롯상태.
 
+	UPROPERTY()
+	FName PlayerStartTag;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
 	FString PlayerName; // 플레이어 이름. Field Notifies.
