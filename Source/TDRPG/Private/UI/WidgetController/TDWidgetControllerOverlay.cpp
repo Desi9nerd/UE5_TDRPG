@@ -18,31 +18,13 @@ void UTDWidgetControllerOverlay::BroadcastInitialValues()
 void UTDWidgetControllerOverlay::BindCallbacksToDependencies() // TDAttributeSet의 데이터와 콜백함수 바인딩
 {
 	//** Health, MaxHealth가 변경될때 마다 아래함수(HealthChanged, MaxHealthChanged)가 callback됨
-	GetASC()->GetGameplayAttributeValueChangeDelegate(
-		GetTDAttributeSet()->GetHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::HealthChanged);
-	GetASC()->GetGameplayAttributeValueChangeDelegate(
-		GetTDAttributeSet()->GetMaxHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxHealthChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(GetTDAttributeSet()->GetHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::HealthChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(GetTDAttributeSet()->GetMaxHealthAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxHealthChanged);
 
-	GetASC()->GetGameplayAttributeValueChangeDelegate(
-		GetTDAttributeSet()->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
-	GetASC()->GetGameplayAttributeValueChangeDelegate(
-		GetTDAttributeSet()->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
-	GetASC()->GetGameplayAttributeValueChangeDelegate(
-		GetTDAttributeSet()->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(GetTDAttributeSet()->GetManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::ManaChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(GetTDAttributeSet()->GetMaxManaAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::MaxManaChanged);
+	GetASC()->GetGameplayAttributeValueChangeDelegate(GetTDAttributeSet()->GetSoulAttribute()).AddUObject(this, &UTDWidgetControllerOverlay::SoulChanged);
 
-
-	/*Cast<UTDAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[this](const FGameplayTagContainer& AssetTags)
-		{
-			for (const FGameplayTag& Tag : AssetTags)
-			{
-				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
-
-				FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-			}
-		}
-	);*/ // 위: 람다함수 버젼, 아래: 함수를 밖으로 뺀 버젼 
 	if (GetTDASC())
 	{
 		GetTDASC()->EquippedAbilityDelegate.AddUObject(this, &ThisClass::OnEquippedAbility);
@@ -124,9 +106,9 @@ void UTDWidgetControllerOverlay::OnExpChanged(int32 InNewExp)
 	}
 }
 
-void UTDWidgetControllerOverlay::OnPlayerLevelChanged(int32 InNewPlayerLevel) const
+void UTDWidgetControllerOverlay::OnPlayerLevelChanged(int32 InNewPlayerLevel, bool bLevelUp) const
 {
-	OnPlayerLevelChangedDelegate.Broadcast(InNewPlayerLevel);
+	OnPlayerLevelChangedDelegate.Broadcast(InNewPlayerLevel, bLevelUp);
 }
 
 void UTDWidgetControllerOverlay::OnEquippedAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag) const
