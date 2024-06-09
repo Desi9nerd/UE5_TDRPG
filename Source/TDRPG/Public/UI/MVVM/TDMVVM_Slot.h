@@ -19,9 +19,11 @@ class TDRPG_API UTDMVVM_Slot : public UMVVMViewModelBase
 public:
 	void InitializeSlot();
 	FString GetPlayerName() const { return PlayerName; }
+	int32 GetPlayerLevel() const { return PlayerLevel; }
 	FString GetMapName() const { return MapName; }
 	FString GetLoadSlotName() const { return LoadSlotName; }
 	void SetPlayerName(FString InPlayerName);
+	void SetPlayerLevel(int32 InPlayerLevel);
 	void SetMapName(FString InLevelMapName);
 	void SetLoadSlotName(FString InLoadSlotName);
 
@@ -43,6 +45,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
 	FString PlayerName; // 플레이어 이름. Field Notifies.
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
+	int32 PlayerLevel; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
 	FString MapName;

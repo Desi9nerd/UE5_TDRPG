@@ -13,6 +13,11 @@ void UTDMVVM_Slot::SetPlayerName(FString InPlayerName)
 	UE_MVVM_SET_PROPERTY_VALUE(PlayerName, InPlayerName);
 }
 
+void UTDMVVM_Slot::SetPlayerLevel(int32 InPlayerLevel)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(PlayerLevel, InPlayerLevel);
+}
+
 void UTDMVVM_Slot::SetMapName(FString InMapName)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(MapName, InMapName);

@@ -47,7 +47,7 @@ public:
 	//********************************************************
 	//** Player 정보.
 	UPROPERTY()
-	int32 PlayerLevel = 0;
+	int32 PlayerLevel = 1;
 	UPROPERTY()
 	int32 Exp = 0;
 	UPROPERTY()
