@@ -20,6 +20,7 @@ class TDRPG_API ATDEnemyCharacter : public ATDBaseCharacter, public IIEnemy
 public:
 	ATDEnemyCharacter();
 	virtual void PossessedBy(AController* NewController) override;
+	FORCEINLINE void SetEnemyLevel(int32 InEnemyLevel) { Level = InEnemyLevel; }
 
 	//** IEnemy 함수
 	virtual void HighlightActor() override;	  // 외곽선 효과 On

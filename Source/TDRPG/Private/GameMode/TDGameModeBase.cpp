@@ -169,7 +169,7 @@ void ATDGameModeBase::LoadWorldState(UWorld* World)
 			{
 				if (SavedActor.ActorName == Actor->GetFName())
 				{
-					if (SaveGameInterface->ShouldLoadTransform())
+					if (SaveGameInterface->ShouldLoadTransform()) // TODO
 					{
 						Actor->SetActorTransform(SavedActor.Transform);
 					}

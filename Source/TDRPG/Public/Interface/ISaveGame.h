@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "ISaveGame.generated.h"
@@ -9,8 +9,8 @@ class UISaveGame : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
+/** 게임 저장과 관련된 인터페이스
+ *  TDPlayerStart, TDSpawnVolumeActor에서 사용.
  */
 class TDRPG_API IISaveGame
 {

@@ -29,6 +29,7 @@ public:
 	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	virtual FOnDamageSignature& GetOnDamageSignature() override { return OnDamageDelegate; };
+	FORCEINLINE void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
 
 	//** ICombat *********************************************
 
