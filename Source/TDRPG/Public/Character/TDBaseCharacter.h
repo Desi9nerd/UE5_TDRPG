@@ -128,6 +128,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 300.f;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool bDead = false;
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
@@ -155,7 +156,7 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
-	TObjectPtr<UTDDebuffComponent> DebuffComponent;
+	TObjectPtr<UTDDebuffComponent> DotDamageDebuffComponent;
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
 	TObjectPtr<UTDDebuffComponent> StunDebuffComponent;
 	//********************************************************

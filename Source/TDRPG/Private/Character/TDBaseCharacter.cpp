@@ -27,9 +27,9 @@ ATDBaseCharacter::ATDBaseCharacter()
 	GetMesh()->SetGenerateOverlapEvents(true); // Mesh에 Overlap 이벤트 발생 true로 설정
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
-	DebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DebuffComponent"));
-	DebuffComponent->SetupAttachment(GetRootComponent());
-	DebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTag의 기본값. 현재 테스트를 위해 DotDamage로 설정.
+	DotDamageDebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DotDamageDebuffComponent"));
+	DotDamageDebuffComponent->SetupAttachment(GetRootComponent());
+	DotDamageDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTag의 기본값. 현재 테스트를 위해 DotDamage로 설정.
 	StunDebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("StunDebuffComponent"));
 	StunDebuffComponent->SetupAttachment(GetRootComponent());
 	StunDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_Stun;
@@ -104,7 +104,7 @@ void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& Ragdol
 	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll 충격 적용
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
-	DebuffComponent->Deactivate(); // 디버프 해제
+	DotDamageDebuffComponent->Deactivate(); // 디버프 해제
 	StunDebuffComponent->Deactivate();
 	bDead = true;
 	OnDeathDelegate.Broadcast(this); // 사망 Broadcast

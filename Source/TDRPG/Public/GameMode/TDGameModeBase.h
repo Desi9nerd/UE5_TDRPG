@@ -35,6 +35,8 @@ public:
 	void TravelToMap(UTDMVVM_Slot* Slot);
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
+	void PlayerDeath(ACharacter* DeadCharacter);
+
 	//********************************************************
 	//** SaveGame, Map
 	UPROPERTY(EditDefaultsOnly, Category = "Save Game")

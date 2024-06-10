@@ -1,5 +1,6 @@
 ﻿#include "GameMode/TDGameModeBase.h"
 #include "EngineUtils.h"
+#include "GameFramework/Character.h"
 #include "GameInstance/TDGameInstance.h"
 #include "SaveGame/TDSaveGame_Load.h"
 #include "GameFramework/PlayerStart.h"
@@ -27,6 +28,7 @@ void ATDGameModeBase::SaveSlotData(UTDMVVM_Slot* LoadSlot, int32 SlotIndex)
 	UTDSaveGame_Load* LoadScreenSaveGame = Cast<UTDSaveGame_Load>(SaveGameObject);
 	LoadScreenSaveGame->PlayerName = LoadSlot->GetPlayerName(); // 캐릭터 이름 설정.
 	LoadScreenSaveGame->MapName = LoadSlot->GetMapName(); // 맵 이름 설정.
+	LoadScreenSaveGame->MapAssetName = LoadSlot->GetMapAssetName(); // 맵 에셋 이름 설정.
 	LoadScreenSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag; // PlayerStartTag 설정.
 	LoadScreenSaveGame->SaveSlotStatus = Taken; // 슬롯상태를 Taken으로 설정.
 
@@ -46,9 +48,9 @@ UTDSaveGame_Load* ATDGameModeBase::GetSaveSlotData(const FString& SlotName, int3
 		SaveGameObject = UGameplayStatics::CreateSaveGameObject(LoadScreenSaveGameClass); // 게임 생성.
 	}
 
-	UTDSaveGame_Load* LoadScreenSaveGame = Cast<UTDSaveGame_Load>(SaveGameObject);
+	UTDSaveGame_Load* TDSaveGame_Load = Cast<UTDSaveGame_Load>(SaveGameObject);
 
-	return LoadScreenSaveGame;
+	return TDSaveGame_Load;
 }
 
 void ATDGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
@@ -220,6 +222,14 @@ AActor* ATDGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 	}
 
 	return nullptr;
+}
+
+void ATDGameModeBase::PlayerDeath(ACharacter* DeadCharacter)
+{
+	UTDSaveGame_Load* TDSaveGame_Load = RetrieveInGameSaveData(); // 마지막으로 저장된 SaveGame 데이터.
+	if (false == IsValid(TDSaveGame_Load)) return;
+
+	UGameplayStatics::OpenLevel(DeadCharacter, FName(TDSaveGame_Load->MapAssetName));
 }
 
 void ATDGameModeBase::BeginPlay()

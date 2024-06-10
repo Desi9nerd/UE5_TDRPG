@@ -36,6 +36,7 @@ public:
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;
 	virtual int32 GetPlayerLevel() override;
+	virtual void Die(const FVector& RagdollImpulse) override;
 	//********************************************************
 
 	//** IPlayer *********************************************
@@ -93,7 +94,6 @@ private:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_LevelUpParticleEffect() const;
 
-
 	UPROPERTY()
 	TObjectPtr<ATDGameModeBase> TDGameModeBase;
 
@@ -102,4 +102,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> TDPlayerController;
+
+	UPROPERTY(EditDefaultsOnly)
+	float DeathTime = 5.f;
+
+	FTimerHandle DeathTimer;
 };

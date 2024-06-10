@@ -23,6 +23,11 @@ void UTDMVVM_Slot::SetMapName(FString InMapName)
 	UE_MVVM_SET_PROPERTY_VALUE(MapName, InMapName);
 }
 
+void UTDMVVM_Slot::SetMapAssetName(FString InLevelMapAssetName)
+{
+	MapAssetName = InLevelMapAssetName;
+}
+
 void UTDMVVM_Slot::SetLoadSlotName(FString InLoadSlotName)
 {
 	UE_MVVM_SET_PROPERTY_VALUE(LoadSlotName, InLoadSlotName);

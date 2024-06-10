@@ -165,6 +165,24 @@ int32 ATDCharacter::GetPlayerLevel()
 	return TDPlayerState->GetPlayerLevel();
 }
 
+void ATDCharacter::Die(const FVector& RagdollImpulse)
+{
+	Super::Die(RagdollImpulse);
+
+	FTimerDelegate DeathTimerDelegate;
+	DeathTimerDelegate.BindLambda([this]()
+		{
+			if (GetTDGameModeBase())
+			{
+				GetTDGameModeBase()->PlayerDeath(this); // GameMode에 플레이어 죽음
+			}
+		});
+
+	GetWorldTimerManager().SetTimer(DeathTimer, DeathTimerDelegate, DeathTime, false);
+
+	FollowCamera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 죽으면 카메라가 떨어지도록 Detach.
+}
+
 //void ATDCharacter::AddToExp_Implementation(int32 InExp)
 //{
 //	check(TDPlayerState);
@@ -470,11 +488,11 @@ void ATDCharacter::OnRep_Burned()
 {
 	if (bBurned)
 	{
-		DebuffComponent->Activate();
+		DotDamageDebuffComponent->Activate();
 	}
 	else
 	{
-		DebuffComponent->Deactivate();
+		DotDamageDebuffComponent->Deactivate();
 	}
 }
 

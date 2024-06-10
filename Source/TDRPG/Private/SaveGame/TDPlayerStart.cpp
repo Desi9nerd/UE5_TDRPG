@@ -45,6 +45,10 @@ void ATDPlayerStart::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, A
 
 		if (ATDGameModeBase* TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this)))
 		{
+			const UWorld* World = GetWorld();
+			FString MapName = World->GetMapName();
+			MapName.RemoveFromStart(World->StreamingLevelsPrefix);
+
 			TDGameModeBase->SaveWorldState(GetWorld()); // SaveMap에 월드 정보를 저장.
 		}
 

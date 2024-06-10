@@ -48,6 +48,7 @@ void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredN
 	LoadSlots[Slot]->SetPlayerName(EnteredName); // 플레이어 이름 설정.
 	LoadSlots[Slot]->SetPlayerLevel(1); // 새 슬롯은 레벨1로 설정.
 	LoadSlots[Slot]->SetMapName(TDGameMode->DefaultMapName); // 맵 이름 설정.
+	LoadSlots[Slot]->SetMapAssetName(TDGameMode->DefaultMap.ToSoftObjectPath().GetAssetName()); // 맵 에셋 이름 설정.
 	LoadSlots[Slot]->PlayerStartTag = TDGameMode->DefaultPlayerStartTag; // PlayerStartTag 설정.
 	LoadSlots[Slot]->SlotStatus = Taken; // 슬롯상태 Taken으로 설정.
 
