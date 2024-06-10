@@ -39,6 +39,11 @@ void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredN
 {
 	//* GameMode의 값 넣어주기.
 	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (false == IsValid(TDGameMode))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, FString("싱글 플레이 환경으로 변경 후 접속해주세요."));
+		return;
+	}
 
 	LoadSlots[Slot]->SetPlayerName(EnteredName); // 플레이어 이름 설정.
 	LoadSlots[Slot]->SetPlayerLevel(1); // 새 슬롯은 레벨1로 설정.
@@ -111,6 +116,7 @@ void UTDMVVM_StartMenu::PlayButtonPressed()
 void UTDMVVM_StartMenu::LoadData()
 {
 	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (false == IsValid(TDGameMode)) return;
 
 	for (const TTuple<int32, UTDMVVM_Slot*> LoadSlot : LoadSlots)
 	{
