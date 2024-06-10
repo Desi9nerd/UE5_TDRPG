@@ -1,8 +1,11 @@
 ﻿#include "GameMode/TDGameModeBase.h"
+#include "EngineUtils.h"
 #include "GameInstance/TDGameInstance.h"
 #include "SaveGame/TDSaveGame_Load.h"
 #include "GameFramework/PlayerStart.h"
+#include "Interface/ISaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "UI/MVVM/TDMVVM_Slot.h"
 
 TObjectPtr<UTDGameInstance> ATDGameModeBase::GetTDGameInstance()
@@ -73,6 +76,115 @@ void ATDGameModeBase::SaveInGameProgressData(UTDSaveGame_Load* SaveObject)
 	GetTDGameInstance()->PlayerStartTag = SaveObject->PlayerStartTag;
 
 	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
+// SaveMap에 월드 정보를 저장하는 함수.
+void ATDGameModeBase::SaveWorldState(UWorld* World)
+{
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix); // 접두어 제거.
+	
+	checkf(GetTDGameInstance(), TEXT("No TDGameInstance. Check ATDGameModeBase::SaveWorldState()"));
+
+	UTDSaveGame_Load* SaveGame = GetSaveSlotData(GetTDGameInstance()->LoadSlotName, GetTDGameInstance()->LoadSlotIndex);
+	if (IsValid(SaveGame))
+	{
+		//***************************************************************************
+		//* 새로운 데이터 넣기
+		if (false == SaveGame->HasMap(WorldName)) // WorldName에 해당하는 맵이 없다면
+		{
+			// WorldName이름의 맵 생성 후 SavedMaps 배열에 추가.
+			FSavedMap NewSavedMap;
+			NewSavedMap.MapAssetName = WorldName;
+			SaveGame->SavedMaps.Add(NewSavedMap);
+		}
+
+		FSavedMap SavedMap = SaveGame->GetSavedMapWithMapName(WorldName);
+		SavedMap.SavedActors.Empty(); // 배열 비우기. 아래에서 Actor들을 채운다.
+
+		// FActorIterator 사용 시 #include "EngineUtils.h" 필요.
+		for (FActorIterator It(World); It; ++It) // 월드에 있는 Actor들.
+		{
+			AActor* Actor = *It;
+			IISaveGame* SaveGameInterface = Cast<IISaveGame>(Actor);
+
+			if (false == IsValid(Actor) || nullptr == SaveGameInterface) continue;
+
+			FSavedActor SavedActor;
+			SavedActor.ActorName = Actor->GetFName();
+			SavedActor.Transform = Actor->GetTransform();
+
+			FMemoryWriter MemoryWriter(SavedActor.Bytes);
+
+			FObjectAndNameAsStringProxyArchive Archive(MemoryWriter, true);
+			Archive.ArIsSaveGame = true; 
+
+			Actor->Serialize(Archive); // Archive에 Actor를 Serializing. 
+
+			SavedMap.SavedActors.AddUnique(SavedActor); // SaveMap의 저장할 액터 배열에 SaveActor를 추가.
+		}
+		//***************************************************************************
+
+		//***************************************************************************
+		//* Old Data를 (지우고) SaveMap으로 대체하기
+		for (FSavedMap& MapToReplace : SaveGame->SavedMaps)
+		{
+			if (MapToReplace.MapAssetName == WorldName)
+			{
+				MapToReplace = SavedMap;
+			}
+		}
+		//***************************************************************************
+
+		//* 게임 저장하기.
+		UGameplayStatics::SaveGameToSlot(SaveGame, GetTDGameInstance()->LoadSlotName, GetTDGameInstance()->LoadSlotIndex);
+	}
+}
+
+// SaveMap에 저장된 Actor 데이터를 로드하는 함수.
+void ATDGameModeBase::LoadWorldState(UWorld* World)
+{
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
+
+	checkf(GetTDGameInstance(), TEXT("No TDGameInstance. Check ATDGameModeBase::LoadWorldState()"));
+
+	if (UGameplayStatics::DoesSaveGameExist(GetTDGameInstance()->LoadSlotName, GetTDGameInstance()->LoadSlotIndex))// 해당 게임이 있다면
+	{
+		UTDSaveGame_Load* SaveGame = Cast<UTDSaveGame_Load>(UGameplayStatics::LoadGameFromSlot(GetTDGameInstance()->LoadSlotName, GetTDGameInstance()->LoadSlotIndex));
+		if (false == IsValid(SaveGame))
+		{
+			UE_LOG(LogTemp, Error, TEXT("슬롯을 로드하는데 실패했습니다."));
+			return;
+		}
+
+		for (FActorIterator It(World); It; ++It) // 월드에 있는 Actor들.
+		{
+			AActor* Actor = *It;
+			IISaveGame* SaveGameInterface = Cast<IISaveGame>(Actor);
+
+			if (nullptr == SaveGameInterface) continue;
+
+			for (FSavedActor SavedActor : SaveGame->GetSavedMapWithMapName(WorldName).SavedActors)
+			{
+				if (SavedActor.ActorName == Actor->GetFName())
+				{
+					if (SaveGameInterface->ShouldLoadTransform())
+					{
+						Actor->SetActorTransform(SavedActor.Transform);
+					}
+
+					FMemoryReader MemoryReader(SavedActor.Bytes);
+
+					FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
+					Archive.ArIsSaveGame = true;
+					Actor->Serialize(Archive); // binary bytes를 변수로 변환.
+					
+					SaveGameInterface->LoadActor();
+				}
+			}
+		}
+	}
 }
 
 void ATDGameModeBase::TravelToMap(UTDMVVM_Slot* Slot)

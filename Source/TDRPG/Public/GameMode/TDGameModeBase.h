@@ -29,6 +29,9 @@ public:
 	UTDSaveGame_Load* RetrieveInGameSaveData();
 	void SaveInGameProgressData(UTDSaveGame_Load* SaveObject);
 
+	void SaveWorldState(UWorld* World); // SaveMap에 월드 내 Actor 데이터들을 저장하는 함수.
+	void LoadWorldState(UWorld* World); // SaveMap에 저장된 Actor 데이터를 로드하는 함수.
+
 	void TravelToMap(UTDMVVM_Slot* Slot);
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 

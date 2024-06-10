@@ -1,6 +1,8 @@
 ﻿#include "SaveGame/TDPlayerStart.h"
 #include "Components/SphereComponent.h"
+#include "GameMode/TDGameModeBase.h"
 #include "Interface/IPlayer.h"
+#include "Kismet/GameplayStatics.h"
 
 ATDPlayerStart::ATDPlayerStart(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -19,6 +21,14 @@ ATDPlayerStart::ATDPlayerStart(const FObjectInitializer& ObjectInitializer)
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
+void ATDPlayerStart::LoadActor()
+{
+	if (bReached)
+	{
+		HandleGlowEffects();
+	}
+}
+
 void ATDPlayerStart::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,6 +41,13 @@ void ATDPlayerStart::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, A
 	IIPlayer* PlayerInterface = Cast<IIPlayer>(OtherActor);
 	if (PlayerInterface) // 플레이어라면
 	{
+		bReached = true;
+
+		if (ATDGameModeBase* TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this)))
+		{
+			TDGameModeBase->SaveWorldState(GetWorld()); // SaveMap에 월드 정보를 저장.
+		}
+
 		PlayerInterface->SaveProgress(PlayerStartTag); // PlayerStartTag를 넘겨 저장.
 		HandleGlowEffects(); // Glow 효과.
 	}

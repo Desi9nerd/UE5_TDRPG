@@ -3,7 +3,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameMode/TDGameModeBase.h"
-#include "GameInstance//TDGameInstance.h"
 #include "SaveGame/TDSaveGame_Load.h"
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
@@ -75,6 +74,12 @@ void ATDCharacter::PossessedBy(AController* NewController) // 서버
 
 	// 게임 SaveData 확인 후 로드하여 데이터 초기화.
 	LoadProgress();
+
+
+	if (GetTDGameModeBase())
+	{
+		GetTDGameModeBase()->LoadWorldState(GetWorld());
+	}
 }
 
 void ATDCharacter::LoadProgress()
