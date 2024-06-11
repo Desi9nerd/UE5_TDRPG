@@ -78,7 +78,7 @@ struct FSavedAbility
 	FGameplayTag AbilityType = FGameplayTag();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	int32 AbilityLevel;
+	int32 AbilityLevel = 1;
 };
 
 inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right)
@@ -113,7 +113,7 @@ public:
 	FString MapAssetName = FString("Default Map Asset Name");
 
 	UPROPERTY()
-	FName PlayerStartTag;
+	FName PlayerStartTag = FName();
 
 	UPROPERTY()
 	TEnumAsByte<ESG_SaveSlotStatus> SaveSlotStatus = Vacant;

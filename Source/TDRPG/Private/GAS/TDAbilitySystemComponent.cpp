@@ -356,12 +356,12 @@ void UTDAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamepla
 		//AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
 
 		// Client들에게도 실행.
-		EquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
+		ClientEquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
 	}
 }
 
-// Client들에서 실행. Equipped Ability가 변경되었음을 Broadcast로 알려줌.
-void UTDAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag)
+// Client RPC. Client들에서 실행. Equipped Ability가 변경되었음을 Broadcast로 알려줌.
+void UTDAbilitySystemComponent::ClientEquipAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag)
 {
 	EquippedAbilityDelegate.Broadcast(AbilityTag, StatusTag, SlotTag, PreviousSlotTag);
 }

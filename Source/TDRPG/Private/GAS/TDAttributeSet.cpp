@@ -265,6 +265,7 @@ void UTDAttributeSet::ApplyDebuff(const FEffectProperties& Props)
 	}
 }
 
+// 경험치 획득 후 레벨업, AttributePoint, SkillPoint 업데이트
 void UTDAttributeSet::ApplyIncomingExp(const FEffectProperties& Props)
 {
 	const float LocalIncomingExp = GetIncomingExp();
@@ -282,10 +283,17 @@ void UTDAttributeSet::ApplyIncomingExp(const FEffectProperties& Props)
 
 		if (AmountOfLevelUps > 0)
 		{
-			const int32 AttributePointsReward = PlayerInterface->GetAttributePointsReward(CurrentPlayerLevel);
-			const int32 SkillPointsReward = PlayerInterface->GetSkillPointsReward(CurrentPlayerLevel);
+			PlayerInterface->AddToPlayerLevel(AmountOfLevelUps); // 레벨업
 
-			PlayerInterface->AddToPlayerLevel(AmountOfLevelUps);		  // 레벨업
+			int32 AttributePointsReward = 0;
+			int32 SkillPointsReward = 0;
+
+			for (int32 i = 0; i < AmountOfLevelUps; i++) // 레벨업한만큼 Attribute, Skill 포인트 준비. 
+			{
+				AttributePointsReward += PlayerInterface->GetAttributePointsReward(CurrentPlayerLevel + i);
+				SkillPointsReward += PlayerInterface->GetSkillPointsReward(CurrentPlayerLevel + i);
+			}
+
 			PlayerInterface->AddToAttributePoints(AttributePointsReward); // Attribute Point 추가
 			PlayerInterface->AddToSkillPoints(SkillPointsReward);		  // Skill Point 추가
 
