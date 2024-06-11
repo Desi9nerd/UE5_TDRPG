@@ -425,7 +425,7 @@ void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 				FSavedAbility SavedAbility;
 				SavedAbility.GameplayAbility = Info.Ability;
 				SavedAbility.AbilityLevel = AbilitySpec.Level;
-				SavedAbility.AbilitySlot = GetTDASC()->GetInputTagFromAbilityTag(AbilityTag);
+				SavedAbility.AbilitySlot = GetTDASC()->GetSlotTagFromAbilityTag(AbilityTag);
 				SavedAbility.AbilityStatus = GetTDASC()->GetStatusTagFromAbilityTag(AbilityTag);
 				SavedAbility.AbilityTag = AbilityTag;
 				SavedAbility.AbilityType = Info.AbilityType;

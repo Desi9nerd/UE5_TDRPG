@@ -35,7 +35,7 @@ public:
 	void UpdateAbilityStatuses(int32 PlayerLevel);
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 	static bool SkillMenuAbilityHasSlot(FGameplayAbilitySpec* Spec, const FGameplayTag& SlotTag);
-	void SkillMenuClearSlot(FGameplayAbilitySpec* Spec);
+	static void SkillMenuClearSlot(FGameplayAbilitySpec* Spec);
 	void SkillMenuClearAbilitiesOfSlot(const FGameplayTag& SlotTag);
 
 	UFUNCTION(Server, Reliable)
@@ -51,7 +51,14 @@ public:
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayTag GetStatusTagFromAbilityTag(const FGameplayTag& AbilityTag);
-	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag); // Input, Slot
+	FGameplayTag GetSlotTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	
+	bool SlotIsEmpty(const FGameplayTag& Slot);
+	static bool AbilityHasSlot(const FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
+	static bool AbilityHasAnySlot(const FGameplayAbilitySpec& Spec);
+	FGameplayAbilitySpec* GetSpecWithSlot(const FGameplayTag& Slot);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
+	static void AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
 
 	FEffectAssetTagsSignature EffectAssetTagsDelegate;
 	FGivenASCSignature GivenASCDelegate;

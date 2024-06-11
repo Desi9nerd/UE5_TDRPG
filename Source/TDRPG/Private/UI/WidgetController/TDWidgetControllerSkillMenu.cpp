@@ -103,7 +103,7 @@ void UTDWidgetControllerSkillMenu::EquipButtonPressed()
 	const FGameplayTag SelectedStatus = GetTDASC()->GetStatusTagFromAbilityTag(SelectedAbilityInSkillMenu.Ability);
 	if (SelectedStatus.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped))
 	{
-		SelectedSlot = GetTDASC()->GetInputTagFromAbilityTag(SelectedAbilityInSkillMenu.Ability);
+		SelectedSlot = GetTDASC()->GetSlotTagFromAbilityTag(SelectedAbilityInSkillMenu.Ability);
 	}
 }
 

@@ -235,7 +235,6 @@ void UTDAbilitySystemComponent::SkillMenuClearSlot(FGameplayAbilitySpec* Spec)
 {
 	const FGameplayTag SlotInputTag = GetInputTagFromSpec(*Spec);
 	Spec->DynamicAbilityTags.RemoveTag(SlotInputTag);
-	MarkAbilitySpecDirty(*Spec);
 }
 
 // ActivatableAbilities를 모두 검사하여 DynamicAbilityTags들 중 SlotTag 모두 없애기.
@@ -337,23 +336,42 @@ void UTDAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamepla
 		if (StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped ||
 			StatusTag == FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked)
 		{
-			// TODO : ServerEquipAbility_Implementation 수정하기
-
-			SkillMenuClearAbilitiesOfSlot(SlotTag); // SlotTag 모두 없애기
-			SkillMenuClearSlot(AbilitySpec);		// 
-			AbilitySpec->DynamicAbilityTags.AddTag(SlotTag); // 해당 SlotTag를 담기.
-
-			// Status:  Unlock -> Equipped 변경.
-			if (StatusTag.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked))
+			// Ability가 이미 슬롯에 할당된 경우, 해당 슬롯을 Deactivate하고 clear 해준다.
+			if (false == SlotIsEmpty(SlotTag))
 			{
-				AbilitySpec->DynamicAbilityTags.RemoveTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Unlocked);
+				FGameplayAbilitySpec* SpecWithSlot = GetSpecWithSlot(SlotTag);
+				if (SpecWithSlot)
+				{
+					// 선택한 슬롯이 현재 Ability라면 처리하지 않고 리턴한다.
+					if (AbilityTag.MatchesTagExact(GetAbilityTagFromSpec(*SpecWithSlot)))
+					{
+						ClientEquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
+						return;
+					}
+					// Passive Ability라면
+					if (IsPassiveAbility(*SpecWithSlot))
+					{
+						// TODO: Passive Ability
+					}
+
+					SkillMenuClearSlot(SpecWithSlot); // 슬롯을 Clear
+				}
+			}
+
+			// Ability가 아직 슬롯에 할당되지 않았다면(active되지 않았다면) 해당 슬롯을 Equipped 태그로 변경
+			if (false ==  AbilityHasAnySlot(*AbilitySpec))
+			{
+				if (IsPassiveAbility(*AbilitySpec))
+				{
+					TryActivateAbility(AbilitySpec->Handle);
+				}
+				AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusTagFromSpec(*AbilitySpec));
 				AbilitySpec->DynamicAbilityTags.AddTag(FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped);
 			}
-			MarkAbilitySpecDirty(*AbilitySpec);
-		}
 
-		//AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusFromSpec(*AbilitySpec));
-		//AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
+			AssignSlotToAbility(*AbilitySpec, SlotTag); // 슬롯에 Ability 할당.
+			MarkAbilitySpecDirty(*AbilitySpec); // 업데이트.
+		}
 
 		// Client들에게도 실행.
 		ClientEquipAbility(AbilityTag, FTDGameplayTags::GetTDGameplayTags().Abilities_Status_Equipped, SlotTag, PrevSlotTag);
@@ -395,13 +413,65 @@ FGameplayTag UTDAbilitySystemComponent::GetStatusTagFromAbilityTag(const FGamepl
 	return FGameplayTag();
 }
 
-FGameplayTag UTDAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag) // Input, Slot 동일
+FGameplayTag UTDAbilitySystemComponent::GetSlotTagFromAbilityTag(const FGameplayTag& AbilityTag) // Input, Slot 동일
 {
 	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
 	{
 		return GetInputTagFromSpec(*Spec);
 	}
 	return FGameplayTag();
+}
+
+bool UTDAbilitySystemComponent::SlotIsEmpty(const FGameplayTag& Slot)
+{
+	FScopedAbilityListLock ActiveScopeLoc(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilityHasSlot(AbilitySpec, Slot))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool UTDAbilitySystemComponent::AbilityHasSlot(const FGameplayAbilitySpec& Spec, const FGameplayTag& Slot)
+{
+	return Spec.DynamicAbilityTags.HasTagExact(Slot);
+}
+
+bool UTDAbilitySystemComponent::AbilityHasAnySlot(const FGameplayAbilitySpec& Spec)
+{
+	return Spec.DynamicAbilityTags.HasTag(FGameplayTag::RequestGameplayTag(FName("InputTag")));
+}
+
+FGameplayAbilitySpec* UTDAbilitySystemComponent::GetSpecWithSlot(const FGameplayTag& Slot)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities()) // Active 가능한 Abilities들 중
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(Slot)) // Slot 태그가 있다면
+		{
+			return &AbilitySpec; // 해당 FGameplayAbilitySpec 리턴
+		}
+	}
+	return nullptr;
+}
+
+bool UTDAbilitySystemComponent::IsPassiveAbility(const FGameplayAbilitySpec& Spec) const
+{
+	const UTDDA_Ability* TDDA_Ability = UTDAbilitySystemBPLibrary::GetTDDA_Ability(GetAvatarActor());
+	const FGameplayTag AbilityTag = GetAbilityTagFromSpec(Spec);
+	const FDA_Ability& Info = TDDA_Ability->FindDA_AbilityForTag(AbilityTag);
+	const FGameplayTag AbilityType = Info.AbilityType;
+	return AbilityType.MatchesTagExact(FTDGameplayTags::GetTDGameplayTags().Abilities_Type_Passive);
+}
+
+void UTDAbilitySystemComponent::AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot)
+{
+	SkillMenuClearSlot(&Spec);
+	Spec.DynamicAbilityTags.AddTag(Slot);
 }
 
 void UTDAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
