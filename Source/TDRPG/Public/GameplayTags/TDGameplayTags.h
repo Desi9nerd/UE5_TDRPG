@@ -171,6 +171,7 @@ public:
 	FGameplayTag GameplayCue_Loop; // EnergyLance 스킬에 사용.
 	FGameplayTag GameplayCue_FrozenField;
 	FGameplayTag GameplayCue_PillarOfFlame;
+	FGameplayTag GameplayCue_ComboFlameShooting;
 
 	//********************************************************
 	// Inventory + Item

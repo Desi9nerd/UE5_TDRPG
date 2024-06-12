@@ -307,6 +307,45 @@ bool UTDAbilitySystemBPLibrary::IsRadialDamage(const FGameplayEffectContextHandl
 	return false;
 }
 
+void UTDAbilitySystemBPLibrary::SetIsRadialDamageEffectParam(FDamageEffectParams& DamageEffectParams, bool bIsRadial, float InnerRadius, float OuterRadius, FVector Origin)
+{
+	DamageEffectParams.bRadialDamage = bIsRadial;
+	DamageEffectParams.RadialDamageInnerRadius = InnerRadius;
+	DamageEffectParams.RadialDamageOuterRadius = OuterRadius;
+	DamageEffectParams.RadialDamageOrigin = Origin;
+}
+
+void UTDAbilitySystemBPLibrary::SetKnockbackDirection(FDamageEffectParams& DamageEffectParams, FVector KnockbackDirection, float Magnitude)
+{
+	KnockbackDirection.Normalize();
+	if (Magnitude == 0.f)
+	{
+		DamageEffectParams.KnockbackImpulse = KnockbackDirection * DamageEffectParams.KnockbackImpulseMagnitude;
+	}
+	else
+	{
+		DamageEffectParams.KnockbackImpulse = KnockbackDirection * Magnitude;
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetRagdollImpulseDirection(FDamageEffectParams& DamageEffectParams, FVector ImpulseDirection, float Magnitude)
+{
+	ImpulseDirection.Normalize();
+	if (Magnitude == 0.f)
+	{
+		DamageEffectParams.RagdollImpulse = ImpulseDirection * DamageEffectParams.RagdollImpulseMagnitude;
+	}
+	else
+	{
+		DamageEffectParams.RagdollImpulse = ImpulseDirection * Magnitude;
+	}
+}
+
+void UTDAbilitySystemBPLibrary::SetTargetEffectParamsASC(FDamageEffectParams& DamageEffectParams, UAbilitySystemComponent* InASC)
+{
+	DamageEffectParams.TargetAbilitySystemComponent = InASC;
+}
+
 void UTDAbilitySystemBPLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
 	FTDGameplayEffectContext* TDGameplayEffectContext = static_cast<FTDGameplayEffectContext*>(EffectContextHandle.Get());

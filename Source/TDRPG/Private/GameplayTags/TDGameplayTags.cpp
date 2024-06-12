@@ -177,6 +177,7 @@ void FTDGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.GameplayCue_Loop = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Loop"), FString("Loop 사운드"));
 	GameplayTags.GameplayCue_FrozenField = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FrozenField"), FString("FrozenField 스킬 이펙트"));
 	GameplayTags.GameplayCue_PillarOfFlame = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.PillarOfFlame"), FString("불기둥 스킬 이펙트"));
+	GameplayTags.GameplayCue_ComboFlameShooting = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.ComboFlameShooting"), FString("불 날리기 스킬 이펙트"));
 
 	// Inventory + Item
 	GameplayTags.Item_Equip = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Item.Equip"), FString("아이템 장착"));

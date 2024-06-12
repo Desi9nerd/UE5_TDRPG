@@ -13,7 +13,7 @@ ATDProjectile::ATDProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true; // 액터가 replicated될 수 있도록 true 설정
-	SetActorTickInterval(0.1f);
+	//SetActorTickInterval(0.1f);
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
@@ -65,29 +65,45 @@ void ATDProjectile::Tick(float DeltaSeconds)
 	}
 }
 
+void ATDProjectile::OnHit()
+{
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
+		LoopingSoundComponent->DestroyComponent();
+	}
+	bHit = true;
+}
+
 void ATDProjectile::Destroyed()
 {
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
+
 	if (false == bHit && false == HasAuthority()) // 피격X && Client
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		if (IsValid(ImpactEffect))
-		{
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		}
-		else
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(this, ImpactEffect_ParticleSystem, GetActorLocation());
-		}
-
-		if (IsValid(LoopingSoundComponent))
-		{
-			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
-			LoopingSoundComponent->DestroyComponent();
-		}
-		bHit = true;
+		OnHit();
 	}
 
 	Super::Destroyed();
+}
+
+bool ATDProjectile::IsValidOverlap(AActor* OtherActor)
+{
+	if (DamageEffectParams.SourceAbilitySystemComponent == nullptr) return false;
+
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+
+	if (SourceAvatarActor == OtherActor) return false; // 액터를 던진 자기자신은 Overlap되지 않게 false
+
+	if (UTDAbilitySystemBPLibrary::IsSameTeam(SourceAvatarActor, OtherActor)) return false; // 같은 팀이면 피격되지 않도록 false
+
+	return true;
 }
 
 void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -111,25 +127,7 @@ void ATDProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	if (false == bHit) // 피격 최초 성공 시에 적용. bHit은 아래에서 false로 변경된다.
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("%s spawned"), *GetName()); // 스폰되는 Projectile 개수 확인용
-
-		//* Hit Sound
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		//* Hit Effect
-		if (IsValid(ImpactEffect)) // Niagara
-		{
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		}
-		else // ParticleSystem
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(this, ImpactEffect_ParticleSystem, GetActorLocation());
-		}
-		//* Looping  Sound Turning Off
-		if (IsValid(LoopingSoundComponent))
-		{
-			LoopingSoundComponent->Stop(); // LoopingSound 재생 멈추기
-			LoopingSoundComponent->DestroyComponent();
-		}
-		bHit = true;
+		OnHit();
 	}
 
 

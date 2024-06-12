@@ -16,21 +16,21 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVe
 {
 	// FDamageEffectParams 을 설정한다. TDGA_Damage 자식 클래스에서 '충돌체, 발사체'의 DamageEffectParams 값에 해당 값이 들어가도록 여기의 SetDamageEffectParams()함수를 호출한다.
 
-	FDamageEffectParams DamageEffectParams;
-	DamageEffectParams.WorldContextObject = GetAvatarActorFromActorInfo();
-	DamageEffectParams.GEDamageClass = GEDamageClass;
-	DamageEffectParams.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
-	DamageEffectParams.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-	DamageEffectParams.BaseDamage = DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
-	DamageEffectParams.AbilityLevel = GetAbilityLevel();
-	DamageEffectParams.DamageType = DamageType;
-	DamageEffectParams.DebuffChance = DebuffChance;
-	DamageEffectParams.DebuffDamage = DebuffDamage;
-	DamageEffectParams.DebuffDuration = DebuffDuration;
-	DamageEffectParams.DebuffFrequency = DebuffFrequency;
-	DamageEffectParams.RagdollImpulseMagnitude = RagdollImpulseMagnitude;
-	DamageEffectParams.KnockbackImpulseMagnitude = KnockbackImpulseMagnitude;
-	DamageEffectParams.KnockbackChance = KnockbackChance;
+	FDamageEffectParams DEffectParams;
+	DEffectParams.WorldContextObject = GetAvatarActorFromActorInfo();
+	DEffectParams.GEDamageClass = GEDamageClass;
+	DEffectParams.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	DEffectParams.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	DEffectParams.BaseDamage = DamageScalableFloat.GetValueAtLevel(GetAbilityLevel());
+	DEffectParams.AbilityLevel = GetAbilityLevel();
+	DEffectParams.DamageType = DamageType;
+	DEffectParams.DebuffChance = DebuffChance;
+	DEffectParams.DebuffDamage = DebuffDamage;
+	DEffectParams.DebuffDuration = DebuffDuration;
+	DEffectParams.DebuffFrequency = DebuffFrequency;
+	DEffectParams.RagdollImpulseMagnitude = RagdollImpulseMagnitude;
+	DEffectParams.KnockbackImpulseMagnitude = KnockbackImpulseMagnitude;
+	DEffectParams.KnockbackChance = KnockbackChance;
 	if (IsValid(TargetActor))
 	{
 		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation(); // 내 기준에서 상대방 방향 회전값
@@ -43,46 +43,46 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVe
 
 		if (false == bOverrideKnockbackDirection) 
 		{
-			DamageEffectParams.KnockbackImpulse = ToTarget * KnockbackImpulseMagnitude;
+			DEffectParams.KnockbackImpulse = ToTarget * KnockbackImpulseMagnitude;
 		}
 		if (false == bOverrideRagdollImpulse) // Ragdoll 방향 적용값 X
 		{
-			DamageEffectParams.RagdollImpulse = ToTarget * RagdollImpulseMagnitude;
+			DEffectParams.RagdollImpulse = ToTarget * RagdollImpulseMagnitude;
 		}
 	}
 
 
-	if (bOverrideRagdollImpulse) // Ragdoll 방향 적용 O
-	{
-		RagdollImpulseDirectionOverride.Normalize();
-		DamageEffectParams.RagdollImpulse = RagdollImpulseDirectionOverride * RagdollImpulseMagnitude;
-		if (bOverridePitch)
-		{
-			FRotator RagdollImpulseRotation = RagdollImpulseDirectionOverride.Rotation();
-			RagdollImpulseRotation.Pitch = PitchOverride;
-			DamageEffectParams.RagdollImpulse = RagdollImpulseRotation.Vector() * RagdollImpulseMagnitude;
-		}
-	}
 	if (bOverrideKnockbackDirection) // Knockback 방향 적용 O
 	{
 		KnockbackDirectionOverride.Normalize();
-		DamageEffectParams.KnockbackImpulse = KnockbackDirectionOverride * KnockbackImpulseMagnitude;
+		DEffectParams.KnockbackImpulse = KnockbackDirectionOverride * KnockbackImpulseMagnitude;
 		if (bOverridePitch)
 		{
 			FRotator KnockbackRotation = KnockbackDirectionOverride.Rotation();
 			KnockbackRotation.Pitch = PitchOverride;
-			DamageEffectParams.KnockbackImpulse = KnockbackRotation.Vector() * KnockbackImpulseMagnitude;
+			DEffectParams.KnockbackImpulse = KnockbackRotation.Vector() * KnockbackImpulseMagnitude;
+		}
+	}
+	if (bOverrideRagdollImpulse) // Ragdoll 방향 적용 O
+	{
+		RagdollImpulseDirectionOverride.Normalize();
+		DEffectParams.RagdollImpulse = RagdollImpulseDirectionOverride * RagdollImpulseMagnitude;
+		if (bOverridePitch)
+		{
+			FRotator RagdollImpulseRotation = RagdollImpulseDirectionOverride.Rotation();
+			RagdollImpulseRotation.Pitch = PitchOverride;
+			DEffectParams.RagdollImpulse = RagdollImpulseRotation.Vector() * RagdollImpulseMagnitude;
 		}
 	}
 	if (bRadialDamage) // 반경 데미지
 	{
-		DamageEffectParams.bRadialDamage = bRadialDamage;
-		DamageEffectParams.RadialDamageOrigin = InRadialDamageOrigin;
-		DamageEffectParams.RadialDamageInnerRadius = RadialDamageInnerRadius;
-		DamageEffectParams.RadialDamageOuterRadius = RadialDamageOuterRadius;
+		DEffectParams.bRadialDamage = bRadialDamage;
+		DEffectParams.RadialDamageOrigin = InRadialDamageOrigin;
+		DEffectParams.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		DEffectParams.RadialDamageOuterRadius = RadialDamageOuterRadius;
 	}
 
-	return DamageEffectParams;
+	return DEffectParams;
 }
 
 float UTDGA_Damage::GetDamageAtCurrentAbilityLevel() const

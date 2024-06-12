@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystemComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/TDDA_CharacterClass.h"
 #include "Library/TDItemLibrary.h"
@@ -128,6 +129,22 @@ public:
 	UFUNCTION(BlueprintPure)
 	static bool IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle);
 	//********************************************************
+
+	//********************************************************
+	//*  Damage Effect Params
+	UFUNCTION(BlueprintCallable)
+	static void SetIsRadialDamageEffectParam(UPARAM(ref) FDamageEffectParams& DamageEffectParams, bool bIsRadial, float InnerRadius, float OuterRadius, FVector Origin);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetKnockbackDirection(UPARAM(ref) FDamageEffectParams& DamageEffectParams, FVector KnockbackDirection, float Magnitude = 0.f);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetRagdollImpulseDirection(UPARAM(ref) FDamageEffectParams& DamageEffectParams, FVector ImpulseDirection, float Magnitude = 0.f);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetTargetEffectParamsASC(UPARAM(ref) FDamageEffectParams& DamageEffectParams, UAbilitySystemComponent* InASC);
+	//********************************************************
+
 
 	UFUNCTION(BlueprintPure)
 	static bool IsSameTeam(AActor* FirstActor, AActor* SecondActor);
