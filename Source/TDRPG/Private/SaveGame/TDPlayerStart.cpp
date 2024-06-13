@@ -1,5 +1,6 @@
 ﻿#include "SaveGame/TDPlayerStart.h"
 #include "Components/SphereComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameMode/TDGameModeBase.h"
 #include "Interface/IPlayer.h"
 #include "Kismet/GameplayStatics.h"
@@ -34,6 +35,7 @@ void ATDPlayerStart::BeginPlay()
 	Super::BeginPlay();
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
+	
 }
 
 void ATDPlayerStart::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -6,6 +6,7 @@
 class UTDGameInstance;
 class UTDDA_CharacterClass;
 class UTDDA_Ability;
+class UTDDA_DropItem;
 class USaveGame;
 class UTDMVVM_Slot;
 class UTDSaveGame_Load;
@@ -63,6 +64,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")
 	TObjectPtr<UTDDA_Ability> TDDAAbility;
 	//********************************************************
+
+	//********************************************************
+	//** Monster Drop Items & Player loot tiers items
+	UPROPERTY(EditDefaultsOnly, Category = "Loot Tiers")
+	TObjectPtr<UTDDA_DropItem> TDDADropItem;
+	//********************************************************
+
 
 protected:
 	virtual void BeginPlay() override;

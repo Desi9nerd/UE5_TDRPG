@@ -1,4 +1,6 @@
 ﻿#include "Character/TDEnemyCharacter.h"
+
+#include "Actor/TDItemActor.h"
 #include "AI/AIController/TDAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -7,9 +9,13 @@
 #include "TDRPG/TDRPG.h" // CUSTOM_DEPTH_RED
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameMode/TDGameModeBase.h"
 #include "UI/Widget/TDUW.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GameplayTags/TDGameplayTags.h"
+#include "GAS/Data/TDDA_DropItem.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ATDEnemyCharacter::ATDEnemyCharacter()
 {
@@ -88,6 +94,8 @@ void ATDEnemyCharacter::Die(const FVector& RagdollImpulse)
 	{	// Blackboard의 key를 찾고 해당 key의 value값을 설정
 		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	}
+
+	SpawnItemsAfterDeath(); // 몬스터 사망 후 아이템 드롭
 
 	Super::Die(RagdollImpulse);
 }
@@ -179,4 +187,64 @@ void ATDEnemyCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 New
 	{
 		TDAIController->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("Stunned")), bStunned);
 	}
+}
+
+void ATDEnemyCharacter::SpawnItemsAfterDeath()
+{
+	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (false == IsValid(TDGameMode)) return;
+
+	LootItems = TDGameMode->TDDADropItem->GetLootItems();
+	int32 NumOfItems = LootItems.Num();
+	LootRotations = EvenlySpacedRotators(GetActorForwardVector(), GetActorUpVector(), 360.f, NumOfItems); // 아이템 여러개를 일정 간격으로 스폰하기 위해 TArray<FRotator> 계산.
+
+	SpawnLoopCnt = 0;
+
+	GetWorld()->GetTimerManager().SetTimer(LootTimer, this, &ThisClass::SpawnLootItem, 0.1f, true);
+}
+
+void ATDEnemyCharacter::SpawnLootItem()
+{
+	if (SpawnLoopCnt < LootItems.Num())
+	{
+		FVector Location = GetActorLocation() + UKismetMathLibrary::GetForwardVector(LootRotations[SpawnLoopCnt]) * UKismetMathLibrary::RandomFloatInRange(MinSpawnDistance, MaxSpawnDistance);
+		FTransform SpawnTransform = UKismetMathLibrary::MakeTransform(Location, LootRotations[SpawnLoopCnt]);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		ATDItemActor* ItemActor = GetWorld()->SpawnActor<ATDItemActor>(LootItems[SpawnLoopCnt].LootClass, SpawnTransform, SpawnParams);
+		if (IsValid(ItemActor))
+		{
+			
+		}
+
+		SpawnLoopCnt++;
+	}
+	else
+	{
+		LootTimer.Invalidate();
+	}
+}
+
+TArray<FRotator> ATDEnemyCharacter::EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfRotators)
+{
+	TArray<FRotator> Rotators;
+
+	if (NumOfRotators > 1)
+	{
+		const float DeltaSpread = Spread / (NumOfRotators - 1);
+		for (int32 i = 0; i < NumOfRotators; i++)
+		{
+			const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			Rotators.Add(Direction.Rotation());
+		}
+	}
+	else
+	{
+		Rotators.Add(ForwardVector.Rotation());
+	}
+
+	return Rotators;
 }

@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "Character/TDBaseCharacter.h"
 #include "Interface/IEnemy.h"
+#include "Library/TDItemLibrary.h"
 #include "UI/WidgetController/TDWidgetControllerOverlay.h"
 #include "TDEnemyCharacter.generated.h"
 
@@ -65,5 +66,26 @@ protected:
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 	UPROPERTY()
 	TObjectPtr<ATDAIController> TDAIController;
+
+	UFUNCTION()
+	void SpawnItemsAfterDeath();
+
+private:
+	UFUNCTION()
+	void SpawnLootItem();
+
+	TArray<FRotator> EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis, float Spread, int32 NumOfRotators);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Drop Item", Meta = (AllowPrivateAccess = true))
+	float MinSpawnDistance = 25.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Drop Item", Meta = (AllowPrivateAccess = true))
+	float MaxSpawnDistance = 150.f;
+
+	TArray<FLootItem> LootItems;
+
+	TArray<FRotator> LootRotations;
+	int32 SpawnLoopCnt;
+
+	FTimerHandle LootTimer;
 
 };

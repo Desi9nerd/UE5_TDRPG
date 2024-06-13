@@ -18,6 +18,7 @@ class UTDItemStaticData;
 struct FWidgetControllerParams;
 class ATDHUD;
 class UTDDA_Ability;
+class UTDDA_DropItem;
 
 /**
  * 
@@ -162,6 +163,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void GetClosestTargets(int32 MaxTargets, const TArray<AActor*>& InActors, TArray<AActor*>& OutClosestTargets, const FVector& InOrigin);
+	//********************************************************
+
+	//********************************************************
+	//** Monster Drop Item Data.
+	UFUNCTION(BlueprintCallable, meta = (DefaultToSelf = "WorldContextObject"))
+	static UTDDA_DropItem* GetTDDA_DropItem(const UObject* WorldContextObject);
 	//********************************************************
 
 	//********************************************************

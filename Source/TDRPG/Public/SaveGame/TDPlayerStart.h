@@ -5,6 +5,7 @@
 #include "TDPlayerStart.generated.h"
 
 class USphereComponent;
+class UWidgetComponent;
 
 /**
  * 

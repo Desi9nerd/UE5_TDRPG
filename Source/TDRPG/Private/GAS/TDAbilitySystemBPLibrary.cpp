@@ -518,6 +518,14 @@ void UTDAbilitySystemBPLibrary::GetClosestTargets(int32 MaxTargets, const TArray
 	}
 }
 
+UTDDA_DropItem* UTDAbilitySystemBPLibrary::GetTDDA_DropItem(const UObject* WorldContextObject)
+{
+	const ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (false == IsValid(TDGameMode)) return nullptr;
+
+	return TDGameMode->TDDADropItem;
+}
+
 bool UTDAbilitySystemBPLibrary::IsSameTeam(AActor* FirstActor, AActor* SecondActor)
 {
 	if ( (FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player")) || (FirstActor->ActorHasTag("Enemy") && SecondActor->ActorHasTag("Enemy")) )
