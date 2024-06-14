@@ -17,8 +17,8 @@ class TDRPG_API UTDUW_InventoryToolTip : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(VisibleAnywhere)
-	UTDUW_InventorySlot* InventorySlotBeingHovered;
+	//UPROPERTY(VisibleAnywhere)
+	//UTDUW_InventorySlot* InventorySlotBeingHovered;
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UTextBlock> ItemName;

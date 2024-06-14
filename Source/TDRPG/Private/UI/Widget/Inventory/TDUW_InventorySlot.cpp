@@ -1,5 +1,6 @@
 ﻿#include "UI/Widget/Inventory/TDUW_InventorySlot.h"
-
+/*
+ 
 #include "Actor/TDEffectActor.h"
 #include "Actor/TDItemActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
@@ -336,3 +337,5 @@ void UTDUW_InventorySlot::UpdateInventorySlots()
 		UpdateDraggedSlot(PrevSlotNetItem, PrevSlotNewQuantity);
 	}
 }
+
+*/

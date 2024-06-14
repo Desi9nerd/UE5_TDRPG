@@ -387,7 +387,7 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 
 	if (false == bTemp)
 	{
-		GetTDHUD()->GetInventoryMenuWidget();
+		//GetTDHUD()->GetInventoryMenuWidget();
 		bTemp = true;
 	}
 }

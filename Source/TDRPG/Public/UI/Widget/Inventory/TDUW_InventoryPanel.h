@@ -23,8 +23,10 @@ public:
 	virtual void NativeDestruct() override;
 
 	void CreateInventorySlotWidgets();
+	//void UpdateCategoryItems(TArray<UTDInventorySlot*> CategoryItems, int32 AmountOfSlots);
 
 	void DisplayInventorySlotWidgets();
+	void DisplayAllItemsWidgets();
 
 	int32 DraggedSlotIndex;
 

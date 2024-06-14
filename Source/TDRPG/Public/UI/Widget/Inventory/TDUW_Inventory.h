@@ -4,6 +4,7 @@
 #include "UI/Widget/TDUW.h"
 #include "TDUW_Inventory.generated.h"
 
+
 class ATDCharacter;
 class UHorizontalBox;
 class UButton;
@@ -16,6 +17,7 @@ class TDRPG_API UTDUW_Inventory : public UTDUW
 {
 	GENERATED_BODY()
 
+	/*
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -64,4 +66,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<ATDCharacter> TDCharacter;
 
+*/
 };

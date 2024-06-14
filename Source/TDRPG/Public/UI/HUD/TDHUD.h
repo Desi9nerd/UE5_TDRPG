@@ -26,7 +26,7 @@ public:
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	//void InitInventory(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
-	TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
+	//TObjectPtr<UTDUW_Inventory> GetInventoryWidget();
 	TObjectPtr<UTDUW_InventoryPanel> GetInventoryPanelWidget();
 	TObjectPtr<UTDUW_InventoryMenuUI> GetInventoryMenuWidget();
 	TObjectPtr<UTDWidgetControllerOverlay> GetTDWidgetControllerOverlay(const FWidgetControllerParams& WCParams);
@@ -39,10 +39,10 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UTDUW> OverlayWidgetClass;
 
-	UPROPERTY()
-	TObjectPtr<UTDUW_Inventory>  InventoryWidget;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass;
+	//UPROPERTY()
+	//TObjectPtr<UTDUW_Inventory>  InventoryWidget;
+	//UPROPERTY(EditAnywhere)
+	//TSubclassOf<UTDUW_Inventory> InventoryWidgetClass;
 	UPROPERTY()
 	TObjectPtr<UTDUW_InventoryPanel>  InventoryPanelWidget;
 	UPROPERTY(EditAnywhere)

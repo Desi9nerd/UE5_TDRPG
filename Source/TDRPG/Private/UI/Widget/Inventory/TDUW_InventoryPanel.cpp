@@ -6,8 +6,6 @@
 #include "Components/ListView.h"
 #include "Components/TileView.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/Widget/Inventory/TDUW_InventoryEntry.h"
-#include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 void UTDUW_InventoryPanel::NativeConstruct()
 {
@@ -31,22 +29,25 @@ void UTDUW_InventoryPanel::NativeDestruct()
 
 void UTDUW_InventoryPanel::CreateInventorySlotWidgets()
 {
-	checkf(TDCharacter, TEXT("No TDCharacter. Check  UTDUW_Inventory::CreateInventorySlotWidgets()"));
+	if (false == IsValid(TDCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("No TDCharacter. Cannot create inventory slot widgets."));
+		return;
+	}
 
 	// SelectedInventoryCategory의 기준으로 Inventory 보이게 하기
 	DisplayInventorySlotWidgets();
 
 	TileView_Inventory->SetVisibility(ESlateVisibility::Visible);
+	
 }
-
 
 void UTDUW_InventoryPanel::DisplayInventorySlotWidgets()
 {
 	TileView_Inventory->ClearListItems();
-
-	int32 AmountOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots(); // Slot 개수
+	
 	EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
-
+	
 	TArray<UTDInventorySlot*> SelectedCategoryItems;
 
 	switch (SelectedCategory)
@@ -68,17 +69,23 @@ void UTDUW_InventoryPanel::DisplayInventorySlotWidgets()
 		break;
 	}
 
-	/*for (int32 i = 0; i < AmountOfSlots; i++)
-	{
-		UTDItemLibrary* EntryObject = NewObject<UTDItemLibrary>();
-		EntryObject->InventorySlot = (*SelectedCategoryItems)[i];
-
-		TileView_Inventory->AddItem(EntryObject);
-	}*/
-
 	TileView_Inventory->SetListItems(SelectedCategoryItems);
+	UE_LOG(LogTemp, Warning, TEXT("SelectedCategoryItems!!"));
 }
 
+void UTDUW_InventoryPanel::DisplayAllItemsWidgets()
+{
+	TileView_Inventory->ClearListItems();
+
+	TArray<UTDInventorySlot*> AllItems;
+
+	for (const TTuple<int, UTDInventorySlot*>& iter : TDCharacter->GetInventoryComponent()->GetAllItems())
+	{
+		AllItems.Add(iter.Value);
+	}
+
+	TileView_Inventory->SetListItems(AllItems);
+}
 
 void UTDUW_InventoryPanel::OnWeaponButtonClicked()
 {
@@ -122,5 +129,7 @@ void UTDUW_InventoryPanel::OnFoodButtonClicked()
 
 void UTDUW_InventoryPanel::OnAllButtonClicked()
 {
-	
+	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::None);
+
+	DisplayAllItemsWidgets();
 }

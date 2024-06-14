@@ -117,10 +117,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> PickUpItemInputAction;
 	
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UTDUW_Inventory> InventoryWidgetClass; 
-	UPROPERTY()
-	TObjectPtr<UTDUW_Inventory> TDInventoryWidget;
+	//UPROPERTY(EditDefaultsOnly)
+	//TSubclassOf<UTDUW_Inventory> InventoryWidgetClass; 
+	//UPROPERTY()
+	//TObjectPtr<UTDUW_Inventory> TDInventoryWidget;
 
 	bool bInventoryIsOpen;
 

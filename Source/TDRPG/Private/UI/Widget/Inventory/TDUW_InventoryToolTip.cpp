@@ -7,11 +7,11 @@ void UTDUW_InventoryToolTip::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (IsValid(InventorySlotBeingHovered->GetFItemReference().ItemClass))
-	{
-		const FItem& ItemBeingHovered = InventorySlotBeingHovered->GetFItemReference();
-		ItemName->SetText(ItemBeingHovered.Name);
-		//ItemQuantity->SetText(InventorySlotBeingHovered->Text_ItemQuantity->GetText());
-		ItemDescription->SetText(ItemBeingHovered.Description);
-	}
+	//if (IsValid(InventorySlotBeingHovered->GetFItemReference().ItemClass))
+	//{
+	//	const FItem& ItemBeingHovered = InventorySlotBeingHovered->GetFItemReference();
+	//	ItemName->SetText(ItemBeingHovered.Name);
+	//	//ItemQuantity->SetText(InventorySlotBeingHovered->Text_ItemQuantity->GetText());
+	//	ItemDescription->SetText(ItemBeingHovered.Description);
+	//}
 }

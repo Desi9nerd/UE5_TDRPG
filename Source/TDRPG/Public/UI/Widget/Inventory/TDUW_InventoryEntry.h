@@ -19,6 +19,8 @@ class TDRPG_API UTDUW_InventoryEntry : public UTDUW, public IUserObjectListEntry
 public:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
+	void UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity);
+
 	UPROPERTY()
 	int32 SlotIndex;
 

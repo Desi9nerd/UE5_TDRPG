@@ -15,7 +15,7 @@ struct FDamageEffectParams
 {
 	GENERATED_BODY()
 
-	FDamageEffectParams() {}
+	//FDamageEffectParams() {}
 
 	UPROPERTY()
 	TObjectPtr<UObject> WorldContextObject = nullptr;

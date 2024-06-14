@@ -6,6 +6,7 @@
 #include "Player/TDPlayerController.h"
 #include "UI/HUD/TDHUD.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
+#include "UI/Widget/Inventory/TDUW_InventoryPanel.h"
 #include "UI/Widget/Inventory/TDUW_InventorySlot.h"
 
 void UTDUW_InventoryMenuUI::NativeConstruct()
@@ -27,28 +28,28 @@ bool UTDUW_InventoryMenuUI::NativeOnDrop(const FGeometry& InGeometry, const FDra
 	switch (TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory())
 	{
 	case EItemCategory::Weapon:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
+		//SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetWeaponCategory();
 		break;
 	case EItemCategory::Armor:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
+		//SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetArmorCategory();
 		break;
 	case EItemCategory::Potion:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
+		//SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetPotionCategory();
 		break;
 	case EItemCategory::Food:
-		SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
+		//SelectedCategoryItems = &TDCharacter->GetInventoryComponent()->GetFoodCategory();
 		break;
 	default:
 		break;
 	}
 
 	//****************************************************************************
-	int32 SlotIdx = TDPlayerController->GetTDHUD()->GetInventoryWidget()->DraggedSlotIndex;
+	int32 SlotIdx = TDPlayerController->GetTDHUD()->GetInventoryPanelWidget()->DraggedSlotIndex;
 
 	TDCharacter->GetInventoryComponent()->DropItem((*SelectedCategoryItems)[SlotIdx].Item.ItemClass, (*SelectedCategoryItems)[SlotIdx].ItemQuantity, TDCharacter->GetActorLocation());
 
 	// ºóÄ­À¸·Î ¾÷µ¥ÀÌÆ®
-	(*SelectedCategoryItems)[SlotIdx].InventorySlot->UpdateInventorySlotUI(FItem(), 0);
+	//(*SelectedCategoryItems)[SlotIdx].InventorySlot->UpdateInventorySlotUI(FItem(), 0);
 	(*SelectedCategoryItems)[SlotIdx].Item = FItem();
 	(*SelectedCategoryItems)[SlotIdx].ItemQuantity = 0;
 
@@ -64,12 +65,12 @@ void UTDUW_InventoryMenuUI::OnOpenInventory()
 	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetOwningPlayer()->GetPawn());
 
 	// TODO: Open Inventory
-	if (TDPlayerController->GetTDHUD()->GetInventoryWidget()->IsVisible())
+	if (TDPlayerController->GetTDHUD()->GetInventoryPanelWidget()->IsVisible())
 	{
-		TDPlayerController->GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
+		TDPlayerController->GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Hidden);
 	}
 	else
 	{
-		TDPlayerController->GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
+		TDPlayerController->GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Visible);
 	}
 }

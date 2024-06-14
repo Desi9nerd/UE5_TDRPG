@@ -71,16 +71,16 @@ void ATDHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 //	GetInventoryMenuWidget();
 //}
 
-TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
-{
-	if (IsValid(InventoryWidget)) return InventoryWidget;
-
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
-	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
-	InventoryWidget->AddToViewport();
-
-	return InventoryWidget;
-}
+//TObjectPtr<UTDUW_Inventory> ATDHUD::GetInventoryWidget()
+//{
+//	if (IsValid(InventoryWidget)) return InventoryWidget;
+//
+//	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+//	InventoryWidget = Cast<UTDUW_Inventory>(Widget);
+//	InventoryWidget->AddToViewport();
+//
+//	return InventoryWidget;
+//}
 
 TObjectPtr<UTDUW_InventoryPanel> ATDHUD::GetInventoryPanelWidget()
 {

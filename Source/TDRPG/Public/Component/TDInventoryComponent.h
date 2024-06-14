@@ -27,11 +27,11 @@ public:
 	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
 	FORCEINLINE int32 GetAmountOfTotalSlots() { return AmountOfTotalSlots; }
 	FORCEINLINE EItemCategory& GetSelectedInventoryCategory() { return SelectedInventoryCategory; }
-	FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
-	FORCEINLINE TArray<FInventorySlot>& GetArmorCategory() { return ArmorCategory; }
-	FORCEINLINE TArray<FInventorySlot>& GetPotionCategory() { return PotionCategory; }
-	FORCEINLINE TArray<FInventorySlot>& GetFoodCategory() { return FoodCategory; }
-	FORCEINLINE TMap<int32, FInventorySlot>& GetAllItems() { return AllItems; }
+	//FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
+	//FORCEINLINE TArray<FInventorySlot>& GetArmorCategory() { return ArmorCategory; }
+	//FORCEINLINE TArray<FInventorySlot>& GetPotionCategory() { return PotionCategory; }
+	//FORCEINLINE TArray<FInventorySlot>& GetFoodCategory() { return FoodCategory; }
+	FORCEINLINE TMap<int32, UTDInventorySlot*>& GetAllItems() { return AllItems; }
 
 	void SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 	UFUNCTION(Client, Reliable) // Client RPC
@@ -66,7 +66,7 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_AddtoInventory(ATDItemActor* InItem);
 
-	void AddItemToInventory(const FItem& Item, int32 Quantity, UTDUW_InventorySlot* InventorySlot, int32 SlotIdx, TArray<FInventorySlot>* OutInventory);
+	void AddItemToInventory(const FItem& Item, int32 Quantity, TArray<UTDInventorySlot*> OutInventorySlots, int32 SlotIdx, TArray<FInventorySlot>* OutInventory);
 
 	bool FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
@@ -91,17 +91,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	EItemCategory SelectedInventoryCategory;
 
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<FInventorySlot> WeaponCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<FInventorySlot> ArmorCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<FInventorySlot> PotionCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<FInventorySlot> FoodCategory;
+	
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TMap<int32, FInventorySlot> AllItems;
+	TMap<int32, UTDInventorySlot*> AllItems;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<UDataTable> ItemDataTable;

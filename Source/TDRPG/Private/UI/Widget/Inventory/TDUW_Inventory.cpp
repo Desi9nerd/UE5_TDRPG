@@ -1,4 +1,5 @@
-﻿#include "UI/Widget/Inventory/TDUW_Inventory.h"
+﻿/*
+#include "UI/Widget/Inventory/TDUW_Inventory.h"
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
 #include "Components/Button.h"
@@ -117,14 +118,14 @@ void UTDUW_Inventory::DisplayAllInventoryItems()
 	Grid_Inventory->ClearChildren();
 
 	int32 AmountOfTotalSlots = TDCharacter->GetInventoryComponent()->GetAmountOfTotalSlots();
-	TMap<int32, FInventorySlot>* AllItems = &TDCharacter->GetInventoryComponent()->GetAllItems();
-	int32 AmountOfCurrentItems = (*AllItems).GetMaxIndex();
+	//TMap<int32, FInventorySlot>* AllItems = &TDCharacter->GetInventoryComponent()->GetAllItems();
+	//int32 AmountOfCurrentItems = (*AllItems).GetMaxIndex();
 
 	for (int32 i = 0; i < AmountOfTotalSlots; i++)
 	{
 		if (i < 3)
 		{
-			Grid_Inventory->AddChildToGrid((*AllItems)[i].InventorySlot, i / 4, i % 4);
+			//Grid_Inventory->AddChildToGrid((*AllItems)[i].InventorySlot, i / 4, i % 4);
 		}
 		else
 		{
@@ -182,3 +183,5 @@ void UTDUW_Inventory::OnAllButtonClicked()
 }
 
 //***************************************************************************************
+
+*/

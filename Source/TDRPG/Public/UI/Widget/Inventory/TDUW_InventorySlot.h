@@ -1,20 +1,17 @@
 #pragma once
-#include "CoreMinimal.h"
-#include "Library/TDItemLibrary.h"
 #include "UI/Widget/TDUW.h"
 #include "TDUW_InventorySlot.generated.h"
 
+/*
 class UImage;
 class UTextBlock;
 class UTDUW_InventoryToolTip;
-/**
- * 
- */
+
 UCLASS()
 class TDRPG_API UTDUW_InventorySlot : public UTDUW
 {
 	GENERATED_BODY()
-
+	
 public:
 	UPROPERTY()
 	FItem ItemReference;
@@ -56,3 +53,5 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
 	TSubclassOf<UTDUW_InventoryToolTip> ToolTipClass;
 };
+
+*/
