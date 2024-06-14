@@ -22,9 +22,9 @@ public:
 	USizeBox* SizeBox_Root;
 	UPROPERTY(meta = (BindWidget))
 	UImage* Image_Border;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UButton* Button;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* Text_X;
 	
 protected:

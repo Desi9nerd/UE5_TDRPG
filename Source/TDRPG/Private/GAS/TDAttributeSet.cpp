@@ -343,6 +343,8 @@ void UTDAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 
 void UTDAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const
 {
+	if (false == IsValid(Props.SourceCharacter) || false == IsValid(Props.TargetCharacter)) return;
+
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		// SouceCharacter가 플레이어. TargetCharcter(= damage causer)가 몬스터.
