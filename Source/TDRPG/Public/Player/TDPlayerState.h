@@ -33,14 +33,14 @@ public:
 	void AddToAttributePoints(int32 InNewAttributePoints);
 	void AddToSkillPoints(int32 InNewSkillPoints);
 
-	FORCEINLINE int32 GetPlayerLevel() const { return PlayerLevel; }
-	FORCEINLINE int32 GetExp() const { return Exp; }
-	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
-	FORCEINLINE int32 GetSkillPoints() const { return SkillPoints; }
-	FORCEINLINE void SetPlayerLevel(int32 InPlayerLevel);
-	FORCEINLINE void SetExp(int32 InExp);
-	FORCEINLINE void SetAttributePoints(int32 InAttributePoints);
-	FORCEINLINE void SetSkillPoints(int32 InSkillPoints);
+	int32 GetPlayerLevel() const { return PlayerLevel; }
+	int32 GetExp() const { return Exp; }
+	int32 GetAttributePoints() const { return AttributePoints; }
+	int32 GetSkillPoints() const { return SkillPoints; }
+	void SetPlayerLevel(int32 InPlayerLevel);
+	void SetExp(int32 InExp);
+	void SetAttributePoints(int32 InAttributePoints);
+	void SetSkillPoints(int32 InSkillPoints);
 
 	FOnPlayerStatChanged OnExpChangedDelegate;
 	FOnPlayerStatChanged OnAttributePointsChangedDelegate;

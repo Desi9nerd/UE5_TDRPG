@@ -6,6 +6,7 @@
 #include "TDCharacter.generated.h"
 
 class ATDGameModeBase;
+class ATDGameModeBase_Single;
 class ATDPlayerController;
 class ATDPlayerState;
 class USpringArmComponent;
@@ -28,10 +29,11 @@ public:
 	virtual void PossessedBy(AController* NewController) override; // Server
 	void LoadProgress();
 	virtual void OnRep_PlayerState() override; // Client
-	FORCEINLINE TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
-	FORCEINLINE TObjectPtr<ATDPlayerController> GetTDPlayerController();
-	FORCEINLINE TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
-	FORCEINLINE TObjectPtr<ATDPlayerState> GetTDPlayerState();
+	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
+	TObjectPtr<ATDPlayerController> GetTDPlayerController();
+	TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
+	TObjectPtr<ATDGameModeBase_Single> GetTDGameModeBase_Single();
+	TObjectPtr<ATDPlayerState> GetTDPlayerState();
 
 	//** ICombat *********************************************
 	//virtual int32 GetPlayerLevelBP_Implementation() override;
@@ -96,6 +98,8 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDGameModeBase> TDGameModeBase;
+	UPROPERTY()
+	TObjectPtr<ATDGameModeBase_Single> TDGameModeBase_Single;
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerState> TDPlayerState;

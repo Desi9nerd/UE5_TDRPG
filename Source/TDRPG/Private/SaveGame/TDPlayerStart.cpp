@@ -1,7 +1,7 @@
 ﻿#include "SaveGame/TDPlayerStart.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
-#include "GameMode/TDGameModeBase.h"
+#include "GameMode/TDGameModeBase_Single.h"
 #include "Interface/IPlayer.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -45,13 +45,13 @@ void ATDPlayerStart::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, A
 	{
 		bReached = true;
 
-		if (ATDGameModeBase* TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this)))
+		if (ATDGameModeBase_Single* TDGameMode = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this)))
 		{
 			const UWorld* World = GetWorld();
 			FString MapName = World->GetMapName();
 			MapName.RemoveFromStart(World->StreamingLevelsPrefix);
 
-			TDGameModeBase->SaveWorldState(GetWorld()); // SaveMap에 월드 정보를 저장.
+			TDGameMode->SaveWorldState(GetWorld()); // SaveMap에 월드 정보를 저장.
 		}
 
 		PlayerInterface->SaveProgress(PlayerStartTag); // PlayerStartTag를 넘겨 저장.

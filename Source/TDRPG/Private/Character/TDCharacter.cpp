@@ -3,6 +3,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameMode/TDGameModeBase.h"
+#include "GameMode/TDGameModeBase_Single.h"
 #include "SaveGame/TDSaveGame_Load.h"
 #include "AbilitySystemComponent.h"
 #include "GAS/TDAbilitySystemComponent.h"
@@ -72,46 +73,45 @@ void ATDCharacter::PossessedBy(AController* NewController) // 서버
 	// 서버에 Init Ability actor info 
 	InitAbilityActorInfo();
 
-	// 게임 SaveData 확인 후 로드하여 데이터 초기화.
-	LoadProgress();
-
-
-	if (GetTDGameModeBase())
+	if (GetTDGameModeBase_Single()) // Single Player
 	{
-		GetTDGameModeBase()->LoadWorldState(GetWorld());
+		LoadProgress(); // 게임 SaveData 확인 후 로드하여 데이터 초기화.
+		GetTDGameModeBase_Single()->LoadWorldState(GetWorld());
+	}
+	else // Multiplyer
+	{
+		InitializeDefaultAttributes(); // Attribute 초기화.
+		AddCharacterAbilities(); // Abilities 초기화.
 	}
 }
 
 void ATDCharacter::LoadProgress()
 {
-	if (GetTDGameModeBase())
+	UTDSaveGame_Load* SaveData = GetTDGameModeBase_Single()->RetrieveInGameSaveData();
+	if (SaveData == nullptr) return;
+
+	//* SaveData가 처음인지 아닌지 기준으로 기본값/저장된값으로 초기화.
+	if (SaveData->bFirstTimeLoadIn) // SaveData가 생성되고 처음으로 로드 되는것이라면
 	{
-		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
-		if (SaveData == nullptr) return;
-
-		//* SaveData가 처음인지 아닌지 기준으로 기본값/저장된값으로 초기화.
-		if (SaveData->bFirstTimeLoadIn) // SaveData가 생성되고 처음으로 로드 되는것이라면
+		InitializeDefaultAttributes(); // Attribute 초기화.
+		AddCharacterAbilities(); // Abilities 초기화.
+	}
+	else // 처음이 아니라면
+	{
+		if (GetTDASC()) // SaveData에서 Abilities 로드하기.
 		{
-			InitializeDefaultAttributes(); // Attribute 초기화.
-			AddCharacterAbilities(); // Abilities 초기화.
+			GetTDASC()->AddCharacterAbilitiesFromSaveData(SaveData);
 		}
-		else // 처음이 아니라면
+
+		if (GetTDPlayerState()) // PlayerState의 데이터를 저장된 게임의 데이터값으로 초기화.
 		{
-			if (GetTDASC()) // SaveData에서 Abilities 로드하기.
-			{
-				GetTDASC()->AddCharacterAbilitiesFromSaveData(SaveData);
-			}
-
-			if (GetTDPlayerState()) // PlayerState의 데이터를 저장된 게임의 데이터값으로 초기화.
-			{
-				GetTDPlayerState()->SetPlayerLevel(SaveData->PlayerLevel);
-				GetTDPlayerState()->SetExp(SaveData->Exp);
-				GetTDPlayerState()->SetAttributePoints(SaveData->AttributePoints);
-				GetTDPlayerState()->SetSkillPoints(SaveData->SkillPoints);
-			}
-
-			UTDAbilitySystemBPLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
+			GetTDPlayerState()->SetPlayerLevel(SaveData->PlayerLevel);
+			GetTDPlayerState()->SetExp(SaveData->Exp);
+			GetTDPlayerState()->SetAttributePoints(SaveData->AttributePoints);
+			GetTDPlayerState()->SetSkillPoints(SaveData->SkillPoints);
 		}
+
+		UTDAbilitySystemBPLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
 	}
 }
 
@@ -145,6 +145,18 @@ TObjectPtr<ATDGameModeBase> ATDCharacter::GetTDGameModeBase()
 	return TDGameModeBase;
 }
 
+TObjectPtr<ATDGameModeBase_Single> ATDCharacter::GetTDGameModeBase_Single()
+{
+	if (IsValid(TDGameModeBase_Single)) return TDGameModeBase_Single;
+
+	TDGameModeBase_Single = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
+	if (false == IsValid(TDGameModeBase_Single))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to get TDGameModeBase_Single"));
+	}
+	return TDGameModeBase_Single;
+}
+
 TObjectPtr<ATDPlayerState> ATDCharacter::GetTDPlayerState()
 {
 	if (IsValid(TDPlayerState)) return TDPlayerState;
@@ -170,11 +182,12 @@ void ATDCharacter::Die(const FVector& RagdollImpulse)
 	Super::Die(RagdollImpulse);
 
 	FTimerDelegate DeathTimerDelegate;
+	// TODO: 멀티버젼도 생각해보기.
 	DeathTimerDelegate.BindLambda([this]()
 		{
-			if (GetTDGameModeBase())
+			if (GetTDGameModeBase_Single())
 			{
-				GetTDGameModeBase()->PlayerDeath(this); // GameMode에 플레이어 죽음
+				GetTDGameModeBase_Single()->PlayerDeath(this); // GameMode에 플레이어 죽음
 			}
 		});
 
@@ -354,9 +367,9 @@ void ATDCharacter::SaveProgressBP_Implementation(const FName& CheckpointTag)
 {
 	UE_LOG(LogTemp, Warning, TEXT("BP Version is Called. Check ATDCharacter::SaveProgressBP_Implementation()"));
 	/*
-	if (GetTDGameModeBase())
+	if (GetTDGameModeBase_Single())
 	{
-		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
+		UTDSaveGame_Load* SaveData = GetTDGameModeBase_Single()->RetrieveInGameSaveData();
 		if (false == IsValid(SaveData)) return;
 
 		//* SaveData에 태그 기록.
@@ -378,16 +391,16 @@ void ATDCharacter::SaveProgressBP_Implementation(const FName& CheckpointTag)
 
 		//* 게임 저장.
 		SaveData->bFirstTimeLoadIn = false; // 다음 번에 게임시작 시 처음 시작이 되지 않고 데이터를 불러오도록 false 설정.
-		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
+		GetTDGameModeBase_Single()->SaveInGameProgressData(SaveData);
 	}
 	*/
 }
 
 void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 {
-	if (GetTDGameModeBase())
+	if (GetTDGameModeBase_Single())
 	{
-		UTDSaveGame_Load* SaveData = GetTDGameModeBase()->RetrieveInGameSaveData();
+		UTDSaveGame_Load* SaveData = GetTDGameModeBase_Single()->RetrieveInGameSaveData();
 		if (false == IsValid(SaveData)) return;
 
 		//* SaveData에 태그 기록.
@@ -438,7 +451,7 @@ void ATDCharacter::SaveProgress(const FName& CheckpointTag)
 
 
 		//* 게임 저장.
-		GetTDGameModeBase()->SaveInGameProgressData(SaveData);
+		GetTDGameModeBase_Single()->SaveInGameProgressData(SaveData);
 	}
 }
 

@@ -1,6 +1,6 @@
 ﻿#include "UI/MVVM/TDMVVM_StartMenu.h"
 #include "GameInstance/TDGameInstance.h"
-#include "GameMode/TDGameModeBase.h"
+#include "GameMode/TDGameModeBase_Single.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/MVVM/TDMVVM_Slot.h"
 
@@ -38,7 +38,7 @@ UTDMVVM_Slot* UTDMVVM_StartMenu::GetLoadSlotViewModelByIndex(int32 Index) const
 void UTDMVVM_StartMenu::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
 	//* GameMode의 값 넣어주기.
-	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	ATDGameModeBase_Single* TDGameMode = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
 	if (false == IsValid(TDGameMode))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, FString("싱글 플레이 환경으로 변경 후 접속해주세요."));
@@ -91,7 +91,7 @@ void UTDMVVM_StartMenu::DeleteButtonPressed()
 {
 	if (IsValid(SelectedSlot))
 	{
-		ATDGameModeBase::DeleteSlot(SelectedSlot->GetLoadSlotName(), SelectedSlot->SlotIndex); // 해당 슬롯 삭제.
+		ATDGameModeBase_Single::DeleteSlot(SelectedSlot->GetLoadSlotName(), SelectedSlot->SlotIndex); // 해당 슬롯 삭제.
 		SelectedSlot->SlotStatus = Vacant; // 삭제 후 해당 슬롯상태를 Vacant로 설정.
 		SelectedSlot->InitializeSlot();	// 삭제 후 해당 슬롯 초기화.
 		SelectedSlot->EnableSelectSlotButton.Broadcast(true); // 삭제 후 해당 슬롯 버튼상태를 true로 Broadcast.
@@ -100,7 +100,7 @@ void UTDMVVM_StartMenu::DeleteButtonPressed()
 
 void UTDMVVM_StartMenu::PlayButtonPressed()
 {
-	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	ATDGameModeBase_Single* TDGameMode = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
 
 	//* GameInstance의 값 넣어주기.
 	UTDGameInstance* TDGameInstance = Cast<UTDGameInstance>(TDGameMode->GetGameInstance());
@@ -116,7 +116,7 @@ void UTDMVVM_StartMenu::PlayButtonPressed()
 
 void UTDMVVM_StartMenu::LoadData()
 {
-	ATDGameModeBase* TDGameMode = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	ATDGameModeBase_Single* TDGameMode = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
 	if (false == IsValid(TDGameMode)) return;
 
 	for (const TTuple<int32, UTDMVVM_Slot*> LoadSlot : LoadSlots)
