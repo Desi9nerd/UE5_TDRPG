@@ -15,6 +15,7 @@
 #include "NiagaraComponent.h"
 #include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
+#include "Component/TDZoomComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GAS/TDAttributeSet.h"
@@ -46,6 +47,9 @@ ATDCharacter::ATDCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraSpringArm);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	// Zoom
+	ZoomComponent = CreateDefaultSubobject<UTDZoomComponent>(TEXT("ZoomComponent"));
 
 	// Niagara
 	Niagara_LevelUp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LevelUpEffect"));

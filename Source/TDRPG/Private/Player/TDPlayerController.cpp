@@ -12,6 +12,7 @@
 #include "Character/TDCharacter.h"
 #include "Component/TDInventoryComponent.h"
 #include "Actor/TDDecalActor.h"
+#include "Component/TDZoomComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "TDRPG/TDRPG.h"
@@ -43,6 +44,14 @@ ATDHUD* ATDPlayerController::GetTDHUD()
 
 	TDHUD = Cast<ATDHUD>(GetHUD());
 	return TDHUD;
+}
+
+TObjectPtr<ATDCharacter> ATDPlayerController::GetTDCharacter()
+{
+	if (IsValid(TDCharacter)) return TDCharacter;
+
+	TDCharacter = Cast<ATDCharacter>(GetPawn());
+	return TDCharacter;
 }
 
 void ATDPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
@@ -125,6 +134,7 @@ void ATDPlayerController::SetupInputComponent()
 	
 	const TWeakObjectPtr<UTDEnhancedInputComponent> TDEnhancedInputComponent = CastChecked<UTDEnhancedInputComponent>(InputComponent);
 	TDEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDPlayerController::Move);
+	TDEnhancedInputComponent->BindAction(ZoomInputAction, ETriggerEvent::Triggered, this, &ATDPlayerController::OnMouseWheel);
 	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ATDPlayerController::ShiftPressed);
 	TDEnhancedInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ATDPlayerController::ShiftReleased);
 	TDEnhancedInputComponent->BindAbilityActions(InputData, this, &ATDPlayerController::AbilityInputTagPressed, &ATDPlayerController::AbilityInputTagReleased, &ATDPlayerController::AbilityInputTagHeld);
@@ -329,6 +339,13 @@ void ATDPlayerController::Move(const FInputActionValue& InputActionValue)
 	}
 }
 
+void ATDPlayerController::OnMouseWheel(const FInputActionValue& Value)
+{
+	float WheelValue = Value.Get<float>();
+
+	GetTDCharacter()->GetTDZoomComponent()->SetZoomValue(WheelValue);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ATDPlayerController::OnOpenInventoryTriggered(const FInputActionValue& Value)
@@ -348,10 +365,9 @@ void ATDPlayerController::OnOpenInventoryTriggered(const FInputActionValue& Valu
 void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pickup Button Pressed!!"));
-
-	ATDCharacter* TDCharacter = Cast<ATDCharacter>(GetCharacter());
+	
 	checkf(TDCharacter, TEXT("No TDCharacter. Check  ATDPlayerController::OnPickupItemTriggered"));
-	TDCharacter->GetInventoryComponent()->PickupItem();
+	GetTDCharacter()->GetInventoryComponent()->PickupItem();
 }
 
 void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.

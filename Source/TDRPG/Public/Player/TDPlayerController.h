@@ -4,13 +4,14 @@
 #include "GameplayTagContainer.h"
 #include "TDPlayerController.generated.h"
 
+struct FInputActionValue;
 class ATDItemActor;
 class ATDDecalActor;
 class ATDHUD;
 class UInputMappingContext;
 class UInputAction;
 class UNiagaraSystem;
-struct FInputActionValue;
+class ATDCharacter;
 class IIEnemy;
 class UTDDAInput;
 class UTDAbilitySystemComponent;
@@ -32,6 +33,7 @@ public:
 	ATDPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
 	ATDHUD* GetTDHUD();
+	TObjectPtr<ATDCharacter> GetTDCharacter();
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit); 
@@ -111,7 +113,9 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_OpenCloseInventoryWidget(bool bOpen);
 
-
+	void OnMouseWheel(const FInputActionValue& Value);
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ZoomInputAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> OpenInventoryInputAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -129,6 +133,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDHUD> TDHUD;
+
+	UPROPERTY()
+	TObjectPtr<ATDCharacter> TDCharacter;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> OverlappingItem;

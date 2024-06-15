@@ -11,6 +11,7 @@ class ATDPlayerController;
 class ATDPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
+class UTDZoomComponent;
 class UNiagaraComponent;
 class UTDInventoryComponent;
 class USphereComponent;
@@ -30,6 +31,7 @@ public:
 	void LoadProgress();
 	virtual void OnRep_PlayerState() override; // Client
 	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
+	TObjectPtr<UTDZoomComponent> GetTDZoomComponent() { return ZoomComponent; }
 	TObjectPtr<ATDPlayerController> GetTDPlayerController();
 	TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
 	TObjectPtr<ATDGameModeBase_Single> GetTDGameModeBase_Single();
@@ -83,6 +85,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<UCameraComponent> FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<UTDZoomComponent> ZoomComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
