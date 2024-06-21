@@ -47,7 +47,7 @@ public:
 
 	//** FGameplayEffectContext 함수 재정의
 	virtual UScriptStruct* GetScriptStruct() const;
-	virtual FGameplayEffectContext* Duplicate() const;
+	virtual FTDGameplayEffectContext* Duplicate() const;
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess); // Custom serialization
 
 protected:

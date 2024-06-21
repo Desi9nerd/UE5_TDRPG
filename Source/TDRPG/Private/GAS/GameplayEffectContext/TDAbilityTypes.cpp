@@ -6,11 +6,11 @@ UScriptStruct* FTDGameplayEffectContext::GetScriptStruct() const
 	return StaticStruct();
 }
 
-FGameplayEffectContext* FTDGameplayEffectContext::Duplicate() const
+FTDGameplayEffectContext* FTDGameplayEffectContext::Duplicate() const
 {
 	//* Creates a copy of this context, used to duplicate for later modifications */
 
-	FGameplayEffectContext* NewContext = new FGameplayEffectContext();
+	FTDGameplayEffectContext* NewContext = new FTDGameplayEffectContext();
 	*NewContext = *this;
 
 	if (GetHitResult())
