@@ -60,11 +60,7 @@ void UTDUW_InventoryPanel::DisplayInventorySlotWidgets()
 
 	TDInventoryComponent->ReloadDisplayItems();
 	TDInventoryComponent->InventoryDisplayItems;
-	UE_LOG(LogTemp, Warning, TEXT("Log  UTDUW_InventoryPanel::DisplayInventorySlotWidgets() - Before RegenerateAllEngtries"));
-	//TileView_Inventory->ClearListItems();
-	//TileView_Inventory->SetListItems(TDInventoryComponent->InventoryDisplayItems);
 	TileView_Inventory->RegenerateAllEntries();
-	UE_LOG(LogTemp, Warning, TEXT("Log  UTDUW_InventoryPanel::DisplayInventorySlotWidgets() - After RegenerateAllEngtries"));
 
 	//TileView_Inventory->ClearListItems();
 	//
