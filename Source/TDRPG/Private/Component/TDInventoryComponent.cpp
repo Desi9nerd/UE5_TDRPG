@@ -121,6 +121,8 @@ void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
 
 void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* InItem)
 {
+	if (Inventory.Items.Num() >= GetAmountOfSlots()) return;
+
 	checkf(ItemDataTable, TEXT("No Item DataTable. Check UTDInventoryComponent::Client_AddtoInventory_Implementation"));
 	if (ItemDataTable)
 	{

@@ -17,31 +17,22 @@ void UTDUW_InventoryEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 		
 	if (IsValid(Item->Data.Item.Thumbnail))
 	{
-		//Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
-		//Image_Item->SetVisibility(ESlateVisibility::Visible);
+		Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
+		Image_Item->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
-		
+		Image_Item->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	Text_ItemQuantity->SetText(FText::AsNumber(Item->Data.ItemQuantity));
-	if (Item->Data.ItemQuantity <= 0)
-	{
-		Image_Item->SetVisibility(ESlateVisibility::Hidden);
-		Text_ItemQuantity->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else if (Item->Data.ItemQuantity > 1)
+	if (Item->Data.ItemQuantity > 1)
 	{
 		Text_ItemQuantity->SetVisibility(ESlateVisibility::HitTestInvisible);
-		Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
-		Image_Item->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
 		Text_ItemQuantity->SetVisibility(ESlateVisibility::Hidden);
-		Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
-		Image_Item->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
