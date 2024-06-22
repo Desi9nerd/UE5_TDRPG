@@ -4,6 +4,7 @@
 #include "UI/Widget/TDUW.h"
 #include "TDUW_InventoryPanel.generated.h"
 
+class UTDInventoryComponent;
 class UTileView;
 class ATDCharacter;
 class UHorizontalBox;
@@ -27,6 +28,9 @@ public:
 
 	void DisplayInventorySlotWidgets();
 	void DisplayAllItemsWidgets();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
 
 	int32 DraggedSlotIndex;
 
@@ -61,4 +65,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ATDCharacter> TDCharacter;
+
+	int32 TotalNumOfSlots;
 };

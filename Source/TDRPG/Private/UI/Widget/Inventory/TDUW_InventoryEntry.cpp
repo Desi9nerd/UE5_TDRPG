@@ -6,7 +6,7 @@ void UTDUW_InventoryEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
 	IUserObjectListEntry::NativeOnListItemObjectSet(ListItemObject);
 
-	UTDInventorySlot* Item = Cast<UTDInventorySlot>(ListItemObject);
+	UTDInventoryDisplayItemObject* Item = Cast<UTDInventoryDisplayItemObject>(ListItemObject);
 
 	if (Item == nullptr)
 	{
@@ -14,9 +14,30 @@ void UTDUW_InventoryEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 		Text_ItemQuantity->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
+		
+	if (IsValid(Item->Data.Item.Thumbnail))
+	{
+		//Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
+		//Image_Item->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		
+	}
 
-	Image_Item->SetBrushFromTexture(Item->InventorySlot.Item.Thumbnail);
-	Text_ItemQuantity->SetText(FText::AsNumber(Item->InventorySlot.ItemQuantity));
+	Text_ItemQuantity->SetText(FText::AsNumber(Item->Data.ItemQuantity));
+	if (Item->Data.ItemQuantity > 1)
+	{
+		Text_ItemQuantity->SetVisibility(ESlateVisibility::HitTestInvisible);
+		Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
+		Image_Item->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		Text_ItemQuantity->SetVisibility(ESlateVisibility::Hidden);
+		Image_Item->SetBrushFromTexture(Item->Data.Item.Thumbnail);
+		Image_Item->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UTDUW_InventoryEntry::UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity)

@@ -366,8 +366,10 @@ void ATDPlayerController::OnPickupItemTriggered(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pickup Button Pressed!!"));
 	
-	checkf(TDCharacter, TEXT("No TDCharacter. Check  ATDPlayerController::OnPickupItemTriggered"));
-	GetTDCharacter()->GetInventoryComponent()->PickupItem();
+	if (GetTDCharacter())
+	{
+		GetTDCharacter()->GetInventoryComponent()->PickupItem();
+	}
 }
 
 void ATDPlayerController::OpenCloseInventoryWidget(bool bOpen) // 인벤토리 열기/닫기.
@@ -384,7 +386,6 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 	{
 		if (IsValid(GetTDHUD()->GetInventoryPanelWidget()))
 		{
-			//GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Visible);
 			GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Visible);
 			UGameplayStatics::PlaySound2D(this, Sound_OpenInventory);
 			bInventoryIsOpen = true;
@@ -394,7 +395,6 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 	{
 		if (IsValid(GetTDHUD()->GetInventoryPanelWidget()))
 		{
-			//GetTDHUD()->GetInventoryWidget()->SetVisibility(ESlateVisibility::Hidden);
 			GetTDHUD()->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Hidden);
 			UGameplayStatics::PlaySound2D(this, Sound_CloseInventory);
 			bInventoryIsOpen = false;
@@ -403,7 +403,6 @@ void ATDPlayerController::Client_OpenCloseInventoryWidget_Implementation(bool bO
 
 	if (false == bTemp)
 	{
-		//GetTDHUD()->GetInventoryMenuWidget();
 		bTemp = true;
 	}
 }

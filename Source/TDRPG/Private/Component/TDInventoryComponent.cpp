@@ -4,10 +4,41 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "Net/UnrealNetwork.h"
 #include "Player/TDPlayerController.h"
+#include "UI/HUD/TDHUD.h"
 #include "UI/Widget/Inventory/TDUW_Inventory.h"
-#include "UI/Widget/Inventory/TDUW_InventoryEntry.h"
-#include "UI/Widget/Inventory/TDUW_InventorySlot.h"
+#include "UI/Widget/Inventory/TDUW_InventoryPanel.h"
+
+void UTDInventoryComponent::OnRep_Inventory()
+{
+	if (false == GetOwner()->HasAuthority()) // 클라이언트인 경우에만 실행
+	{
+		ReloadDisplayItems();
+	}
+}
+
+void UTDInventoryComponent::ReloadDisplayItems()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UTDInventoryComponent::ReloadDisplayItems()"));
+
+	for (auto& InventoryItem : Inventory.Items)
+	{
+		UTDInventoryDisplayItemObject* ItemToAdd = NewObject<UTDInventoryDisplayItemObject>(this, UTDInventoryDisplayItemObject::StaticClass());
+		FItem* FoundItem = ItemDataTable->FindRow<FItem>(FName(*((InventoryItem.Item.Name).ToString())), FString(""));
+
+		if (FoundItem)
+		{
+			// Add details from Setup inventory data (FoundItem from ItemDataTable)
+			ItemToAdd->Data.Item = *FoundItem;
+			ItemToAdd->Data.ItemQuantity = InventoryItem.ItemQuantity;
+			ItemToAdd->Data.SlotIndex = InventoryItem.SlotIndex;
+
+			// Add the item to the array
+			InventoryDisplayItems.Add(ItemToAdd);
+		}
+	}
+}
 
 UTDInventoryComponent::UTDInventoryComponent()
 {
@@ -16,40 +47,32 @@ UTDInventoryComponent::UTDInventoryComponent()
 	SetIsReplicatedByDefault(true);
 }
 
+void UTDInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	FDoRepLifetimeParams Params;
+	Params.bIsPushBased = true;
+	Params.Condition = COND_OwnerOnly;
+	
+	DOREPLIFETIME_WITH_PARAMS_FAST(UTDInventoryComponent, Inventory, Params);
+	//DOREPLIFETIME_CONDITION(UTDInventoryComponent, Inventory, COND_OwnerOnly);
+}
+
+TObjectPtr<ATDPlayerController> UTDInventoryComponent::GetTDPlayerController()
+{
+	if (IsValid(TDPlayerController)) return TDPlayerController;
+
+	TDPlayerController = Cast<ATDPlayerController>(GetWorld()->GetFirstPlayerController());
+	return TDPlayerController;
+}
+
 void UTDInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	TDPlayerController = Cast<ATDPlayerController>(GetWorld()->GetFirstPlayerController());
 	check(TDPlayerController);
-
-	InitializeInventory();
-}
-
-void UTDInventoryComponent::InitializeInventory()
-{
-	if (TDPlayerController->IsLocalController())
-	{
-		Client_InitializeInventory();
-	}
-}
-
-void UTDInventoryComponent::Client_InitializeInventory_Implementation()
-{
-	// AmountOfSlots 만큼 슬롯을 만들기위해 TArray 사이즈를 맞춰줌.
-	// TODO :  생성 이렇게 하는게 맞는지 확인
-	WeaponInventoryCategory.Init(NewObject<UTDInventorySlot>(), AmountOfSlots);
-	ArmorInventoryCategory.Init(NewObject<UTDInventorySlot>(), AmountOfSlots);
-	PotionInventoryCategory.Init(NewObject<UTDInventorySlot>(), AmountOfSlots);
-	FoodInventoryCategory.Init(NewObject<UTDInventorySlot>(), AmountOfSlots);
-
-	for (int32 i = 0; i < AmountOfSlots; i++)
-	{
-		WeaponInventoryCategory[i]->InventorySlot.SlotIndex = i;
-		ArmorInventoryCategory[i]->InventorySlot.SlotIndex = i;
-		PotionInventoryCategory[i]->InventorySlot.SlotIndex = i;
-		FoodInventoryCategory[i]->InventorySlot.SlotIndex = i;
-	}
 }
 
 void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory)
@@ -58,6 +81,11 @@ void UTDInventoryComponent::SetSelectedInventoryCategory(const EItemCategory& In
 	{
 		Client_SetSelectedInventoryCategory(InSelectedInventoryCategory);
 	}
+}
+
+void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(const EItemCategory& InSelectedInventoryCategory)
+{
+	SelectedInventoryCategory = InSelectedInventoryCategory;
 }
 
 void UTDInventoryComponent::PickupItem()
@@ -75,8 +103,7 @@ void UTDInventoryComponent::Server_PickupItem_Implementation()
 	{
 		for (int32 i = 0; i < OverlappingActors.Num(); i++)
 		{
-			UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
-
+			//UE_LOG(LogTemp, Log, TEXT("Overlapping Actor!"));
 			ATDItemActor* OverlappingItem = Cast<ATDItemActor>(OverlappingActors[i]);
 			AddtoInventory(OverlappingItem);			
 		}
@@ -85,12 +112,6 @@ void UTDInventoryComponent::Server_PickupItem_Implementation()
 
 void UTDInventoryComponent::Server_RelootItem_Implementation()
 {
-
-}
-
-void UTDInventoryComponent::Client_SetSelectedInventoryCategory_Implementation(const EItemCategory& InSelectedInventoryCategory)
-{
-	SelectedInventoryCategory = InSelectedInventoryCategory;
 }
 
 void UTDInventoryComponent::AddtoInventory(ATDItemActor* InItem)
@@ -107,7 +128,7 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 		
 		if (ItemToAddInfo.bStackable) // 인벤토리 내에 해당 아이템이 있는지 찾음.
 		{
-			if (false == FindPartialStack(InItem, ItemToAddInfo))
+			//if (false == FindPartialStack(InItem, ItemToAddInfo))
 			{
 				CreateNewStack(InItem, ItemToAddInfo);
 			}
@@ -123,91 +144,120 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 	}
 }
 
-void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity, TArray<UTDInventorySlot*> OutInventorySlots, int32 SlotIdx, TArray<FInventorySlot>* OutInventory)
+void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity)
 {
-	//if (Item.ItemCategory == SelectedInventoryCategory)
+	// 빈 슬롯을 찾아서 사용
+	for (int32 i = 0; i < InventoryDisplayItems.Num(); i++)
 	{
-		//(*OutInventory)[SlotIdx].Item = Item;
-		//(*OutInventory)[SlotIdx].ItemQuantity = Quantity;
-		//(*OutInventory)[SlotIdx].InventorySlot->UpdateInventorySlotUI(Item, Quantity); // UI 갱신.
+		if (InventoryDisplayItems[i]->Data.Item.Name.IsEmpty())
+		{
+			InventoryDisplayItems[i]->Data.Item = Item;
+			InventoryDisplayItems[i]->Data.ItemQuantity = Quantity;
+			InventoryDisplayItems[i]->Data.SlotIndex = i;
 
-		OutInventorySlots[SlotIdx]->InventorySlot.Item = Item;
-		OutInventorySlots[SlotIdx]->InventorySlot.ItemQuantity = Quantity;
-		//OutInventorySlots[SlotIdx]->InventorySlot.InventoryEntry->UpdateInventorySlotUI(Item, Quantity);
+			if (Inventory.Items.Num() <= i)
+			{
+				FInventoryItem ItemToAdd;
+				ItemToAdd.Item = Item;
+				ItemToAdd.ItemQuantity = Quantity;
+				ItemToAdd.SlotIndex = i;
+				Inventory.Items.Add(ItemToAdd);
+				Inventory.MarkItemDirty(ItemToAdd);
+			}
+			else
+			{
+				Inventory.Items[i].Item = Item;
+				Inventory.Items[i].ItemQuantity = Quantity;
+				Inventory.Items[i].SlotIndex = i;
+				Inventory.MarkItemDirty(Inventory.Items[i]);
+			}
 
-		AllItems.Add({SlotIdx, OutInventorySlots[SlotIdx]});
+			GetTDPlayerController()->GetTDHUD()->GetInventoryPanelWidget()->DisplayInventorySlotWidgets();
 
-
-		//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), SlotIdx);
-
-		//AllItems.Add(SlotIdx, (*OutInventory)[SlotIdx]);
-
-		//for (int8 i = 0; i < (*OutInventory).Num(); i++)
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].InventorySlot->GetName());
-		//	//UE_LOG(LogTemp, Warning, TEXT("Item = %d"), *(*OutInventory)[i].ItemQuantity);
-		//	//UE_LOG(LogTemp, Warning, TEXT("Item = %s"), *(*OutInventory)[i].Item.Thumbnail->GetName());
-		//}
+			return;
+		}
 	}
+
+	// 빈 슬롯이 없으면 새로운 슬롯 추가
+	FInventoryItem ItemToAdd;
+	ItemToAdd.Item = Item;
+	ItemToAdd.ItemQuantity = Quantity;
+	ItemToAdd.SlotIndex = Inventory.Items.Num();
+
+	FInventoryItem& ReferenceToAddedItem = Inventory.Items.Add_GetRef(ItemToAdd);
+	Inventory.MarkItemDirty(ReferenceToAddedItem);
+
+	//UTDInventoryDisplayItemObject* Temp = NewObject<UTDInventoryDisplayItemObject>();
+	//Temp->Data.Item = Item;
+	//Temp->Data.ItemQuantity = Quantity;
+	//InventoryDisplayItems.Add(Temp);
+
+	GetTDPlayerController()->GetTDHUD()->GetInventoryPanelWidget()->DisplayInventorySlotWidgets();
+
+
+	//if (false == GetOwner()->HasAuthority()) // Client가 불린 경우, return
+	//{
+	//	return;
+	//}
 }
 
 // 인벤토리 내 해당 아이템이 있는지 확인. Stack 여부 검사 후 쌓기.
 // '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우 true, 아닌 경우 false 리턴.
 bool UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
-	TArray<FInventorySlot>* CategoryArray = nullptr;
-	TArray<UTDInventorySlot*> Category;
+	//TArray<FInventorySlot>* CategoryArray = nullptr;
+	//TArray<UTDInventorySlot*> Category;
 
-	switch (ItemToAddInfo.ItemCategory)
-	{
-	case EItemCategory::Weapon:
-		Category = WeaponInventoryCategory;
-		break;
-	case EItemCategory::Armor:
-		Category = ArmorInventoryCategory;
-		break;
-	case EItemCategory::Potion:
-		Category = PotionInventoryCategory;
-		break;
-	case EItemCategory::Food:
-		Category = FoodInventoryCategory;
-		break;
-	default:
-		break;
-	}
+	//switch (ItemToAddInfo.ItemCategory)
+	//{
+	//case EItemCategory::Weapon:
+	//	Category = WeaponInventoryCategory;
+	//	break;
+	//case EItemCategory::Armor:
+	//	Category = ArmorInventoryCategory;
+	//	break;
+	//case EItemCategory::Potion:
+	//	Category = PotionInventoryCategory;
+	//	break;
+	//case EItemCategory::Food:
+	//	Category = FoodInventoryCategory;
+	//	break;
+	//default:
+	//	break;
+	//}
 
-	//if (Category)
-	{
-		for (int i = 0; i < Category.Num(); i++)
-		{
-			if (UKismetTextLibrary::EqualEqual_TextText(Category[i]->InventorySlot.Item.Name, ItemToAddInfo.Name) &&
-				Category[i]->InventorySlot.ItemQuantity < ItemToAddInfo.MaxStackSize) // '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우
-			{
+	////if (Category)
+	//{
+	//	for (int i = 0; i < Category.Num(); i++)
+	//	{
+	//		if (UKismetTextLibrary::EqualEqual_TextText(Category[i]->InventorySlot.Item.Name, ItemToAddInfo.Name) &&
+	//			Category[i]->InventorySlot.ItemQuantity < ItemToAddInfo.MaxStackSize) // '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우
+	//		{
 
-				if (Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity() <= ItemToAddInfo.MaxStackSize)
-				{
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
-				}
-				else
-				{
-					// 아이템 수량 갱신
-					int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->InventorySlot.ItemQuantity));
-					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
+	//			if (Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity() <= ItemToAddInfo.MaxStackSize)
+	//			{
+	//				// 인벤토리에 아이템 추가
+	//				AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
+	//			}
+	//			else
+	//			{
+	//				// 아이템 수량 갱신
+	//				int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->InventorySlot.ItemQuantity));
+	//				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), Category, i, CategoryArray);
+	//				// 인벤토리에 아이템 추가
+	//				AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), Category, i, CategoryArray);
 
-					if (i < Category.Num() - 1 && RemainingQuantity > 0)
-					{
-						CreateNewStack(ItemToAdd, ItemToAddInfo);
-					}
-				}
-				
-				return true;
-			}
-		}
-	}
+	//				if (i < Category.Num() - 1 && RemainingQuantity > 0)
+	//				{
+	//					CreateNewStack(ItemToAdd, ItemToAddInfo);
+	//				}
+	//			}
+	//			
+	//			return true;
+	//		}
+	//	}
+	//}
 
 	return false;
 }
@@ -215,86 +265,85 @@ bool UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 // Stack 새로 만들기 또는 Stack 불가능한 아이템 채우기.
 void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
-	TArray<FInventorySlot>* CategoryArray = nullptr;
-	TArray<UTDInventorySlot*> Category;
+	// 전체 목록에 추가
+	AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity());
 
-	switch (ItemToAddInfo.ItemCategory)
-	{
-	case EItemCategory::Weapon:
-		Category = WeaponInventoryCategory;
-		break;
-	case EItemCategory::Armor:
-		Category = ArmorInventoryCategory;
-		break;
-	case EItemCategory::Potion:
-		Category = PotionInventoryCategory;
-		break;
-	case EItemCategory::Food:
-		Category = FoodInventoryCategory;
-		break;
-	default:
-		break;
-	}
-	
-	//if (CategoryArray)
-	{
-		bool bRelootItem = false;
-		int32 i = 0; // 루프 외부에서 i를 선언.
-		for (; i < Category.Num(); i++)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("ItemSlot = %s"), *(*CategoryArray)[i].InventorySlot->GetName());
-			//UE_LOG(LogTemp, Warning, TEXT("ItemActor = %s"), *(*CategoryArray)[i].Item.ItemClass->GetName());
-			//UE_LOG(LogTemp, Warning, TEXT("SlotIndex = %d"), (*CategoryArray)[i].SlotIndex);
-			//UE_LOG(LogTemp, Warning, TEXT("Item Quantity = %d"), (*CategoryArray)[i].ItemQuantity);
-			UE_LOG(LogTemp, Warning, TEXT("SlotIndex = %d"), Category[i]->InventorySlot.SlotIndex);
-			UE_LOG(LogTemp, Warning, TEXT("Item Quantity = %d"), Category[i]->InventorySlot.ItemQuantity);
+	////****************************************************************************
+	////** Category
+	//TArray<UTDInventoryDisplayItemObject*> Category;
 
-			if (Category[i]->InventorySlot.ItemQuantity == 0)
-			{
-				bInventoryIsFull = false;
+	//switch (ItemToAddInfo.ItemCategory)
+	//{
+	//case EItemCategory::Weapon:
+	//	Category = WeaponInventoryCategory;
+	//	break;
+	//case EItemCategory::Armor:
+	//	Category = ArmorInventoryCategory;
+	//	break;
+	//case EItemCategory::Potion:
+	//	Category = PotionInventoryCategory;
+	//	break;
+	//case EItemCategory::Food:
+	//	Category = FoodInventoryCategory;
+	//	break;
+	//default:
+	//	break;
+	//}
+	//
+	////if (CategoryArray)
+	//{
+	//	bool bRelootItem = false;
+	//	int32 i = 0; // 루프 외부에서 i를 선언.
+	//	for (; i < Category.Num(); i++)
+	//	{
+	//		if (Category[i]->Data.ItemQuantity == 0)
+	//		{
+	//			bInventoryIsFull = false;
 
-				if (ItemToAdd->GetItemQuantity() > ItemToAddInfo.MaxStackSize)
-				{
-					// 아이템 수량 갱신
-					int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->InventorySlot.ItemQuantity));
-					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
+	//			if (ItemToAdd->GetItemQuantity() > ItemToAddInfo.MaxStackSize)
+	//			{
+	//				// 아이템 수량 갱신
+	//				int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->Data.ItemQuantity));
+	//				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
 
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, Category, Category[i]->InventorySlot.SlotIndex, CategoryArray);
-					bRelootItem = true;
+	//				// 인벤토리에 아이템 추가
+	//				AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, Category, Category[i]->Data.SlotIndex, CategoryArray);
+	//				bRelootItem = true;
 
-					if (RemainingQuantity == 0)
-						break;
-				}
-				else
-				{
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
-				}
+	//				if (RemainingQuantity == 0)
+	//					break;
+	//			}
+	//			else
+	//			{
+	//				// 인벤토리에 아이템 추가
+	//				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
+	//			}
 
-				break;
-			}
-		}
+	//			break;
+	//		}
+	//	}
 
-		if (i >= AmountOfSlots)
-		{
-			bInventoryIsFull = true;
-		}
+	//	if (i >= AmountOfSlots)
+	//	{
+	//		bInventoryIsFull = true;
+	//	}
 
-		if (bRelootItem)
-		{
-			bRelootItem = false;
-			Server_RelootItem();
-		}
-		else
-		{
-			if (bInventoryIsFull)
-			{
-				// 인벤토리에 아이템 추가
-				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, Category[i]->InventorySlot.SlotIndex, CategoryArray);
-			}
-		}
-	}
+	//	if (bRelootItem)
+	//	{
+	//		bRelootItem = false;
+	//		Server_RelootItem();
+	//	}
+	//	else
+	//	{
+	//		if (bInventoryIsFull)
+	//		{
+	//			// 인벤토리에 아이템 추가
+	//			AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, Category[i]->InventorySlot.SlotIndex, CategoryArray);
+	//		}
+	//	}
+	//}
+
+	////****************************************************************************
 }
 
 //******************************************************************************

@@ -7,6 +7,7 @@
 class UTDUW_InventorySlot;
 class ATDPlayerController;
 class ATDItemActor;
+class UTDPlayerController;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TDRPG_API UTDInventoryComponent : public UActorComponent
@@ -14,24 +15,26 @@ class TDRPG_API UTDInventoryComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<UTDInventorySlot*> WeaponInventoryCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<UTDInventorySlot*> ArmorInventoryCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<UTDInventorySlot*> PotionInventoryCategory;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TArray<UTDInventorySlot*> FoodInventoryCategory;
+	UPROPERTY(ReplicatedUsing = OnRep_Inventory)
+	FInventoryMaster Inventory;
+	UFUNCTION()
+	virtual void OnRep_Inventory();
+
+	UFUNCTION()
+	void ReloadDisplayItems();
+
+	//UI Display
+	UPROPERTY()
+	TArray<UTDInventoryDisplayItemObject*> InventoryDisplayItems;
+
+	//************************************************************
 
 	UTDInventoryComponent();
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+	TObjectPtr<ATDPlayerController> GetTDPlayerController();
 	FORCEINLINE int32 GetAmountOfSlots() { return AmountOfSlots; }
 	FORCEINLINE int32 GetAmountOfTotalSlots() { return AmountOfTotalSlots; }
 	FORCEINLINE EItemCategory& GetSelectedInventoryCategory() { return SelectedInventoryCategory; }
-	//FORCEINLINE TArray<FInventorySlot>& GetWeaponCategory() { return WeaponCategory; }
-	//FORCEINLINE TArray<FInventorySlot>& GetArmorCategory() { return ArmorCategory; }
-	//FORCEINLINE TArray<FInventorySlot>& GetPotionCategory() { return PotionCategory; }
-	//FORCEINLINE TArray<FInventorySlot>& GetFoodCategory() { return FoodCategory; }
-	FORCEINLINE TMap<int32, UTDInventorySlot*>& GetAllItems() { return AllItems; }
 
 	void SetSelectedInventoryCategory(const EItemCategory& InSelectedInventoryCategory);
 	UFUNCTION(Client, Reliable) // Client RPC
@@ -58,15 +61,11 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void InitializeInventory();
-	UFUNCTION(Client, Reliable) // Client RPC
-	void Client_InitializeInventory();
-
 	void AddtoInventory(ATDItemActor* InItem);
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_AddtoInventory(ATDItemActor* InItem);
 
-	void AddItemToInventory(const FItem& Item, int32 Quantity, TArray<UTDInventorySlot*> OutInventorySlots, int32 SlotIdx, TArray<FInventorySlot>* OutInventory);
+	void AddItemToInventory(const FItem& Item, int32 Quantity);
 
 	bool FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
@@ -91,16 +90,22 @@ private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	EItemCategory SelectedInventoryCategory;
 
-	
-
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
-	TMap<int32, UTDInventorySlot*> AllItems;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<UDataTable> ItemDataTable;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
 	TObjectPtr<USoundBase> Sound_DestroyLootedItem;
+
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventoryDisplayItemObject*> WeaponInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventoryDisplayItemObject*> ArmorInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventoryDisplayItemObject*> PotionInventoryCategory;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess), Category = "Inventory")
+	TArray<UTDInventoryDisplayItemObject*> FoodInventoryCategory;
 
 	bool HasToCreateStack;
 	//bool bRelootItem = false;
