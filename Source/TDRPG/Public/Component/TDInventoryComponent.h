@@ -65,9 +65,9 @@ private:
 	UFUNCTION(Client, Reliable) // Client RPC
 	void Client_AddtoInventory(ATDItemActor* InItem);
 
-	void AddItemToInventory(const FItem& Item, int32 Quantity);
+	void AddItemToInventory(const FItem& Item, int32 Quantity, int32 SlotIdx);
 
-	bool FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
+	void FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 
 	void SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);
