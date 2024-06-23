@@ -67,8 +67,8 @@ private:
 
 	void AddItemToInventory(const FItem& Item, int32 Quantity, int32 SlotIdx);
 
-	void FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
-	void CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
+	void FindPartialStackAndStore(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
+	void CreateNewSlotAndStore(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo);
 
 	void SetNewItemQuantity(ATDItemActor* InItem, int32 ItemQuantity);
 	UFUNCTION(Server, Reliable)

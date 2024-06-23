@@ -126,28 +126,28 @@ void UTDInventoryComponent::Client_AddtoInventory_Implementation(ATDItemActor* I
 	{
 		FItem ItemToAddInfo = *(ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString("")));
 		
-		if (ItemToAddInfo.bStackable) // 인벤토리 내에 해당 아이템이 있는지 찾음.
+		if (ItemToAddInfo.bStackable) // Stack 가능한 아이템이라면
 		{
-			FindPartialStack(InItem, ItemToAddInfo);			
+			FindPartialStackAndStore(InItem, ItemToAddInfo);	// 인벤토리 내에 해당 아이템이 있는지 찾은 후 아이템 추가.
 		}
 		else
 		{
-			if (Inventory.Items.Num() >= GetAmountOfSlots()) {
+			if (Inventory.Items.Num() >= GetAmountOfSlots()) { // 인벹토리가 꽉 찬 경우
 				UE_LOG(LogTemp, Log, TEXT("Inventory is Full!"));
 				return;
 			}
-			CreateNewStack(InItem, ItemToAddInfo);
+			CreateNewSlotAndStore(InItem, ItemToAddInfo);
 		}
 	}
 }
 
-// 인벤토리 내 해당 아이템이 있는지 확인. Stack 여부 검사 후 쌓기.
-// '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우 true, 아닌 경우 false 리턴.
-void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
+// 인벤토리 내 해당  Stackable 아이템이 있는지 확인 후 적재.
+void UTDInventoryComponent::FindPartialStackAndStore(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {
+	//************************************************************************************************
+	//** 해당 이름의 아이템을 발견 && '해당 아이템의 겹쳐진 개수 > 0' && '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우 **//
 	for (int i = 0; i < InventoryDisplayItems.Num(); i++)
-	{
-		//** 해당 이름의 아이템을 발견 && '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우 **//
+	{		
 		bool bStatckable = UKismetTextLibrary::EqualEqual_TextText(InventoryDisplayItems[i]->Data.Item.Name, ItemToAddInfo.Name)
 							&& InventoryDisplayItems[i]->Data.ItemQuantity > 0
 							&& InventoryDisplayItems[i]->Data.ItemQuantity < ItemToAddInfo.MaxStackSize;
@@ -168,11 +168,6 @@ void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 				// 현재 존재하는 InventoryDisplayItems[i]에 아이템 추가하여 최대수량으로 변경
 				AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, i);
 				
-				//if (i < InventoryDisplayItems.Num() - 1 && RemainingQuantity > 0)
-				//{
-				//	CreateNewStack(ItemToAdd, ItemToAddInfo);
-				//}
-
 				while (i < InventoryDisplayItems.Num() - 1 && RemainingQuantity > 0)
 				{
 					if (RemainingQuantity <= ItemToAddInfo.MaxStackSize)
@@ -200,8 +195,10 @@ void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 			return;
 		}
 	}
+	//************************************************************************************************
 
-
+	//************************************************************************************************
+	//** 겹침이 해당되지 않는 경우, 새로운 인벤토리 슬롯을 생성 후 적재 **//
 	for (int32 i = 0; i < InventoryDisplayItems.Num(); i++)
 	{
 		if (InventoryDisplayItems[i]->Data.ItemQuantity == 0)
@@ -248,67 +245,11 @@ void UTDInventoryComponent::FindPartialStack(ATDItemActor* ItemToAdd, FItem& Ite
 			return;
 		}
 	}
-
-
-	//TArray<FInventorySlot>* CategoryArray = nullptr;
-	//TArray<UTDInventorySlot*> Category;
-
-	//switch (ItemToAddInfo.ItemCategory)
-	//{
-	//case EItemCategory::Weapon:
-	//	Category = WeaponInventoryCategory;
-	//	break;
-	//case EItemCategory::Armor:
-	//	Category = ArmorInventoryCategory;
-	//	break;
-	//case EItemCategory::Potion:
-	//	Category = PotionInventoryCategory;
-	//	break;
-	//case EItemCategory::Food:
-	//	Category = FoodInventoryCategory;
-	//	break;
-	//default:
-	//	break;
-	//}
-
-	////if (Category)
-	//{
-	//	for (int i = 0; i < Category.Num(); i++)
-	//	{
-	//		if (UKismetTextLibrary::EqualEqual_TextText(Category[i]->InventorySlot.Item.Name, ItemToAddInfo.Name) &&
-	//			Category[i]->InventorySlot.ItemQuantity < ItemToAddInfo.MaxStackSize) // '해당 아이템의 겹쳐진 개수 < 최대 겹침개수'인 경우
-	//		{
-
-	//			if (Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity() <= ItemToAddInfo.MaxStackSize)
-	//			{
-	//				// 인벤토리에 아이템 추가
-	//				AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
-	//			}
-	//			else
-	//			{
-	//				// 아이템 수량 갱신
-	//				int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->InventorySlot.ItemQuantity));
-	//				SetNewItemQuantity(ItemToAdd, RemainingQuantity);
-
-	//				// 인벤토리에 아이템 추가
-	//				AddItemToInventory(ItemToAddInfo, Category[i]->InventorySlot.ItemQuantity + (ItemToAdd->GetItemQuantity() - RemainingQuantity), Category, i, CategoryArray);
-
-	//				if (i < Category.Num() - 1 && RemainingQuantity > 0)
-	//				{
-	//					CreateNewStack(ItemToAdd, ItemToAddInfo);
-	//				}
-	//			}
-	//			
-	//			return true;
-	//		}
-	//	}
-	//}
-	//
-	//return false;
+	//************************************************************************************************
 }
 
-// Stack 새로 만들기 또는 Stack 불가능한 아이템 채우기.
-void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
+// Stack 불가능한 아이템 채우기.
+void UTDInventoryComponent::CreateNewSlotAndStore(ATDItemActor* ItemToAdd, FItem& ItemToAddInfo)
 {	
 	for (int32 i = 0; i < InventoryDisplayItems.Num(); i++)
 	{
@@ -322,142 +263,32 @@ void UTDInventoryComponent::CreateNewStack(ATDItemActor* ItemToAdd, FItem& ItemT
 
 	DestroyPickupItem(ItemToAdd, true);
 	UGameplayStatics::PlaySound2D(this, Sound_DestroyLootedItem);
-
-	/*
-	//****************************************************************************
-	//** Category
-	TArray<UTDInventoryDisplayItemObject*> Category;
-
-	switch (ItemToAddInfo.ItemCategory)
-	{
-	case EItemCategory::Weapon:
-		Category = WeaponInventoryCategory;
-		break;
-	case EItemCategory::Armor:
-		Category = ArmorInventoryCategory;
-		break;
-	case EItemCategory::Potion:
-		Category = PotionInventoryCategory;
-		break;
-	case EItemCategory::Food:
-		Category = FoodInventoryCategory;
-		break;
-	default:
-		break;
-	}
-	
-	//if (CategoryArray)
-	{
-		bool bRelootItem = false;
-		int32 i = 0; // 루프 외부에서 i를 선언.
-		for (; i < Category.Num(); i++)
-		{
-			if (Category[i]->Data.ItemQuantity == 0)
-			{
-				bInventoryIsFull = false;
-
-				if (ItemToAdd->GetItemQuantity() > ItemToAddInfo.MaxStackSize)
-				{
-					// 아이템 수량 갱신
-					int32 RemainingQuantity = FMath::Max(0, ItemToAdd->GetItemQuantity() - (ItemToAddInfo.MaxStackSize - Category[i]->Data.ItemQuantity));
-					SetNewItemQuantity(ItemToAdd, RemainingQuantity);
-
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAddInfo.MaxStackSize, Category, Category[i]->Data.SlotIndex, CategoryArray);
-					bRelootItem = true;
-
-					if (RemainingQuantity == 0)
-						break;
-				}
-				else
-				{
-					// 인벤토리에 아이템 추가
-					AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, i, CategoryArray);
-				}
-
-				break;
-			}
-		}
-
-		if (i >= AmountOfSlots)
-		{
-			bInventoryIsFull = true;
-		}
-
-		if (bRelootItem)
-		{
-			bRelootItem = false;
-			Server_RelootItem();
-		}
-		else
-		{
-			if (bInventoryIsFull)
-			{
-				// 인벤토리에 아이템 추가
-				AddItemToInventory(ItemToAddInfo, ItemToAdd->GetItemQuantity(), Category, Category[i]->InventorySlot.SlotIndex, CategoryArray);
-			}
-		}
-	}
-
-	//****************************************************************************
-	*/
 }
 
 void UTDInventoryComponent::AddItemToInventory(const FItem& Item, int32 Quantity, int32 SlotIdx)
 {
-	// 빈 슬롯을 찾아서 사용
-	//for (int32 i = 0; i < InventoryDisplayItems.Num(); i++)
+	InventoryDisplayItems[SlotIdx]->Data.Item = Item;
+	InventoryDisplayItems[SlotIdx]->Data.ItemQuantity = Quantity;
+	InventoryDisplayItems[SlotIdx]->Data.SlotIndex = SlotIdx;
+	
+	if (Inventory.Items.Num() <= SlotIdx)
 	{
-		//if (InventoryDisplayItems[i]->Data.Item.Name.IsEmpty())
-		{
-			InventoryDisplayItems[SlotIdx]->Data.Item = Item;
-			InventoryDisplayItems[SlotIdx]->Data.ItemQuantity = Quantity;
-			InventoryDisplayItems[SlotIdx]->Data.SlotIndex = SlotIdx;
-			
-			if (Inventory.Items.Num() <= SlotIdx)
-			{
-				FInventoryItem ItemToAdd;
-				ItemToAdd.Item = Item;
-				ItemToAdd.ItemQuantity = Quantity;
-				ItemToAdd.SlotIndex = SlotIdx;
-				Inventory.Items.Add(ItemToAdd);
-				Inventory.MarkItemDirty(ItemToAdd);
-			}
-			else
-			{
-				Inventory.Items[SlotIdx].Item = Item;
-				Inventory.Items[SlotIdx].ItemQuantity = Quantity;
-				Inventory.Items[SlotIdx].SlotIndex = SlotIdx;
-				Inventory.MarkItemDirty(Inventory.Items[SlotIdx]);
-			}
-
-			GetTDPlayerController()->GetTDHUD()->GetInventoryPanelWidget()->DisplayInventorySlotWidgets();
-
-			return;
-		}
+		FInventoryItem ItemToAdd;
+		ItemToAdd.Item = Item;
+		ItemToAdd.ItemQuantity = Quantity;
+		ItemToAdd.SlotIndex = SlotIdx;
+		Inventory.Items.Add(ItemToAdd);
+		Inventory.MarkItemDirty(ItemToAdd);
+	}
+	else
+	{
+		Inventory.Items[SlotIdx].Item = Item;
+		Inventory.Items[SlotIdx].ItemQuantity = Quantity;
+		Inventory.Items[SlotIdx].SlotIndex = SlotIdx;
+		Inventory.MarkItemDirty(Inventory.Items[SlotIdx]);
 	}
 
-	// 빈 슬롯이 없으면 새로운 슬롯 추가
-	FInventoryItem ItemToAdd;
-	ItemToAdd.Item = Item;
-	ItemToAdd.ItemQuantity = Quantity;
-	ItemToAdd.SlotIndex = Inventory.Items.Num();
-
-	FInventoryItem& ReferenceToAddedItem = Inventory.Items.Add_GetRef(ItemToAdd);
-	Inventory.MarkItemDirty(ReferenceToAddedItem);
-
-	//UTDInventoryDisplayItemObject* Temp = NewObject<UTDInventoryDisplayItemObject>();
-	//Temp->Data.Item = Item;
-	//Temp->Data.ItemQuantity = Quantity;
-	//InventoryDisplayItems.Add(Temp);
-
 	GetTDPlayerController()->GetTDHUD()->GetInventoryPanelWidget()->DisplayInventorySlotWidgets();
-
-
-	//if (false == GetOwner()->HasAuthority()) // Client가 불린 경우, return
-	//{
-	//	return;
-	//}
 }
 
 
