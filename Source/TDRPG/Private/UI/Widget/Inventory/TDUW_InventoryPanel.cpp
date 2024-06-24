@@ -59,47 +59,7 @@ void UTDUW_InventoryPanel::DisplayInventorySlotWidgets()
 	UE_LOG(LogTemp, Warning, TEXT("Log  UTDUW_InventoryPanel::DisplayInventorySlotWidgets() "));
 
 	TDInventoryComponent->ReloadDisplayItems();
-	TDInventoryComponent->InventoryDisplayItems;
 	TileView_Inventory->RegenerateAllEntries();
-
-	//TileView_Inventory->ClearListItems();
-	//
-	//EItemCategory SelectedCategory = TDCharacter->GetInventoryComponent()->GetSelectedInventoryCategory();
-	//
-	//TArray<UTDInventorySlot*> SelectedCategoryItems;
-
-	//switch (SelectedCategory)
-	//{
-	//case EItemCategory::Weapon:
-	//	SelectedCategoryItems = TDCharacter->GetInventoryComponent()->WeaponInventoryCategory;
-	//	break;
-	//case EItemCategory::Armor:
-	//	SelectedCategoryItems = TDCharacter->GetInventoryComponent()->ArmorInventoryCategory;
-	//	break;
-	//case EItemCategory::Potion:
-	//	SelectedCategoryItems = TDCharacter->GetInventoryComponent()->PotionInventoryCategory;
-	//	break;
-	//case EItemCategory::Food:
-	//	SelectedCategoryItems = TDCharacter->GetInventoryComponent()->FoodInventoryCategory;
-	//	break;
-	//default:
-	//	checkNoEntry(); // 선택된 카테고리가 유효하지 않은 경우 체크
-	//	break;
-	//}
-
-	//// 슬롯 배열에 빈 슬롯 추가
-	//while (SelectedCategoryItems.Num() < TotalSlots)
-	//{
-	//	UTDInventorySlot* EmptySlot = NewObject<UTDInventorySlot>();
-	//	SelectedCategoryItems.Add(EmptySlot);
-	//}
-
-	//TileView_Inventory->SetListItems(SelectedCategoryItems);
-}
-
-void UTDUW_InventoryPanel::DisplayAllItemsWidgets()
-{
-	
 }
 
 void UTDUW_InventoryPanel::OnWeaponButtonClicked()
@@ -146,5 +106,4 @@ void UTDUW_InventoryPanel::OnAllButtonClicked()
 {
 	TDCharacter->GetInventoryComponent()->SetSelectedInventoryCategory(EItemCategory::None);
 
-	DisplayAllItemsWidgets();
 }

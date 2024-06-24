@@ -1,10 +1,10 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "TDUW_InventorySlot.h"
 #include "Blueprint/UserWidget.h"
 #include "TDUW_InventoryToolTip.generated.h"
 
 class UTextBlock;
+class UTDUW_InventoryEntry;
 
 /**
  * 
@@ -17,8 +17,8 @@ class TDRPG_API UTDUW_InventoryToolTip : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	//UPROPERTY(VisibleAnywhere)
-	//UTDUW_InventorySlot* InventorySlotBeingHovered;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTDUW_InventoryEntry> InventorySlotBeingHovered;
 
 	UPROPERTY(meta = (BindWidgetOptional), meta = (AllowPrivateAccess))
 	TObjectPtr<UTextBlock> ItemName;

@@ -27,7 +27,6 @@ public:
 	//void UpdateCategoryItems(TArray<UTDInventorySlot*> CategoryItems, int32 AmountOfSlots);
 
 	void DisplayInventorySlotWidgets();
-	void DisplayAllItemsWidgets();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
