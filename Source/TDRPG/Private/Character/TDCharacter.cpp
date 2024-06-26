@@ -22,6 +22,7 @@
 #include "GAS/Data/TDDA_Ability.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "UI/Widget/Inventory/TDUW_InventoryPanel.h"
 
 ATDCharacter::ATDCharacter()
 {
@@ -286,25 +287,25 @@ int32 ATDCharacter::FindLevelForExpBP_Implementation(int32 InExp) const
 int32 ATDCharacter::GetAttributePointsReward(int32 PlayerLevel) const
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePointsReward()"));
-	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointReward;
 }
 
 int32 ATDCharacter::GetAttributePointsRewardBP_Implementation(int32 PlayerLevel) const
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetAttributePointsRewardBP_Implementation()"));
-	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointAward;
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].AttributePointReward;
 }
 
 int32 ATDCharacter::GetSkillPointsReward(int32 PlayerLevel) const
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPointsReward()"));
-	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointReward;
 }
 
 int32 ATDCharacter::GetSkillPointsRewardBP_Implementation(int32 PlayerLevel) const
 {
 	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetSkillPointsRewardBP_Implementation()"));
-	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointAward;
+	return TDPlayerState->TDDA_LevelUpInfo->DA_LevelUpInfo[PlayerLevel].SkillPointReward;
 }
 
 int32 ATDCharacter::GetAttributePoints() const
@@ -547,6 +548,7 @@ void ATDCharacter::InitAbilityActorInfo() // Ability actor 정보 초기화. Ser
 		if (ATDHUD* TDHUD = Cast<ATDHUD>(TDPlayerController->GetHUD()))
 		{
 			TDHUD->InitOverlay(TDPlayerController, TDPlayerState, AbilitySystemComponent, AttributeSet);
+			TDHUD->GetInventoryPanelWidget()->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
