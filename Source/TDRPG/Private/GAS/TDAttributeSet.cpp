@@ -367,7 +367,6 @@ void UTDAttributeSet::SendExpEvent(const FEffectProperties& Props) // 자신을 
 	if (CombatInterface)
 	{
 		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
-		//const ECharacterClass TargetClass = IICombat::Execute_GetCharacterClass(Props.TargetCharacter);
 		const ECharacterClass TargetClass = CombatInterface->GetCharacterClassCPP();
 		const int32 ExpReward = UTDAbilitySystemBPLibrary::GetExpRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
 

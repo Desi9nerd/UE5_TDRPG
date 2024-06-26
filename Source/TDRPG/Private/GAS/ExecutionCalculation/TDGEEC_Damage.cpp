@@ -56,7 +56,6 @@ struct TDDamageStatics
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Ice, IceResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Electronic, ElectronicResistanceDef);
 		TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Ultimate, UltimateResistanceDef);
-		// TODO: Resistance 추가 시 등록
 	}
 };
 

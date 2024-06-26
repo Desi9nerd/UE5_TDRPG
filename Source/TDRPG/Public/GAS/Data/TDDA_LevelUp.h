@@ -18,9 +18,9 @@ struct FDA_LevelUp
 
 	// 레벨업 당 주는 포인트
 	UPROPERTY(EditDefaultsOnly)
-	int32 AttributePointAward = 1; // Attribute 포인트
+	int32 AttributePointReward = 1; // Attribute 포인트
 	UPROPERTY(EditDefaultsOnly)
-	int32 SkillPointAward = 1; // Skill 포인트
+	int32 SkillPointReward = 1; // Skill 포인트
 };
 
 UCLASS()
