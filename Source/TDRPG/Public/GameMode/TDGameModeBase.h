@@ -7,6 +7,7 @@ class UTDGameInstance;
 class UTDDA_CharacterClass;
 class UTDDA_Ability;
 class UTDDA_DropItem;
+class UTDDA_ItemGE;
 class USaveGame;
 class UTDMVVM_Slot;
 class UTDSaveGame_Load;
@@ -35,4 +36,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Loot Tiers")
 	TObjectPtr<UTDDA_DropItem> TDDADropItem;
 	//********************************************************
+
 };

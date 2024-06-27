@@ -36,7 +36,7 @@ protected:
 	UFUNCTION()
 	void StartRotation();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> SphereCollision;

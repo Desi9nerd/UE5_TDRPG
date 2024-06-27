@@ -35,6 +35,9 @@ public:
 
 private:
 	UFUNCTION()
+	void DeferredBindingDelegates();
+
+	UFUNCTION()
 	void OnWeaponButtonClicked();
 	UFUNCTION()
 	void OnArmorButtonClicked();

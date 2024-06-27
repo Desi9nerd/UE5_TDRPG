@@ -8,6 +8,7 @@ class UTDUW_InventorySlot;
 class ATDPlayerController;
 class ATDItemActor;
 class UTDPlayerController;
+class UTDDA_ItemGE;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TDRPG_API UTDInventoryComponent : public UActorComponent
@@ -54,11 +55,14 @@ public:
 
 	void ConsumeItem(const FText& ItemName);
 	UFUNCTION(Server, Reliable)
-	void Server_ConsumeItem();
-
+	void Server_ConsumeItem(const FText& ItemName);
+	
 
 protected:
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UTDDA_ItemGE> DA_ItemGE; // Item GameplayEffect. ex. 포션회복
 
 private:
 	void AddtoInventory(ATDItemActor* InItem);
@@ -110,4 +114,6 @@ private:
 	bool HasToCreateStack;
 	//bool bRelootItem = false;
 	bool bInventoryIsFull = false;
+
+
 };

@@ -207,7 +207,7 @@ void ATDEnemyCharacter::SpawnLootItem()
 {
 	if (SpawnLoopCnt < LootItems.Num())
 	{
-		FVector Location = GetActorLocation() + UKismetMathLibrary::GetForwardVector(LootRotations[SpawnLoopCnt]) * UKismetMathLibrary::RandomFloatInRange(MinSpawnDistance, MaxSpawnDistance);
+		FVector Location = GetActorLocation() - FVector(0.f, 0.f, 50.f) + UKismetMathLibrary::GetForwardVector(LootRotations[SpawnLoopCnt]) * UKismetMathLibrary::RandomFloatInRange(MinSpawnDistance, MaxSpawnDistance);
 		FTransform SpawnTransform = UKismetMathLibrary::MakeTransform(Location, LootRotations[SpawnLoopCnt]);
 
 		FActorSpawnParameters SpawnParams;
@@ -216,7 +216,7 @@ void ATDEnemyCharacter::SpawnLootItem()
 		ATDItemActor* ItemActor = GetWorld()->SpawnActor<ATDItemActor>(LootItems[SpawnLoopCnt].LootClass, SpawnTransform, SpawnParams);
 		if (IsValid(ItemActor))
 		{
-			
+
 		}
 
 		SpawnLoopCnt++;

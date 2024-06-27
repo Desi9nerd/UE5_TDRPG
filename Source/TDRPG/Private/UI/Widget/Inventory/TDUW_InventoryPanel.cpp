@@ -6,11 +6,18 @@
 #include "Components/ListView.h"
 #include "Components/TileView.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Widget/Inventory/TDUW_InventoryEntry.h"
 
 void UTDUW_InventoryPanel::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &ThisClass::DeferredBindingDelegates, 1.f, false);
+}
+
+void UTDUW_InventoryPanel::DeferredBindingDelegates()
+{
 	TDCharacter = Cast<ATDCharacter>(GetOwningPlayer()->GetPawn());
 	TDInventoryComponent = TDCharacter->GetInventoryComponent();
 	TotalNumOfSlots = TDCharacter->GetInventoryComponent()->GetAmountOfSlots();
@@ -51,6 +58,17 @@ void UTDUW_InventoryPanel::CreateInventorySlotWidgets()
 	}
 
 	TileView_Inventory->SetListItems(TDInventoryComponent->InventoryDisplayItems);
+
+	// Entry 생성 시 SlotIndex 설정
+	for (int32 Index = 0; Index < TileView_Inventory->GetNumItems(); ++Index)
+	{
+		UTDUW_InventoryEntry* InventoryEntry = Cast<UTDUW_InventoryEntry>(TileView_Inventory->GetEntryWidgetFromItem(TDInventoryComponent->InventoryDisplayItems[Index]));
+		if (InventoryEntry)
+		{
+			InventoryEntry->SetSlotIndex(Index);
+		}
+	}
+
 	TileView_Inventory->SetVisibility(ESlateVisibility::Visible);
 }
 
@@ -60,6 +78,16 @@ void UTDUW_InventoryPanel::DisplayInventorySlotWidgets()
 
 	TDInventoryComponent->ReloadDisplayItems();
 	TileView_Inventory->RegenerateAllEntries();
+
+	// Entry 생성 시 SlotIndex 설정
+	for (int32 Index = 0; Index < TileView_Inventory->GetNumItems(); ++Index)
+	{
+		UTDUW_InventoryEntry* InventoryEntry = Cast<UTDUW_InventoryEntry>(TileView_Inventory->GetEntryWidgetFromItem(TDInventoryComponent->InventoryDisplayItems[Index]));
+		if (InventoryEntry)
+		{
+			InventoryEntry->SetSlotIndex(Index);
+		}
+	}
 }
 
 void UTDUW_InventoryPanel::OnWeaponButtonClicked()

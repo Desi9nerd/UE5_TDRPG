@@ -31,7 +31,6 @@ void UTDGA_Flash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 		PlayDashTask->OnCancelled.AddUniqueDynamic(this, &ThisClass::OnEndAbility);
 		PlayDashTask->ReadyForActivation();
 	}
-
 }
 
 void UTDGA_Flash::OnFlashTeleport(FGameplayEventData Payload)
@@ -41,9 +40,9 @@ void UTDGA_Flash::OnFlashTeleport(FGameplayEventData Payload)
 	TargetDataTask->ReadyForActivation();
 
 	FVector_NetQuantize FlashLocation = TargetDataTask->MouseCursorLocation;
+	float Zposition = GetAvatarActorFromActorInfo()->GetActorLocation().Z + 10.f;
 	
-	GetAvatarActorFromActorInfo()->SetActorLocation(FlashLocation);
-
+	GetAvatarActorFromActorInfo()->SetActorLocation(FVector(FlashLocation.X, FlashLocation.Y, Zposition));
 }
 
 void UTDGA_Flash::OnEndAbility()

@@ -1,5 +1,4 @@
 #include "UI/Widget/Inventory/TDUW_InventoryEntry.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
@@ -56,6 +55,11 @@ void UTDUW_InventoryEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 		Text_ItemQuantity->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
+
+	// 여기서 SlotIndex를 설정합니다.
+	SetSlotIndex(Item->Data.SlotIndex);
+	UE_LOG(LogTemp, Warning, TEXT("Slot Index = %d"), SlotIndex);
+
 		
 	if (IsValid(Item->Data.Item.Thumbnail))
 	{
@@ -102,6 +106,11 @@ void UTDUW_InventoryEntry::UpdateInventorySlotUI(const FItem& InItem, int32 InIt
 	}
 }
 
+void UTDUW_InventoryEntry::SetSlotIndex(int32 InSlotIndex)
+{
+	SlotIndex = InSlotIndex;
+}
+
 FReply UTDUW_InventoryEntry::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
@@ -116,27 +125,18 @@ FReply UTDUW_InventoryEntry::NativeOnMouseButtonDown(const FGeometry& InGeometry
 	else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Native On Mouse Button Down - Right Click "));
-
 		UE_LOG(LogTemp, Log, TEXT("%s"), *GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.Item.Name.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Slot Index = %d"), SlotIndex);
 
-		//if (GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.Item.bConsumable)
-		if (true)
+		//** 아이템 사용하기
+		if (GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.Item.bConsumable &&
+			GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.ItemQuantity > 0)
 		{
-			ATDPlayerController* TDPlayerController = Cast<ATDPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-			ATDCharacter* TDCharacter = Cast<ATDCharacter>(TDPlayerController->GetCharacter());
-			
-			UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TDCharacter);
-			if (TargetASC == nullptr) return Reply.Unhandled();
-
-			check(GameplayEffectClass);
-
-			// FGameplayEffectContextHandle와 FGameplayEffectSpecHandle는 각각 FGameplayEffectContext와 FGameplayEffectSpec를 감싸는 wrapper 구조체다.
-			FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
-			
-			const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
-			const FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
-
+			FText ItemName = GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.Item.Name;
+			GetTDInventoryComponent()->ConsumeItem(ItemName);
+			GetTDInventoryComponent()->InventoryDisplayItems[SlotIndex]->Data.ItemQuantity -= 1;
 		}
+
 	}
 
 	return Reply.Unhandled();

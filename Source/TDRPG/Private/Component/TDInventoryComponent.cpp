@@ -1,7 +1,11 @@
 ﻿#include "Component/TDInventoryComponent.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Actor/TDItemActor.h"
 #include "Character/TDCharacter.h"
 #include "GameFramework/Character.h"
+#include "GAS/Data/TDDA_ItemGE.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"
 #include "Net/UnrealNetwork.h"
@@ -342,14 +346,24 @@ void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemAc
 // 아이템 소모 (포션, 음식)
 void UTDInventoryComponent::ConsumeItem(const FText& ItemName)
 {
-	if (ItemDataTable)
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner());
+	if (nullptr == ASC) return;
+	checkf(DA_ItemGE, TEXT("No DA_ItemGE. Assign DataAsset at UTDInventoryComponent::ConsumeItem()"));
+
+	for (TTuple<FName, TSubclassOf<UGameplayEffect>> Iter : DA_ItemGE->ItemGEClassList)
 	{
-		//FItem ItemToAddInfo = *(ItemDataTable->FindRow<FItem>(FName(*(InItem->GetItemName())), FString("")));
+		if (Iter.Key == FName(*((ItemName).ToString())))
+		{
+			FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+			EffectContextHandle.AddSourceObject(this);
+			const FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(Iter.Value, 1.f, EffectContextHandle);
+			ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		}
 	}
 }
 
-void UTDInventoryComponent::Server_ConsumeItem_Implementation()
+void UTDInventoryComponent::Server_ConsumeItem_Implementation(const FText& ItemName)
 {
-
+	
 }
 //******************************************************************************

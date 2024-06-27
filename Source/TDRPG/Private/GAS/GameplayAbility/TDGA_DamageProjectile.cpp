@@ -71,10 +71,11 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 		Projectile->DamageEffectParams = SetDamageEffectParams();
 		//Projectile->DamageEffectParams.KnockbackImpulse = FVector(600.f, 600.f, 0.f);
 
-		UE_LOG(LogTemp, Warning, TEXT(" = %f"), Projectile->DamageEffectParams.TargetAbilitySystemComponent);
-		UE_LOG(LogTemp, Warning, TEXT("Knockback Chance = %f"), Projectile->DamageEffectParams.KnockbackChance);
-		UE_LOG(LogTemp, Warning, TEXT("Knockback Impulse Magnitude = %f"), Projectile->DamageEffectParams.KnockbackImpulseMagnitude);
-		UE_LOG(LogTemp, Warning, TEXT("Knockback Impulse FVector = %s"), *Projectile->DamageEffectParams.KnockbackImpulse.ToString());
+		// TODO : Knockback
+		//UE_LOG(LogTemp, Warning, TEXT(" = %f"), Projectile->DamageEffectParams.TargetAbilitySystemComponent);
+		//UE_LOG(LogTemp, Warning, TEXT("Knockback Chance = %f"), Projectile->DamageEffectParams.KnockbackChance);
+		//UE_LOG(LogTemp, Warning, TEXT("Knockback Impulse Magnitude = %f"), Projectile->DamageEffectParams.KnockbackImpulseMagnitude);
+		//UE_LOG(LogTemp, Warning, TEXT("Knockback Impulse FVector = %s"), *Projectile->DamageEffectParams.KnockbackImpulse.ToString());
 
 		Projectile->FinishSpawning(SpawnTransform);
 	}

@@ -31,6 +31,8 @@ public:
 
 	void UpdateInventorySlotUI(const FItem& InItem, int32 InItemQuantity);
 
+
+	void SetSlotIndex(int32 InSlotIndex); // SlotIndex 설정 함수 추가
 	UPROPERTY()
 	int32 SlotIndex;
 
@@ -60,8 +62,4 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
 	TSubclassOf<UTDUW_InventoryToolTip> ToolTipClass;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
-	TSubclassOf<UGameplayEffect> GameplayEffectClass;
-
 };
