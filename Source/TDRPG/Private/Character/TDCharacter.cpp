@@ -16,7 +16,6 @@
 #include "Component/TDDebuffComponent.h"
 #include "Component/TDInventoryComponent.h"
 #include "Component/TDZoomComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "GameplayTags/TDGameplayTags.h"
 #include "GAS/TDAbilitySystemBPLibrary.h"
 #include "GAS/TDAttributeSet.h"
@@ -185,24 +184,21 @@ int32 ATDCharacter::GetPlayerLevel()
 
 void ATDCharacter::Die(const FVector& RagdollImpulse)
 {
-	DisableInput(TDPlayerController);
-
 	Super::Die(RagdollImpulse);
 
-	GetWorldTimerManager().SetTimer(DeathTimer, FTimerDelegate::CreateUObject(this, &ATDCharacter::OnPlayerDeath), DeathTime, false);
-	
-}
+	FTimerDelegate DeathTimerDelegate;
+	// TODO: 멀티버젼도 생각해보기.
+	DeathTimerDelegate.BindLambda([this]()
+		{
+			if (GetTDGameModeBase_Single())
+			{
+				GetTDGameModeBase_Single()->PlayerDeath(this); // GameMode에 플레이어 죽음
+			}
+		});
 
-void ATDCharacter::OnPlayerDeath()
-{
-	if (GetTDGameModeBase_Single())
-	{
-		GetTDGameModeBase_Single()->PlayerDeath(this); // GameMode에 플레이어 죽음
-	}
-	else
-	{
-		SetLifeSpan(0.5f);
-	}
+	GetWorldTimerManager().SetTimer(DeathTimer, DeathTimerDelegate, DeathTime, false);
+
+	FollowCamera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 죽으면 카메라가 떨어지도록 Detach.
 }
 
 //void ATDCharacter::AddToExp_Implementation(int32 InExp)
