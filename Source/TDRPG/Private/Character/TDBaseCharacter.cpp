@@ -87,27 +87,43 @@ void ATDBaseCharacter::Die(const FVector& RagdollImpulse)
 
 void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& RagdollImpulse) // 캐릭터 사망 처리
 {
-	// 사망 사운드 재생
-	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+	if (GetMesh())
+	{
+		// 사망 사운드 재생
+		if (DeathSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+		}
 
-	// 무기 바닥에 떨어뜨리기
-	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	Weapon->AddImpulse(RagdollImpulse * 0.05f, NAME_None, true);
+		// 무기 바닥에 떨어뜨리기
+		if (Weapon)
+		{
+			Weapon->SetSimulatePhysics(true);
+			Weapon->SetEnableGravity(true);
+			Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+			Weapon->AddImpulse(RagdollImpulse * 0.05f, NAME_None, true);
+		}
 
-	// Ragdoll 적용을 위해 캐릭터 매쉬/캡슐 설정하기 
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetEnableGravity(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll 충격 적용
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
+		// Ragdoll 적용을 위해 캐릭터 매쉬/캡슐 설정하기 
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetEnableGravity(true);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+		GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll 충격 적용
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule 충돌X
 
-	DotDamageDebuffComponent->Deactivate(); // 디버프 해제
-	StunDebuffComponent->Deactivate();
-	bDead = true;
-	OnDeathDelegate.Broadcast(this); // 사망 Broadcast
+		// Ensure Debuff components are valid before deactivating them
+		if (DotDamageDebuffComponent)
+		{
+			DotDamageDebuffComponent->Deactivate(); // 디버프 해제
+		}
+		if (StunDebuffComponent)
+		{
+			StunDebuffComponent->Deactivate();
+		}
+		bDead = true;
+		OnDeathDelegate.Broadcast(this); // 사망 Broadcast
+	}
 }
 
 void ATDBaseCharacter::BeginPlay()

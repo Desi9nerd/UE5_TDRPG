@@ -98,8 +98,14 @@ protected:
 private:
 	virtual void InitAbilityActorInfo() override;
 
+	UFUNCTION()
+	void OnPlayerDeath();
+
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_LevelUpParticleEffect() const;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> PlayerDieMontage;
 
 	UPROPERTY()
 	TObjectPtr<ATDGameModeBase> TDGameModeBase;

@@ -346,6 +346,11 @@ void UTDInventoryComponent::Server_DropItem_Implementation(TSubclassOf<ATDItemAc
 // 아이템 소모 (포션, 음식)
 void UTDInventoryComponent::ConsumeItem(const FText& ItemName)
 {
+	Server_ConsumeItem(ItemName);
+}
+
+void UTDInventoryComponent::Server_ConsumeItem_Implementation(const FText& ItemName)
+{
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner());
 	if (nullptr == ASC) return;
 	checkf(DA_ItemGE, TEXT("No DA_ItemGE. Assign DataAsset at UTDInventoryComponent::ConsumeItem()"));
@@ -360,10 +365,5 @@ void UTDInventoryComponent::ConsumeItem(const FText& ItemName)
 			ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 		}
 	}
-}
-
-void UTDInventoryComponent::Server_ConsumeItem_Implementation(const FText& ItemName)
-{
-	
 }
 //******************************************************************************
