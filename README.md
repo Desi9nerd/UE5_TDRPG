@@ -14,8 +14,8 @@
 |게임 장르|쿼터뷰 RPG. 핵 앤 슬러쉬|
 |개발 인원|1인|
 |개발 기간|24.03.28 ~ 24.06.28|
-|게임 플레이 영상| https://youtu.be/GXUgNoHUXrk?si=t3Cx0HjRcpHKx7Bu
-https://youtu.be/LL7_vV_uVV8?si=1F_7LMDUOqA5RZli |
+|게임 플레이 영상| https://youtu.be/GXUgNoHUXrk?si=t3Cx0HjRcpHKx7Bu |
+|               | https://youtu.be/LL7_vV_uVV8?si=1F_7LMDUOqA5RZli |
 |게임 파일 다운로드| http://naver.me/IMyez5WK |
 </p>
 싱글 플레이 / 멀티 플레이(데디케이티드 서버) 모두 가능한 3인칭 쿼터뷰 RPG 게임입니다. </p>
