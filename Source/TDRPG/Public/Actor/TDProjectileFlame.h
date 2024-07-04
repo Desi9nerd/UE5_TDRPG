@@ -1,7 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Actor/TDProjectile.h"
-#include "Components/TimelineComponent.h"
 #include "TDProjectileFlame.generated.h"
 
 /**
@@ -59,38 +58,3 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	FVector KnockbackDirection;
 };
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-/*
-UFUNCTION()
-void StartOutgoingTimeline();
-UFUNCTION()
-void UpdateOutgoingTimeline();
-UFUNCTION()
-void UpdateReturningTimeline();
-
-UFUNCTION()
-void OnOutgoingTimelineFinished();
-UFUNCTION()
-void OnReturningTimelineFinished();
-
-UPROPERTY(EditAnywhere)
-UTimelineComponent* OutgoingTimeline;
-
-UPROPERTY(EditAnywhere)
-UTimelineComponent* ReturningTimeline;
-
-UPROPERTY(EditDefaultsOnly, Category = "Timeline", Meta = (AllowPrivateAccess = true))
-TObjectPtr<UCurveFloat> Curve1 = nullptr;
-UPROPERTY(EditDefaultsOnly, Category = "Timeline", Meta = (AllowPrivateAccess = true))
-TObjectPtr<UCurveFloat> Curve2 = nullptr;
-UPROPERTY(EditDefaultsOnly, Category = "Timeline", Meta = (AllowPrivateAccess = true))
-TObjectPtr<UCurveFloat> Curve3 = nullptr;
-
-UPROPERTY(EditDefaultsOnly, Category = "Timeline", Meta = (AllowPrivateAccess = true))
-float LerpTimelineLength = 1.f;
-
-FTimeline LerpTimeline;
-*/

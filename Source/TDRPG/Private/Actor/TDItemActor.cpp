@@ -27,19 +27,7 @@ void ATDItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 void ATDItemActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//RunningTime += DeltaTime;
-	//const float SinePeriod = 2 * PI / SinePeriodConstant;
-	//
-	//if (RunningTime > SinePeriod)
-	//{
-	//	RunningTime = 0.f;
-	//}
-	//
-	//ItemMovement(DeltaTime);
-	//
-	//SetActorLocation(CalculatedLocation);
-	//SetActorRotation(CalculatedRotation);
+	
 }
 
 void ATDItemActor::ItemMovement(float DeltaTime)
@@ -66,13 +54,6 @@ void ATDItemActor::BeginPlay()
 	Super::BeginPlay();
 
 	Mesh->SetSimulatePhysics(true);
-	//
-	//InitialLocation = GetActorLocation();
-	//CalculatedLocation = InitialLocation;
-	//CalculatedRotation = GetActorRotation();
-	//
-	//StartSineMovement();
-	//StartRotation();
 }
 
 void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

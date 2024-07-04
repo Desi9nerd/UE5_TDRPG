@@ -24,8 +24,8 @@ void UTDGA_DamageProjectile::SpawnProjectile(const FVector& ProjectileTargetLoca
 	// 서버가 스폰시킨 Projectile Actor는 replicated actor가 되어 클라이언트는 replicated된 버젼을 보게 된다.
 	if (false == GetAvatarActorFromActorInfo()->HasAuthority()) return; // 서버가 아닌 경우 예외처리
 
-	//IICombat* CombatInterface = Cast<IICombat>(GetAvatarActorFromActorInfo());
-	//if (CombatInterface)
+	IICombat* CombatInterface = Cast<IICombat>(GetAvatarActorFromActorInfo());
+	if (CombatInterface)
 	{
 		const FVector SocketLocation = IICombat::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
 			SocketTag); // Weapon, LeftHand, RightHand Socket 중 맞는것을 가져와서 사용.

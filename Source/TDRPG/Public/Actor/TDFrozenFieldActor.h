@@ -14,8 +14,6 @@ public:
 	UFUNCTION(BlueprintPure)
 	USceneComponent* GetGroundPoint(const FVector& GroundLocation, int32 NumPoints, float YawOverride = 0.f);
 
-protected:
-
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<USceneComponent> FrozenField;

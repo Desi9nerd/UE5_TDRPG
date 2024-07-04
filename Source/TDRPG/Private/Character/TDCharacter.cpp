@@ -184,10 +184,18 @@ int32 ATDCharacter::GetPlayerLevel()
 
 void ATDCharacter::Die(const FVector& RagdollImpulse)
 {
+	// TODO: 멀티버젼도 생각해보기.
+	
+	if (false == IsValid(GetTDGameModeBase_Single())) 
+	{
+		SetLifeSpan(3.f);
+		Super::Die(RagdollImpulse);
+		return;
+	}
+
 	Super::Die(RagdollImpulse);
 
 	FTimerDelegate DeathTimerDelegate;
-	// TODO: 멀티버젼도 생각해보기.
 	DeathTimerDelegate.BindLambda([this]()
 		{
 			if (GetTDGameModeBase_Single())
