@@ -30,23 +30,54 @@ public:
 	virtual void PossessedBy(AController* NewController) override; // Server
 	void LoadProgress();
 	virtual void OnRep_PlayerState() override; // Client
-	TObjectPtr<UTDInventoryComponent> GetInventoryComponent();
-	TObjectPtr<UTDZoomComponent> GetTDZoomComponent() { return ZoomComponent; }
-	TObjectPtr<ATDPlayerController> GetTDPlayerController();
-	TObjectPtr<ATDGameModeBase> GetTDGameModeBase();
-	TObjectPtr<ATDGameModeBase_Single> GetTDGameModeBase_Single();
-	TObjectPtr<ATDPlayerState> GetTDPlayerState();
 
-	//** ICombat *********************************************
-	//virtual int32 GetPlayerLevelBP_Implementation() override;
+protected:
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<USpringArmComponent> CameraSpringArm;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<UCameraComponent> FollowCamera;
+
+//=== Get, Set func ===========================================================
+public:
+	UTDInventoryComponent* GetInventoryComponent();
+	UTDZoomComponent* GetTDZoomComponent() { return ZoomComponent; }
+	ATDPlayerState* GetTDPlayerState();
+	ATDPlayerController* GetTDPlayerController();
+	ATDGameModeBase* GetTDGameModeBase();
+	ATDGameModeBase_Single* GetTDGameModeBase_Single();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<UTDZoomComponent> ZoomComponent;
+
+private:
+	UPROPERTY()
+	TObjectPtr<ATDPlayerState> TDPlayerState;
+
+	UPROPERTY()
+	TObjectPtr<ATDPlayerController> TDPlayerController;
+
+	UPROPERTY()
+	TObjectPtr<ATDGameModeBase> TDGameModeBase;
+
+	UPROPERTY()
+	TObjectPtr<ATDGameModeBase_Single> TDGameModeBase_Single;
+
+//=== Get, Set func ===========================================================
+	
+//=== ICombat =================================================================
+public:
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die(const FVector& RagdollImpulse) override;
-	//********************************************************
+//=== ICombat =================================================================
 
-	//** IPlayer *********************************************
-	//virtual void AddToExp_Implementation(int32 InExp) override;
+//=== IPlayer =================================================================
+public:
 	virtual void AddToExpCPP(int32 InExp) override;
-	//virtual void LevelUp_Implementation() override;
 	virtual void LevelUpCPP() override;
 	virtual void AddToPlayerLevel(int32 InPlayerLevel) override;
 	virtual void AddToPlayerLevelBP_Implementation(int32 InPlayerLevel) override;
@@ -73,24 +104,16 @@ public:
 	virtual void HideDecal() override;
 	virtual void SaveProgressBP_Implementation(const FName& CheckpointTag) override;
 	virtual void SaveProgress(const FName& CheckpointTag) override;
-	//********************************************************
-	void SaveGameSaveAbilities(const FGameplayAbilitySpec& AbilitySpec);
+//=== IPlayer =================================================================
 
+//=== Parent Class: TDBaseCharcter ============================================
+protected:
 	virtual void OnRep_Stunned() override;
 	virtual void OnRep_Burned() override;
+//=== Parent Class: TDBaseCharcter ============================================
 
-protected:
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	TObjectPtr<USpringArmComponent> CameraSpringArm;
-
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	TObjectPtr<UCameraComponent> FollowCamera;
-
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	TObjectPtr<UTDZoomComponent> ZoomComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UTDInventoryComponent> TDInventoryComponent;
+public:
+	void SaveGameSaveAbilities(const FGameplayAbilitySpec& AbilitySpec);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> Niagara_LevelUp;
@@ -101,16 +124,6 @@ private:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_LevelUpParticleEffect() const;
 
-	UPROPERTY()
-	TObjectPtr<ATDGameModeBase> TDGameModeBase;
-	UPROPERTY()
-	TObjectPtr<ATDGameModeBase_Single> TDGameModeBase_Single;
-
-	UPROPERTY()
-	TObjectPtr<ATDPlayerState> TDPlayerState;
-
-	UPROPERTY()
-	TObjectPtr<ATDPlayerController> TDPlayerController;
 
 	UPROPERTY(EditDefaultsOnly)
 	float DeathTime = 5.f;

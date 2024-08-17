@@ -55,14 +55,14 @@ public:
 	virtual void BindCallbacksToDependencies();
 	void BroadcastDA_AbilityInfo();
 
-	TObjectPtr<APlayerController> GetPlayerController();
-	TObjectPtr<ATDPlayerController> GetTDPlayerController();
-	TObjectPtr<APlayerState> GetPlayerState();
-	TObjectPtr<ATDPlayerState> GetTDPlayerState();
-	TObjectPtr<UAbilitySystemComponent> GetASC();
-	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
-	TObjectPtr<UAttributeSet> GetAttributeSet();
-	TObjectPtr<UTDAttributeSet> GetTDAttributeSet();
+	APlayerController* GetPlayerController();
+	ATDPlayerController* GetTDPlayerController();
+	APlayerState* GetPlayerState();
+	ATDPlayerState* GetTDPlayerState();
+	UAbilitySystemComponent* GetASC();
+	UTDAbilitySystemComponent* GetTDASC();
+	UAttributeSet* GetAttributeSet();
+	UTDAttributeSet* GetTDAttributeSet();
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FDA_AbilitySignature DA_AbilityInfoDelegate;

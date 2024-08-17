@@ -63,16 +63,3 @@ void ATDItemActor::OnSphereComponentOverlap(UPrimitiveComponent* OverlappedCompo
 		UE_LOG(LogTemp, Warning, TEXT("Item Overlapped! "));
 	}
 }
-
-void ATDItemActor::StartSineMovement()
-{
-	bSineMovement = true;
-	InitialLocation = GetActorLocation();
-	CalculatedLocation = InitialLocation;
-}
-
-void ATDItemActor::StartRotation()
-{
-	bRotates = true;
-	CalculatedRotation = GetActorRotation();
-}

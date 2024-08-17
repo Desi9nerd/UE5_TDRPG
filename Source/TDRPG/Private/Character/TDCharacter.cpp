@@ -93,7 +93,7 @@ void ATDCharacter::PossessedBy(AController* NewController) // 서버
 void ATDCharacter::LoadProgress()
 {
 	UTDSaveGame_Load* SaveData = GetTDGameModeBase_Single()->RetrieveInGameSaveData();
-	if (SaveData == nullptr) return;
+	if (false == IsValid(SaveData)) { return; }
 
 	//* SaveData가 처음인지 아닌지 기준으로 기본값/저장된값으로 초기화.
 	if (SaveData->bFirstTimeLoadIn) // SaveData가 생성되고 처음으로 로드 되는것이라면
@@ -128,58 +128,59 @@ void ATDCharacter::OnRep_PlayerState() // 클라이언트
 	InitAbilityActorInfo(); 
 }
 
-TObjectPtr<UTDInventoryComponent> ATDCharacter::GetInventoryComponent()
+UTDInventoryComponent* ATDCharacter::GetInventoryComponent()
 {
 	checkf(TDInventoryComponent, TEXT("No TDInventoryComponent. Check: ATDCharacter::GetInventoryComponent()"));
 	return TDInventoryComponent;
 }
 
-TObjectPtr<ATDPlayerController> ATDCharacter::GetTDPlayerController()
+ATDPlayerController* ATDCharacter::GetTDPlayerController()
 {
-	if (IsValid(TDPlayerController)) return TDPlayerController;
+	if (false == IsValid(TDPlayerController))
+	{
+		TDPlayerController = Cast<ATDPlayerController>(GetController());
+		checkf(TDPlayerController, TEXT("No TDPlayerController. Check: ATDCharacter::GetTDPlayerController()"));
+	}
 
-	TDPlayerController = Cast<ATDPlayerController>(GetController());
 	return TDPlayerController;
 }
 
-TObjectPtr<ATDGameModeBase> ATDCharacter::GetTDGameModeBase()
+ATDGameModeBase* ATDCharacter::GetTDGameModeBase()
 {
-	if (IsValid(TDGameModeBase)) return TDGameModeBase;
-
-	TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (false == IsValid(TDGameModeBase))
+	{
+		TDGameModeBase = Cast<ATDGameModeBase>(UGameplayStatics::GetGameMode(this));
+		checkf(TDGameModeBase, TEXT("No TDGameModeBase. Check: ATDCharacter::GetTDGameModeBase"));
+	}
+	
 	return TDGameModeBase;
 }
 
-TObjectPtr<ATDGameModeBase_Single> ATDCharacter::GetTDGameModeBase_Single()
+ATDGameModeBase_Single* ATDCharacter::GetTDGameModeBase_Single()
 {
-	if (IsValid(TDGameModeBase_Single)) return TDGameModeBase_Single;
-
-	TDGameModeBase_Single = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
 	if (false == IsValid(TDGameModeBase_Single))
 	{
+		TDGameModeBase_Single = Cast<ATDGameModeBase_Single>(UGameplayStatics::GetGameMode(this));
 		UE_LOG(LogTemp, Warning, TEXT("Failed to get TDGameModeBase_Single"));
 	}
+	
 	return TDGameModeBase_Single;
 }
 
-TObjectPtr<ATDPlayerState> ATDCharacter::GetTDPlayerState()
+ATDPlayerState* ATDCharacter::GetTDPlayerState()
 {
-	if (IsValid(TDPlayerState)) return TDPlayerState;
+	if (false == IsValid(TDPlayerState)) 
+	{
+		TDPlayerState = GetPlayerState<ATDPlayerState>();
+		checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetTDPlayerState()"));
+	}
 
-	TDPlayerState = GetPlayerState<ATDPlayerState>();
 	return TDPlayerState;
 }
 
-//int32 ATDCharacter::GetPlayerLevelBP_Implementation()
-//{
-//	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevelBP_Implementation()"));
-//	return TDPlayerState->GetPlayerLevel();
-//}
-
 int32 ATDCharacter::GetPlayerLevel()
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::GetPlayerLevel()"));
-	return TDPlayerState->GetPlayerLevel();
+	return GetTDPlayerState()->GetPlayerLevel();
 }
 
 void ATDCharacter::Die(const FVector& RagdollImpulse)
@@ -209,63 +210,49 @@ void ATDCharacter::Die(const FVector& RagdollImpulse)
 	FollowCamera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // 죽으면 카메라가 떨어지도록 Detach.
 }
 
-//void ATDCharacter::AddToExp_Implementation(int32 InExp)
-//{
-//	check(TDPlayerState);
-//
-//	TDPlayerState->AddToExp(InExp);
-//}
-
 void ATDCharacter::AddToExpCPP(int32 InExp)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToExpCPP()"));
-	TDPlayerState->AddToExp(InExp);
+	GetTDPlayerState()->AddToExp(InExp);
 }
 
 void ATDCharacter::AddToPlayerLevel(int32 InPlayerLevel)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevel()"));
-	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+	GetTDPlayerState()->AddToPlayerLevel(InPlayerLevel);
 
 	if (GetTDASC())
 	{
-		GetTDASC()->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+		GetTDASC()->UpdateAbilityStatuses(GetTDPlayerState()->GetPlayerLevel());
 	}
 }
 
 void ATDCharacter::AddToPlayerLevelBP_Implementation(int32 InPlayerLevel)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToPlayerLevelBP_Implementation()"));
-	TDPlayerState->AddToPlayerLevel(InPlayerLevel);
+	GetTDPlayerState()->AddToPlayerLevel(InPlayerLevel);
 
 	if (GetTDASC())
 	{
-		GetTDASC()->UpdateAbilityStatuses(TDPlayerState->GetPlayerLevel());
+		GetTDASC()->UpdateAbilityStatuses(GetTDPlayerState()->GetPlayerLevel());
 	}
 }
 
 void ATDCharacter::AddToAttributePoints(int32 InAttributePoints)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToAttributePoints()"));
-	TDPlayerState->AddToAttributePoints(InAttributePoints);
+	GetTDPlayerState()->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToAttributePointsBP_Implementation(int32 InAttributePoints)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToAttributePointsBP_Implementation()"));
-	TDPlayerState->AddToAttributePoints(InAttributePoints);
+	GetTDPlayerState()->AddToAttributePoints(InAttributePoints);
 }
 
 void ATDCharacter::AddToSkillPoints(int32 InSkillPoints)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToSkillPoints()"));
-	TDPlayerState->AddToSkillPoints(InSkillPoints);
+	GetTDPlayerState()->AddToSkillPoints(InSkillPoints);
 }
 
 void ATDCharacter::AddToSkillPointsBP_Implementation(int32 InSpellPoints)
 {
-	checkf(TDPlayerState, TEXT("No TDPlayerState. Check: ATDCharacter::AddToSkillPointsBP_Implementation()"));
-	TDPlayerState->AddToSkillPoints(InSpellPoints);
+	GetTDPlayerState()->AddToSkillPoints(InSpellPoints);
 }
 
 int32 ATDCharacter::GetExp() const
@@ -521,11 +508,6 @@ void ATDCharacter::OnRep_Burned()
 		DotDamageDebuffComponent->Deactivate();
 	}
 }
-
-//void ATDCharacter::LevelUp_Implementation()
-//{
-//	Multicast_LevelUpParticleEffect();  // 서버 + 모든 클라이언트들에게 레벨업 이펙트를 보여줌.
-//}
 
 void ATDCharacter::LevelUpCPP()
 {

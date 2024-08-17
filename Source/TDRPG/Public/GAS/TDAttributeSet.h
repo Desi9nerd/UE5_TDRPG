@@ -30,22 +30,22 @@ struct FEffectProperties // 이펙트 속성 구조체
 	FGameplayEffectContextHandle EffectContextHandle;
 
 	UPROPERTY()
-	UAbilitySystemComponent* SourceASC = nullptr;
+	TObjectPtr<UAbilitySystemComponent> SourceASC;
 	UPROPERTY()
-	AActor* SourceAvatarActor = nullptr;
+	TObjectPtr<AActor> SourceAvatarActor;
 	UPROPERTY()
-	AController* SourceController = nullptr;
+	TObjectPtr<AController> SourceController;
 	UPROPERTY()
-	ACharacter* SourceCharacter = nullptr;
+	TObjectPtr<ACharacter> SourceCharacter;
 
 	UPROPERTY()
-	UAbilitySystemComponent* TargetASC = nullptr;
+	TObjectPtr<UAbilitySystemComponent> TargetASC;
 	UPROPERTY()
-	AActor* TargetAvatarActor = nullptr;
+	TObjectPtr<AActor> TargetAvatarActor;
 	UPROPERTY()
-	AController* TargetController = nullptr;
+	TObjectPtr<AController> TargetController;
 	UPROPERTY()
-	ACharacter* TargetCharacter = nullptr;
+	TObjectPtr<ACharacter> TargetCharacter;
 };
 
 UCLASS()

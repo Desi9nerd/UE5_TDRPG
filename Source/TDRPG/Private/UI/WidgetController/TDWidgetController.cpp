@@ -40,12 +40,12 @@ void UTDWidgetController::BroadcastDA_AbilityInfo()
 	GetTDASC()->ForEachAbility(BroadcastDelegate); // 델리게이트 보내기
 }
 
-TObjectPtr<APlayerController> UTDWidgetController::GetPlayerController()
+APlayerController* UTDWidgetController::GetPlayerController()
 {
 	return PlayerController;
 }
 
-TObjectPtr<ATDPlayerController> UTDWidgetController::GetTDPlayerController()
+ATDPlayerController* UTDWidgetController::GetTDPlayerController()
 {
 	//TDPlayerController = IsValid(TDPlayerController) ? TDPlayerController : Cast<ATDPlayerController>(PlayerController);
 	if (false == IsValid(TDPlayerController))
@@ -56,12 +56,12 @@ TObjectPtr<ATDPlayerController> UTDWidgetController::GetTDPlayerController()
 	return TDPlayerController;
 }
 
-TObjectPtr<APlayerState> UTDWidgetController::GetPlayerState()
+APlayerState* UTDWidgetController::GetPlayerState()
 {
 	return PlayerState;
 }
 
-TObjectPtr<ATDPlayerState> UTDWidgetController::GetTDPlayerState()
+ATDPlayerState* UTDWidgetController::GetTDPlayerState()
 {
 	if (false == IsValid(TDPlayerState))
 	{
@@ -71,12 +71,12 @@ TObjectPtr<ATDPlayerState> UTDWidgetController::GetTDPlayerState()
 	return TDPlayerState;
 }
 
-TObjectPtr<UAbilitySystemComponent> UTDWidgetController::GetASC()
+UAbilitySystemComponent* UTDWidgetController::GetASC()
 {
 	return ASC;
 }
 
-TObjectPtr<UTDAbilitySystemComponent> UTDWidgetController::GetTDASC()
+UTDAbilitySystemComponent* UTDWidgetController::GetTDASC()
 {
 	if (false == IsValid(TDASC))
 	{
@@ -86,12 +86,12 @@ TObjectPtr<UTDAbilitySystemComponent> UTDWidgetController::GetTDASC()
 	return TDASC;
 }
 
-TObjectPtr<UAttributeSet> UTDWidgetController::GetAttributeSet()
+UAttributeSet* UTDWidgetController::GetAttributeSet()
 {
 	return AttributeSet;
 }
 
-TObjectPtr<UTDAttributeSet> UTDWidgetController::GetTDAttributeSet()
+UTDAttributeSet* UTDWidgetController::GetTDAttributeSet()
 {
 	if (false == IsValid(TDAttributeSet))
 	{
