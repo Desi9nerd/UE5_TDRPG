@@ -25,14 +25,34 @@ class TDRPG_API ATDBaseCharacter : public ACharacter, public IAbilitySystemInter
 public:
 	ATDBaseCharacter();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+//=== Get, Set func ===========================================================
+public:
 	TObjectPtr<UTDAbilitySystemComponent> GetTDASC();
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	virtual FOnDamageSignature& GetOnDamageSignature() override { return OnDamageDelegate; };
 	FORCEINLINE void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
+	
+protected:
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
+	
+private:
+	UPROPERTY()
+	TObjectPtr<UTDAbilitySystemComponent> TDASC;
+//=== Get, Set func ===========================================================
 
-	//** ICombat *********************************************
+//=== IAbilitySystemInterface =================================================
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+protected:
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+//=== IAbilitySystemInterface =================================================
+
+//=== ICombat =================================================================
+public:
 	virtual void UpdateFacingTargetCPP(const FVector& FacingTarget) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontageCPP() override;
@@ -64,8 +84,8 @@ public:
 	virtual USkeletalMeshComponent* GetWeaponBP_Implementation() override;
 	virtual USkeletalMeshComponent* GetWeapon() override;
 	virtual void SpawnWeapon() override;
-	//********************************************************
-
+//=== ICombat =================================================================
+	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void Multicast_ApplyDeath(const FVector& RagdollImpulse); // 캐릭터 사망 처리
 
@@ -152,9 +172,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion Warping Component")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
 	TObjectPtr<UTDDebuffComponent> DotDamageDebuffComponent;
 	UPROPERTY(VisibleAnywhere, Category = "Debuff Component")
@@ -163,9 +180,6 @@ protected:
 
 	//********************************************************
 	//** Attributes
-	UPROPERTY()
-	TObjectPtr<UAttributeSet> AttributeSet;
-
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultStatAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
@@ -188,6 +202,4 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 
-	UPROPERTY()
-	TObjectPtr<UTDAbilitySystemComponent> TDASC;
 };

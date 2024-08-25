@@ -23,16 +23,20 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	FORCEINLINE void SetEnemyLevel(int32 InEnemyLevel) { Level = InEnemyLevel; }
 
-	//** IEnemy 함수
+//=== IEnemy ==================================================================
+public:
 	virtual void HighlightActor() override;	  // 외곽선 효과 On
 	virtual void UnHighlightActor() override; // 외곽선 효과 Off
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
 	virtual AActor* GetCombatTargetCPP() const override;
-
-	//** ICombat 함수
+//=== IEnemy ==================================================================
+	
+//=== ICombat =================================================================
+public:
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die(const FVector& RagdollImpulse) override;
+//=== ICombat =================================================================
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 

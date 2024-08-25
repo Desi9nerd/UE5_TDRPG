@@ -14,7 +14,7 @@ void UTDGA_Damage::CauseDamage(AActor* TargetActor)
 
 FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVector InRadialDamageOrigin, bool bOverrideKnockbackDirection, FVector KnockbackDirectionOverride, bool bOverrideRagdollImpulse, FVector RagdollImpulseDirectionOverride, bool bOverridePitch, float PitchOverride) const
 {
-	// FDamageEffectParams À» ¼³Á¤ÇÑ´Ù. TDGA_Damage ÀÚ½Ä Å¬·¡½º¿¡¼­ 'Ãæµ¹Ã¼, ¹ß»çÃ¼'ÀÇ DamageEffectParams °ª¿¡ ÇØ´ç °ªÀÌ µé¾î°¡µµ·Ï ¿©±âÀÇ SetDamageEffectParams()ÇÔ¼ö¸¦ È£ÃâÇÑ´Ù.
+	// FDamageEffectParams ì„ ì„¤ì •í•œë‹¤. TDGA_Damage ìì‹ í´ë˜ìŠ¤ì—ì„œ 'ì¶©ëŒì²´, ë°œì‚¬ì²´'ì˜ DamageEffectParams ê°’ì— í•´ë‹¹ ê°’ì´ ë“¤ì–´ê°€ë„ë¡ ì—¬ê¸°ì˜ SetDamageEffectParams()í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•œë‹¤.
 
 	FDamageEffectParams DEffectParams;
 	DEffectParams.WorldContextObject = GetAvatarActorFromActorInfo();
@@ -33,26 +33,26 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVe
 	DEffectParams.KnockbackChance = KnockbackChance;
 	if (IsValid(TargetActor))
 	{
-		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation(); // ³» ±âÁØ¿¡¼­ »ó´ë¹æ ¹æÇâ È¸Àü°ª
+		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation(); // ë‚´ ê¸°ì¤€ì—ì„œ ìƒëŒ€ë°© ë°©í–¥ íšŒì „ê°’
 		if (bOverridePitch)
 		{
 			Rotation.Pitch = PitchOverride;
 		}
 
-		const FVector ToTarget = Rotation.Vector(); // ³» ±âÁØ¿¡¼­ »ó´ë¹æ ¹æÇâ
+		const FVector ToTarget = Rotation.Vector(); // ë‚´ ê¸°ì¤€ì—ì„œ ìƒëŒ€ë°© ë°©í–¥
 
 		if (false == bOverrideKnockbackDirection) 
 		{
 			DEffectParams.KnockbackImpulse = ToTarget * KnockbackImpulseMagnitude;
 		}
-		if (false == bOverrideRagdollImpulse) // Ragdoll ¹æÇâ Àû¿ë°ª X
+		if (false == bOverrideRagdollImpulse) // Ragdoll ë°©í–¥ ì ìš©ê°’ X
 		{
 			DEffectParams.RagdollImpulse = ToTarget * RagdollImpulseMagnitude;
 		}
 	}
 
 
-	if (bOverrideKnockbackDirection) // Knockback ¹æÇâ Àû¿ë O
+	if (bOverrideKnockbackDirection) // Knockback ë°©í–¥ ì ìš© O
 	{
 		KnockbackDirectionOverride.Normalize();
 		DEffectParams.KnockbackImpulse = KnockbackDirectionOverride * KnockbackImpulseMagnitude;
@@ -63,7 +63,7 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVe
 			DEffectParams.KnockbackImpulse = KnockbackRotation.Vector() * KnockbackImpulseMagnitude;
 		}
 	}
-	if (bOverrideRagdollImpulse) // Ragdoll ¹æÇâ Àû¿ë O
+	if (bOverrideRagdollImpulse) // Ragdoll ë°©í–¥ ì ìš© O
 	{
 		RagdollImpulseDirectionOverride.Normalize();
 		DEffectParams.RagdollImpulse = RagdollImpulseDirectionOverride * RagdollImpulseMagnitude;
@@ -74,7 +74,7 @@ FDamageEffectParams UTDGA_Damage::SetDamageEffectParams(AActor* TargetActor, FVe
 			DEffectParams.RagdollImpulse = RagdollImpulseRotation.Vector() * RagdollImpulseMagnitude;
 		}
 	}
-	if (bRadialDamage) // ¹İ°æ µ¥¹ÌÁö
+	if (bRadialDamage) // ë°˜ê²½ ë°ë¯¸ì§€
 	{
 		DEffectParams.bRadialDamage = bRadialDamage;
 		DEffectParams.RadialDamageOrigin = InRadialDamageOrigin;
@@ -94,7 +94,7 @@ FTaggedMontage UTDGA_Damage::GetRandomTaggedMontageFromArray(const TArray<FTagge
 {
 	if (TaggedMontages.Num() > 0)
 	{
-		// ¸ùÅ¸ÁÖ Áß ÇÏ³ª¸¦ ·£´ıÀ¸·Î °ñ¶ó ¹İÈ¯.
+		// ëª½íƒ€ì£¼ ì¤‘ í•˜ë‚˜ë¥¼ ëœë¤ìœ¼ë¡œ ê³¨ë¼ ë°˜í™˜.
 		const int32 Selection = FMath::RandRange(0, TaggedMontages.Num() - 1);
 		return TaggedMontages[Selection];
 	}

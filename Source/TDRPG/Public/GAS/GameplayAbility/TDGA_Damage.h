@@ -6,7 +6,7 @@
 #include "Interface/ICombat.h"
 #include "TDGA_Damage.generated.h"
 
-/** °ø°İ ½ºÅ³¿¡ °øÅëÀ¸·Î µé¾î°¡´Â µ¥¹ÌÁö °ü·Ã Ã³¸®¸¦ ÇÏ´Â GameplayAbility Å¬·¡½º
+/** ê³µê²© ìŠ¤í‚¬ì— ê³µí†µìœ¼ë¡œ ë“¤ì–´ê°€ëŠ” ë°ë¯¸ì§€ ê´€ë ¨ ì²˜ë¦¬ë¥¼ í•˜ëŠ” GameplayAbility í´ë˜ìŠ¤
  * 
  */
 UCLASS()

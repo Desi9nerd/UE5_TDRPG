@@ -18,18 +18,18 @@ ATDBaseCharacter::ATDBaseCharacter()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
-	// Ä«¸Ş¶ó¶û Capsule, Mesh Ãæµ¹ ¹«½Ã
+	// ì¹´ë©”ë¼ë‘ Capsule, Mesh ì¶©ëŒ ë¬´ì‹œ
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	// ProjectileÃ¤³Î(=ECC_Projectile)À» Overlap Ã³¸®
+	// Projectileì±„ë„(=ECC_Projectile)ì„ Overlap ì²˜ë¦¬
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
-	GetMesh()->SetGenerateOverlapEvents(true); // Mesh¿¡ Overlap ÀÌº¥Æ® ¹ß»ı true·Î ¼³Á¤
+	GetMesh()->SetGenerateOverlapEvents(true); // Meshì— Overlap ì´ë²¤íŠ¸ ë°œìƒ trueë¡œ ì„¤ì •
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	DotDamageDebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("DotDamageDebuffComponent"));
 	DotDamageDebuffComponent->SetupAttachment(GetRootComponent());
-	DotDamageDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTagÀÇ ±âº»°ª. ÇöÀç Å×½ºÆ®¸¦ À§ÇØ DotDamage·Î ¼³Á¤.
+	DotDamageDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_DotDamage; // DebuffTagì˜ ê¸°ë³¸ê°’. í˜„ì¬ í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•´ DotDamageë¡œ ì„¤ì •.
 	StunDebuffComponent = CreateDefaultSubobject<UTDDebuffComponent>(TEXT("StunDebuffComponent"));
 	StunDebuffComponent->SetupAttachment(GetRootComponent());
 	StunDebuffComponent->DebuffTag = FTDGameplayTags::GetTDGameplayTags().Debuff_Stun;
@@ -64,7 +64,7 @@ TObjectPtr<UTDAbilitySystemComponent> ATDBaseCharacter::GetTDASC()
 
 void ATDBaseCharacter::UpdateFacingTargetCPP(const FVector& FacingTarget)
 {
-	// ¸ùÅ¸ÁÖ¿¡¼­ MotionWarping ¾Ö´Ô½ºÅ×ÀÌÆ®¸¦ ÁöÁ¤ÇÏ°í Warp Target NameÀ» ¶È°°ÀÌ Àû´Â´Ù
+	// ëª½íƒ€ì£¼ì—ì„œ MotionWarping ì• ë‹˜ìŠ¤í…Œì´íŠ¸ë¥¼ ì§€ì •í•˜ê³  Warp Target Nameì„ ë˜‘ê°™ì´ ì ëŠ”ë‹¤
 	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(WarpTargetName, FacingTarget);
 }
 
@@ -82,32 +82,32 @@ void ATDBaseCharacter::Die(const FVector& RagdollImpulse)
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
-	Multicast_ApplyDeath(RagdollImpulse); // Ä³¸¯ÅÍ »ç¸Á Ã³¸®. Server & Client
+	Multicast_ApplyDeath(RagdollImpulse); // ìºë¦­í„° ì‚¬ë§ ì²˜ë¦¬. Server & Client
 }
 
-void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& RagdollImpulse) // Ä³¸¯ÅÍ »ç¸Á Ã³¸®
+void ATDBaseCharacter::Multicast_ApplyDeath_Implementation(const FVector& RagdollImpulse) // ìºë¦­í„° ì‚¬ë§ ì²˜ë¦¬
 {
-	// »ç¸Á »ç¿îµå Àç»ı
+	// ì‚¬ë§ ì‚¬ìš´ë“œ ì¬ìƒ
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
 
-	// ¹«±â ¹Ù´Ú¿¡ ¶³¾î¶ß¸®±â
+	// ë¬´ê¸° ë°”ë‹¥ì— ë–¨ì–´ëœ¨ë¦¬ê¸°
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Weapon->AddImpulse(RagdollImpulse * 0.05f, NAME_None, true);
 
-	// Ragdoll Àû¿ëÀ» À§ÇØ Ä³¸¯ÅÍ ¸Å½¬/Ä¸½¶ ¼³Á¤ÇÏ±â 
+	// Ragdoll ì ìš©ì„ ìœ„í•´ ìºë¦­í„° ë§¤ì‰¬/ìº¡ìŠ ì„¤ì •í•˜ê¸° 
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll Ãæ°İ Àû¿ë
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule Ãæµ¹X
+	GetMesh()->AddImpulse(RagdollImpulse, NAME_None, true); // Ragdoll ì¶©ê²© ì ìš©
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Capsule ì¶©ëŒX
 
-	DotDamageDebuffComponent->Deactivate(); // µğ¹öÇÁ ÇØÁ¦
+	DotDamageDebuffComponent->Deactivate(); // ë””ë²„í”„ í•´ì œ
 	StunDebuffComponent->Deactivate();
 	bDead = true;
-	OnDeathDelegate.Broadcast(this); // »ç¸Á Broadcast
+	OnDeathDelegate.Broadcast(this); // ì‚¬ë§ Broadcast
 }
 
 void ATDBaseCharacter::BeginPlay()
@@ -120,29 +120,29 @@ void ATDBaseCharacter::InitAbilityActorInfo()
 {
 }
 
-void ATDBaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const // GE Àû¿ëÇÏ±â
+void ATDBaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const // GE ì ìš©í•˜ê¸°
 {
-	check(GetAbilitySystemComponent()); // ASC À¯¹« °Ë»ç
+	check(GetAbilitySystemComponent()); // ASC ìœ ë¬´ ê²€ì‚¬
 	check(GameplayEffectClass); 
 
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	ContextHandle.AddSourceObject(this); // SourceObject(=TDBaseCharacter)¸¦ ContextHandle¿¡ Ãß°¡. ICombat.hÀÇ GetPlayerLevel()¸¦ »ç¿ëÇÒ¶§ ÇÊ¿äÇÏ±â¿¡ SourceObjectÀ» Ãß°¡
+	ContextHandle.AddSourceObject(this); // SourceObject(=TDBaseCharacter)ë¥¼ ContextHandleì— ì¶”ê°€. ICombat.hì˜ GetPlayerLevel()ë¥¼ ì‚¬ìš©í• ë•Œ í•„ìš”í•˜ê¸°ì— SourceObjectì„ ì¶”ê°€
 
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
-void ATDBaseCharacter::InitializeDefaultAttributes() const // Attributes ÃÊ±â°ª ¼³Á¤
+void ATDBaseCharacter::InitializeDefaultAttributes() const // Attributes ì´ˆê¸°ê°’ ì„¤ì •
 {
-	// Stat/Secondary/VitalAttributes·Î »ç¿ëÇÒ GE_Stat/Secondary/VitalAttributes Àû¿ë
+	// Stat/Secondary/VitalAttributesë¡œ ì‚¬ìš©í•  GE_Stat/Secondary/VitalAttributes ì ìš©
 	ApplyEffectToSelf(DefaultStatAttributes, 1.f);	
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f); 
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
-void ATDBaseCharacter::AddCharacterAbilities() // ¼­¹ö¿¡¼­¸¸ ½ÇÇà.
+void ATDBaseCharacter::AddCharacterAbilities() // ì„œë²„ì—ì„œë§Œ ì‹¤í–‰.
 {
-	if (false == HasAuthority()) return; // ¼­¹ö°¡ ¾Æ´Ï¸é return
+	if (false == HasAuthority()) return; // ì„œë²„ê°€ ì•„ë‹ˆë©´ return
 
 	GetTDASC()->AddCharacterAbilities(StartupAbilities);
 	GetTDASC()->AddCharacterPassiveAbilities(StartupPassiveAbilities);
@@ -165,7 +165,7 @@ void ATDBaseCharacter::StunTagChanged(const FGameplayTag CallbackTag, int32 NewC
 float ATDBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	OnDamageDelegate.Broadcast(DamageTaken); // OnDamageDelegate ºê·ÎµåÄ³½ºÆÃ.
+	OnDamageDelegate.Broadcast(DamageTaken); // OnDamageDelegate ë¸Œë¡œë“œìºìŠ¤íŒ….
 
 	return DamageTaken;
 }
@@ -178,7 +178,7 @@ void ATDBaseCharacter::OnRep_Burned()
 {
 }
 
-FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // ¼ÒÄÏ À§Ä¡¸¦ ¸®ÅÏ
+FVector ATDBaseCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) // ì†Œì¼“ ìœ„ì¹˜ë¥¼ ë¦¬í„´
 {
 	const FTDGameplayTags& GameplayTags = FTDGameplayTags::GetTDGameplayTags();
 	if (MontageTag.MatchesTagExact(GameplayTags.Socket_Weapon) && IsValid(Weapon))
